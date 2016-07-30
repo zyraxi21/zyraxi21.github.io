@@ -17,7 +17,7 @@ P.S.:记住自己的用户名，有用。
 
 ## 添加网页文件
 在你想要的位置打开Git Bash    
-键入'git clone https://github.com/*用户名*/*用户名*.github.io.git'    
+键入'<git clone https://github.com/*用户名*/*用户名*.github.io.git>'    
 键入'cd 用户名.github.io'    
 在*用户名*.github.io文件夹里面放上你的网页文件。    
 键入'git add --all'    
