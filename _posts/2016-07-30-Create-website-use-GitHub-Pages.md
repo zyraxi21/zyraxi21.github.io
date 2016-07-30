@@ -5,7 +5,7 @@ category: Tutorials
 tags: [GitHub, Pages, Website]
 ---
 
-用GitHub Pages大概是建站最简单的方法了。
+最简单方便的免费建站方法。
 
 ## 创建GitHub账户
 https://github.com 不解释。    
@@ -26,4 +26,5 @@ https://github.com 不解释。
 ## 将本地网页文件上传至GitHub
 键入"git push -u origin master"，Enter。    
 
-## 至此建站全部完成，访问username.github.io看看效果吧:D    
+## 完成
+至此建站过程全部完成，访问username.github.io看看效果吧:D    
