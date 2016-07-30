@@ -28,3 +28,4 @@ P.S.:记住自己的username，有用。
 
 ## 完成
 至此建站过程全部完成，访问username.github.io看看效果吧:D    
+详见<https://pages.github.com>
