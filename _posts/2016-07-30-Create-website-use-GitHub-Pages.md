@@ -28,19 +28,3 @@ https://github.com 不解释。
 
 ## 完成
 至此建站过程全部完成，访问username.github.io看看效果吧:D    
-<div id="disqus_thread"></div>
-<script>
-
-var disqus_config = function () {
-    this.page.url = "https://epilepsy-ydf.github.io/tutorials/2016/07/30/Create-website-use-GitHub-Pages.html";  // Replace PAGE_URL with your page's canonical URL variable
-    this.page.identifier = "create_website"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-};
-
-(function() { // DON'T EDIT BELOW THIS LINE
-    var d = document, s = d.createElement('script');
-    s.src = '//epilepsy-ydf.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
