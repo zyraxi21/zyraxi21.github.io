@@ -8,8 +8,8 @@ tags: [GitHub, Pages, Website]
 最简单方便的免费建站方法。
 
 ## 创建GitHub账户
-https://github.com 不解释。    
-*记住自己的username，有用。    
+<https://github.com>不解释。    
+P.S.:记住自己的username，有用。    
 
 ## 创建一个仓库
 点击GitHub首页右上角加号，点击New repository。    
