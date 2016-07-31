@@ -5,10 +5,10 @@ category: news
 tags: [Win10, ISO, Update, Anniversary]
 ---
 
-.
+[IT之家](http://www.ithome.com)讯
 
 ## 正文
-[IT之家](http://www.ithome.com)讯 7月29日消息，名为Mary Jo Foley的知名记者近日发布推特，在推文中他声称自己与微软发言人进行交谈后得知，Win10一周年更新官方ISO镜像将于8月2日同步放出。   
+7月29日消息，名为Mary Jo Foley的知名记者近日发布推特，在推文中他声称自己与微软发言人进行交谈后得知，Win10一周年更新官方ISO镜像将于8月2日同步放出。   
     
 ![微软发言人：Win10一周年更新官方ISO镜像8月2日放出](http://img.ithome.com/newsuploadfiles/2016/7/20160729_132411_63.png)    
     
