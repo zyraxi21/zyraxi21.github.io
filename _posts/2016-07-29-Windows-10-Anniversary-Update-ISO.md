@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 微软发言人：Win10一周年更新官方ISO镜像8月2日放出
-category: 新闻
+category: news
 tags: [Win10, ISO, Update, Anniversary]
 ---
 
