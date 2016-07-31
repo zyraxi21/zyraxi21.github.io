@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Win10专业版无法禁用应用商店惹恼用户
-category: 新闻
+category: news
 tags: [win10, appstore]
 ---
 
