@@ -1,7 +1,7 @@
 ---
 layout: post
-title: 用GitHub Pages创建网站
-category: 教程
+title: 怎么用GitHub Pages创建网站
+category: tutorials
 tags: [GitHub, Pages, Website]
 ---
 
