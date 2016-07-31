@@ -24,7 +24,7 @@ P.S.:记住自己的用户名，有用。
 6. 键入`git commit -m "Initial commit"`    
 
 ## 将本地网页文件上传至GitHub
-* 键入`git push -u origin master"`    
+* 键入`git push -u origin master`    
 
 ## 完成
 * 至此建站过程全部完成，访问*用户名*.github.io看看效果吧:D    
