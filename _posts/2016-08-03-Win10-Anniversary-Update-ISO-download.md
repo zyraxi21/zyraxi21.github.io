@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Win10一周年更新正式版ISO官方光盘镜像免费下载
-category: download
+category: downloads
 tags: [win10, download, ISO]
 ---
 
