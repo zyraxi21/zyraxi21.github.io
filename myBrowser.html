@@ -3,7 +3,7 @@
         <script type="text/javascript">
             function isAlipayOrWechat()
             {
-                var userAgent = navigator.userAgent.toLowerCase();
+                var userAgent = navigator.userAgent();
                 if(userAgent.match(/Alipay/i) == "Alipay")
                 {
                     alert("支付宝浏览器");
