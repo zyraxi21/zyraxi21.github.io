@@ -1,0 +1,27 @@
+<html>
+    <body>
+        <script type="text/javascript">
+            function isAlipayOrWechat()
+            {
+                var userAgent = navigator.userAgent.toLowerCase();
+                if(userAgent.match(/Alipay/i) == "Alipay")
+                {
+                    alert("支付宝浏览器");
+                }
+                else if(userAgent.match(/MicroMessenger/i) == "MicroMessenger")
+                {
+                    alert("微信浏览器");
+                }
+                else if(userAgent.match(/QQ/i) == "QQ")
+                {
+                    alert("QQ 浏览器");
+                }
+                else if(userAgent.match(/Chrome/i) == "Chrome")
+                {
+                    alert("Chrome 浏览器");
+                }
+            }
+            isAlipayOrWechat();
+        </script>
+    </body>
+</html>
