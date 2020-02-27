@@ -3,26 +3,21 @@
         <script type="text/javascript">
             function isAlipayOrWechat()
             {
-                var userAgent = navigator.userAgent();
-                if(userAgent.match(/Alipay/i) == "Alipay")
+                var ua = window.navigator.userAgent;
+                if ( ua.indexOf("AlipayClient") > 0 )
                 {
                     alert("支付宝浏览器");
                     window.location.href="https://www.alipay.com/"
                 }
-                else if(userAgent.match(/MicroMessenger/i) == "MicroMessenger")
+                else if ( ua.indexOf("MicroMessenger") > 0 )
                 {
                     alert("微信浏览器");
                     window.location.href="https://weixin.qq.com/"
                 }
-                else if(userAgent.match(/QQ/i) == "QQ")
+                else if ( ua.indexOf("QQ") > 0 )
                 {
                     alert("QQ 浏览器");
                     window.location.href="https://im.qq.com/"
-                }
-                else if(userAgent.match(/Chrome/i) == "Chrome")
-                {
-                    alert("Chrome 浏览器");
-                    window.location.href="https://www.google.cn/"
                 }
             }
             isAlipayOrWechat();
