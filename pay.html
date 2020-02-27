@@ -1,7 +1,8 @@
 <html>
     <body>
+        <p>请使用支付宝（推荐）、微信或 QQ 这三个应用中的其中一个扫描该二维码。</p>
         <script type="text/javascript">
-            function isAlipayOrWechat()
+            function whichApp()
             {
                 var ua = navigator.userAgent;
                 if(ua.indexOf("AlipayClient")>-1)
@@ -16,12 +17,8 @@
                 {
                     window.location.href="mqqapi://forward/url?plg_auth=1&url_prefix=https://i.qianbao.qq.com/wallet/sqrcode.htm?m=tenpay&f=wallet&u=1977759176&a=1&n=Epilepsy_%E6%9D%A8%E5%B7%85%E5%B3%B0&ac=CAEQyOuIrwcY0Nzc8gU%3D_xxx_sign&openscan=1"
                 }
-                else
-                {
-                    document.write("<p>请使用支付宝（推荐）、微信或 QQ 这三个应用中的其中一个扫描该二维码。</p>")
-                }
             }
-            isAlipayOrWechat();
+            whichApp();
         </script>
     </body>
 </html>
