@@ -89,13 +89,13 @@
                 window.location.href = "https://qr.alipay.com/fkx16715khfgwiumouxj4d4"
             }
             else if (ua.indexOf("MicroMessenger") > -1) {
-                icon.src = "https://yangbaimg.syoogame.com/tmp/000/00/00/00/5e57bf91ddf9e.jpg";
+                icon.src = "./assets/images/WeChatPayLogo.jpg";
                 document.title = "微信支付";
                 document.body.className = "wepay";
                 qrcode.src = qrcodeWechat
             }
             else if (ua.indexOf("QQ") > -1) {
-                icon.src = "https://yangbaimg.syoogame.com/tmp/000/00/00/00/5e57bf62856e7.jpg";
+                icon.src = "./assets/images/QQPayLogo.jpg";
                 document.title = "QQ 钱包支付";
                 document.body.className = "qq";
                 qrcode.src = qrcodeQQ;
