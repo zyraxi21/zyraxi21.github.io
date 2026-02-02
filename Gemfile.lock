@@ -113,7 +113,7 @@ GEM
       mini_portile2 (~> 2.1.0)
     octokit (4.3.0)
       sawyer (~> 0.7.0, >= 0.5.3)
-    protobuf (3.6.7)
+    protobuf (3.10.6)
       activesupport (>= 3.2)
       middleware
       thor
