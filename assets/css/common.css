@@ -177,16 +177,30 @@
 }
 
 /* 数学渲染优化 */
-/* 确保公式容器不被主题行高干扰 */
-.katex-display {
-  line-height: 1.2 !important;
-  margin: 1em 0 !important;
-  overflow-x: auto;
-  overflow-y: hidden;
+/* 修正 KaTeX 整体字体，特别是正体部分 */
+.katex {
+    font-family: KaTeX_Main, "Times New Roman", serif !important;
+    font-size: 1.1em !important;
+    text-rendering: optimizeLegibility;
 }
 
-/* 修正正体 mathrm 字体，使其更符合学术观感 */
-.katex {
-  font-size: 1.1em !important; /* 根据需要微调大小 */
-  text-rendering: optimizeLegibility;
+/* 专门针对 mathrm 字符的字体强制映射 */
+.katex .mathrm {
+    font-family: KaTeX_Main !important;
+    font-style: normal !important;
+}
+
+/* 确保数学符号使用 KaTeX 字体 */
+.katex .mathit {
+    font-family: KaTeX_Math, "Times New Roman", serif !important;
+    font-style: italic !important;
+}
+
+/* 无论在哪，只要是显示模式的公式，必须独占一行并居中 */
+.katex-display {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  margin: 1em 0 !important;
+  clear: both; /* 防止被浮动元素挤压 */
 }
