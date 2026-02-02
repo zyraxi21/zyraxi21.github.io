@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <link rel="shortcut icon" type="image/png" href="/assets/images/favicon.png"/>
+    <style type="text/css">
+        * {
+            margin: auto;
+            padding: 0;
+            border: 0;
+        }
+
+        html {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%
+        }
+
+        body {
+            font-family: Noto Sans CJK SC DemiLight, -apple-system, SF UI Text, Arial, Microsoft YaHei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+            color: #333;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        h3 {
+            padding: 10px;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .title {
+            padding: 2em 0;
+            background-color: #fff;
+        }
+
+        .content {
+            padding: 2em 1em;
+            color: #fff;
+        }
+
+        .wepay {
+            background-color: #22ab38;
+        }
+
+        .qq {
+            background-color: #12b7f5;
+        }
+
+        .other {
+            background-color: #ff7055;
+        }
+
+        #qrcode {
+            border-radius: 32px;
+        }
+    </style>
+</head>
+
+<body class="other">
+    <div class="container">
+        <div class="title">
+            <img id="icon" src="" width="48px" height="48px" alt="">
+            <h1>打赏</h1>
+        </div>
+        <div class="content">
+            <h3 id="tips"></h3><img id="qrcode" src="" width="300px" height="300px" alt="">
+            <h3>扫描或长按识别二维码，向我付款</h3>
+            <br>
+        </div>
+    </div>
+    <div style="text-align: center;color:#fff;font-size:14px">声明：在本页面所进行的付款行为均为无偿捐赠，我不会对您有任何回报。如您通过本页面付款，即说明您已经阅读并同意本声明。</div>
+    <script>
+        window.onload = function () {
+            let qrcodeQQ = "./qrcode/qq.png";
+            let qrcodeWechat = "./qrcode/wechat.png"
+            let ua = navigator.userAgent;
+            let qrcode = document.getElementById("qrcode");
+            let icon = document.getElementById("icon");
+            if (ua.indexOf("AlipayClient") > -1) {
+                window.location.href = "https://qr.alipay.com/fkx16715khfgwiumouxj4d4"
+            }
+            else if (ua.indexOf("MicroMessenger") > -1) {
+                icon.src = "./assets/images/WeChatPayLogo.jpg";
+                document.title = "微信支付";
+                document.body.className = "wepay";
+                qrcode.src = qrcodeWechat
+            }
+            else if (ua.indexOf("QQ") > -1) {
+                icon.src = "./assets/images/QQPayLogo.jpg";
+                document.title = "QQ 钱包支付";
+                document.body.className = "qq";
+                qrcode.src = qrcodeQQ;
+            } else {
+                icon.src = "./assets/images/orangePayLogo.jpg";
+                document.title = "打赏";
+                document.body.className = "other";
+                document.getElementById("tips").innerText = "可使用支付宝（推荐）、微信、QQ 客户端扫码付款";
+                qrcode.src = "./qrcode/donate.png"
+            }
+        }
+    </script>
+</body>
+
+</html>
