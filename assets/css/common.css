@@ -175,3 +175,18 @@
 .sidebar-title {
     text-align: center;
 }
+
+/* 数学渲染优化 */
+/* 确保公式容器不被主题行高干扰 */
+.katex-display {
+  line-height: 1.2 !important;
+  margin: 1em 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* 修正正体 mathrm 字体，使其更符合学术观感 */
+.katex {
+  font-size: 1.1em !important; /* 根据需要微调大小 */
+  text-rendering: optimizeLegibility;
+}
