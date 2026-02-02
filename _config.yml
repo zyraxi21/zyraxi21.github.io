@@ -10,8 +10,8 @@ title: zyraxi
 name: zyraxi
 email: zyraxi@outlook.com
 location: 中国，四川
-company: 可爱Win10专业户
-company_url: http://lovely-win10-specialists.github.io
+company: 哈尔滨工业大学
+company_url: https://www.hit.edu.cn/
 github_url: https://github.com/zyraxi21
 description: 编辑个签，展示我的独特态度
 favicon: favicon.png # Image must be in assets/images
@@ -42,9 +42,10 @@ defaults: []
 kramdown:
   input: GFM
   enable_coderay: true
+  math_engine: mathjax
 
 # Disque
-disque: epilepsy-ydf.disqus.com
+disque: zyraxi.disqus.com
 
 # Pagination
 paginate: 10
@@ -79,3 +80,6 @@ skill_software_keywords: [Java, C, C++, Qt, Python, MySQL, Oracle, SQLite, PL/SQ
 skill_j2ee_keywords: [Spring, Struct, Hibernet, MyBatis, JSP]
 skill_web_keywords: [HTML, CSS, JS, JQuery, Ajax, AngularJS, NodeJS, ExpressJS, MongoDB, Redis, PHP, Symfony, Boostrap]
 skill_mobile_app_keywords: [Android, Sketch UI Desgin]
+
+layout: default
+comments: true
