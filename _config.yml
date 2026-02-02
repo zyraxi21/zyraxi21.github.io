@@ -42,7 +42,7 @@ defaults: []
 kramdown:
   input: GFM
   enable_coderay: true
-  math_engine: mathjax
+  math_engine: null
 
 # Disque
 disque: zyraxi.disqus.com
