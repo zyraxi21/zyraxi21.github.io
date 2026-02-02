@@ -1,0 +1,37 @@
+<html>
+    <head>
+        
+    </head>
+    <body>
+        <div>it is.</div>
+        <script type="text/javascript">
+            function isAlipayOrWechat()
+            {
+                var ua = navigator.userAgent;
+                if(ua.indexOf("AlipayClient")>-1)
+                {
+                    alert("支付宝浏览器");
+                    document.write("<p>浏览器: ")
+                    document.write("支付宝" + "</p>")
+                    window.location.href="https://www.alipay.com/"
+                    
+                }
+                else if(ua.indexOf("MicroMessenger")>-1)
+                {
+                    alert("微信浏览器");
+                    document.write("<p>浏览器: ")
+                    document.write("微信" + "</p>")
+                    window.location.href="https://weixin.qq.com/"
+                }
+                else if(ua.indexOf("QQ")>-1)
+                {
+                    alert("QQ 浏览器");
+                    document.write("<p>浏览器: ")
+                    document.write("QQ" + "</p>")
+                    window.location.href="https://im.qq.com/"
+                }
+            }
+            isAlipayOrWechat();
+        </script>
+    </body>
+</html>
