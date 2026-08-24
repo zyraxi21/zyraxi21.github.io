@@ -20,11 +20,8 @@ repository: zyraxi21/zyraxi21.github.io
 url: https://zyraxi21.github.io
 
 ## Gem
-gems:
+plugins:
   - jekyll-paginate
-  - jekyll-geo-pattern
-  - rouge
-  - kramdown
   - jekyll-github-metadata
 
 # Build settings
@@ -41,7 +38,6 @@ defaults: []
 
 kramdown:
   input: GFM
-  enable_coderay: true
   math_engine: null
 
 # Disque
