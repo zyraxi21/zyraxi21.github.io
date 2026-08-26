@@ -36,6 +36,8 @@ jobs:
         run: bundle exec jekyll build
         env:
           JEKYLL_ENV: production
+          JEKYLL_GITHUB_TOKEN: ${{ secrets.JEKYLL_GITHUB_TOKEN }}
+          JEKYLL_BUILD_REVISION: ${{ github.sha }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

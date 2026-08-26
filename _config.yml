@@ -64,12 +64,6 @@ navs:
 # Sidebar to show popular repo
 side_bar_repo_limit: 5 # Number of repos to show
 
-# Google Analytics
-analytics :
-  provider : google
-  google :
-      tracking_id : 'UA-81448019-1'
-
 
 # For about.html. Fell free to create your own!
 skill_software_keywords: [Java, C, C++, Qt, Python, MySQL, Oracle, SQLite, PL/SQL, Design Patterns]
