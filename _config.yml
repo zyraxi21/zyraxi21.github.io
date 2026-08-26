@@ -29,6 +29,8 @@ markdown: kramdown
 highlighter: rouge
 lsi:         false
 excerpt_separator: "\n\n"
+permalink: /blog/:title.html
+
 
 source:      .
 destination: ./_site

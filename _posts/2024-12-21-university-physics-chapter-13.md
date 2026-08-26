@@ -32,8 +32,12 @@ tags: [考前复习, 大学物理]
 ### 13.6.2    薄膜的等厚干涉
 1. 劈尖干涉
 反射光产生干涉明条纹的条件为：$$\delta=2ne+\frac{\lambda}{2}=k\lambda\text{，}\quad k=1\text{，}2\text{，}3\text{，}\cdots$$产生暗条纹的条件为$$\delta =2ne+\frac{\lambda}{2}=(2k+1)\frac{\lambda}{2}\text{，}\quad k=0\text{，}1\text{，}2\text{，}3\text{，}\cdots$$
-这些干涉条纹称为**等厚干涉**（equal thickness interference）条纹。等厚条纹将是一系列平行的，间距相等的明暗条纹。设劈尖的夹角为 $\theta$（一般很小），则相邻明条纹（或暗条纹）的间距 $L$ 应满足$$L=\frac{\lambda}{2n\sin \theta}\approx\frac{\lambda}{2n\theta}\text{。}$$2. 牛顿环
+这些干涉条纹称为**等厚干涉**（equal thickness interference）条纹。等厚条纹将是一系列平行的，间距相等的明暗条纹。设劈尖的夹角为 $\theta$（一般很小），则相邻明条纹（或暗条纹）的间距 $L$ 应满足$$L=\frac{\lambda}{2n\sin \theta}\approx\frac{\lambda}{2n\theta}\text{。}$$
+
+2. 牛顿环
 明环的半径为：$$r=\sqrt{\frac{(2k-1)R\lambda}{2n}}\text{，}\quad k=1\text{，}2\text{，}3\text{，}\cdots$$暗环的半径为：$$r=\sqrt{\frac{kR\lambda}{n}}\text{，}\quad k=0\text{，}1\text{，}2\text{，}\cdots$$
+
+
 ## 13.7    单缝衍射
 ### 13.7.2    单缝衍射
 对于暗条纹中心，$$a\sin \varphi=2k\frac{\lambda}{2}\text{，}\quad k=\pm 1\text{，}\pm 2\text{，}\pm 3\text{，}\cdots$$对于明条纹中心，$$a\sin \varphi=(2k+1)\frac{\lambda}{2}\text{，}\quad k=\pm 1\text{，}\pm 2\text{，}\pm 3\text{，}\cdots$$中央明纹（零级）的角宽度为 $\theta_0=2\frac{\lambda}{a}$，线宽度为 $\Delta x\approx 2f\frac{\lambda}{a}$，相邻两暗条纹（或明条纹）的角宽度为 $\Delta \varphi =\frac{\lambda}{a}$。

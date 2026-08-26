@@ -7,7 +7,7 @@
                     {{ page.subtitle }}
                 {% endif %}
                 {% if page.date %}
-                <span class="octicon octicon-calendar"></span> {{ page.date | date: "%Y/%m/%d" }}
+                <svg class="octicon" width="16" height="16" aria-hidden="true"><use href="/assets/vendor/octicons.svg#icon-calendar"></use></svg> {{ page.date | date: "%Y/%m/%d" }}
                 {% endif %}
             </span>
         </div>

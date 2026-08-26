@@ -1,0 +1,21 @@
+{
+  "name": "zyraxi21-github-io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend assets for zyraxi21.github.io",
+  "scripts": {
+    "build": "node scripts/build-assets.mjs",
+    "build:assets": "node scripts/build-assets.mjs"
+  },
+  "dependencies": {
+    "@primer/octicons": "^19.0.0",
+    "bootstrap": "^5.3.3",
+    "hover.css": "^2.3.1",
+    "jquery": "^3.7.1",
+    "katex": "^0.16.9",
+    "primer-markdown": "^2.5.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

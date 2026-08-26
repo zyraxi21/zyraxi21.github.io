@@ -190,13 +190,13 @@ ol, ul, dl {
     border-top:2px solid #eee
 }
 
-.site-footer .octicon-mark-github {
+.site-footer .octicon {
     position: absolute;
     left: 50%;
     color: #ccc;
 }
 
-.site-footer .octicon-mark-github:hover {
+.site-footer .octicon:hover {
     color:#bbb;
 }
 
@@ -280,4 +280,86 @@ ol, ul, dl {
 .markdown-body h5,
 .markdown-body h6 {
     font-family: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", SimSun, Georgia, "Times New Roman", serif;
+}
+/* LaTeX copy button */
+.math-copy {
+    position: relative;
+}
+
+.latex-copy-btn {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 20;
+    padding: 2px 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    width: auto;
+    min-width: 0;
+    white-space: nowrap;
+    color: #333;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    opacity: 1;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.math-copy:hover .latex-copy-btn,
+.math-copy.math-copy-hover .latex-copy-btn {
+    display: block;
+}
+
+.math-copy.latex-copy-done .latex-copy-btn {
+    opacity: 0 !important;
+    transform: scale(0.8);
+    pointer-events: none;
+}
+
+.latex-copy-btn:hover {
+    color: #000;
+    border-color: #999;
+    background: #f5f5f5;
+}
+
+.latex-copy-success {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 20;
+    padding: 2px 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    width: auto;
+    min-width: 0;
+    white-space: nowrap;
+    color: #fff;
+    background: #28a745;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.latex-copy-success.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Octicons SVG */
+.octicon {
+    display: inline-block;
+    vertical-align: middle;
+    fill: currentColor;
+    width: 1em;
+    height: 1em;
+}
+
+.mega-octicon {
+    width: 1.5em;
+    height: 1.5em;
 }

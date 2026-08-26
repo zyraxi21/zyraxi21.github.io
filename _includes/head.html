@@ -29,13 +29,10 @@
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
     <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}">
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/app.js"></script>
 
-    <!-- Third-Party CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/3.5.0/octicons.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hover.css@2.3.1/css/hover-min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/primer-markdown@2.5.1/dist/user-content.min.css">
+    <!-- Bundled CSS -->
+    <link rel="stylesheet" href="/assets/vendor/app.css">
     <link rel="stylesheet" href="/assets/css/syntax.css">
 
     <!-- My CSS -->
@@ -51,30 +48,159 @@
     <link rel="stylesheet" href="/assets/css/{{css}}">
     {% endfor %}
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="/assets/vendor/katex.min.js"></script>
 
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="/assets/vendor/auto-render.min.js"></script>
+<script defer>
+  function cleanLatex(raw) {
+    return raw
+      .replace(/^\$\$/, '')
+      .replace(/\$\$$/, '')
+      .replace(/^\\\[/, '')
+      .replace(/\\\]$/, '')
+      .replace(/^\\\(/, '')
+      .replace(/\\\)$/, '')
+      .replace(/^\$/, '')
+      .replace(/\$$/, '');
+  }
 
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" 
-        onload="
-          document.querySelectorAll('.kdmath').forEach(function(el) {
-            var tex = el.textContent.trim().replace(/^\$+|\$+$/g, '');
-            if (tex) {
-              el.innerHTML = katex.renderToString(tex, { displayMode: true, throwOnError: false });
-            }
-          });
-          renderMathInElement(document.body, {
-            delimiters: [
-                {left: '$$', right: '$$', display: true},
-                {left: '$', right: '$', inline: true},
-                {left: '\\(', right: '\\)', inline: true},
-                {left: '\\[', right: '\\]', display: true}
-            ],
-            throwOnError : false
-          });
-        ">
+  function wrapMathTextNodes() {
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node) {
+        var parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        if (parent.closest('code, pre, script, style, .kdmath, .math-copy, .katex')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    var regex = /(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\$)[^$]+?\$)/g;
+
+    textNodes.forEach(function(textNode) {
+      var text = textNode.nodeValue;
+      var frag = document.createDocumentFragment();
+      var match;
+      var lastIndex = 0;
+      var found = false;
+      regex.lastIndex = 0;
+      while ((match = regex.exec(text)) !== null) {
+        found = true;
+        if (match.index > lastIndex) {
+          frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+        }
+        var span = document.createElement('span');
+        span.className = 'math-copy';
+        span.setAttribute('data-latex', cleanLatex(match[0]));
+        span.textContent = match[0];
+        frag.appendChild(span);
+        lastIndex = regex.lastIndex;
+      }
+      if (found) {
+        if (lastIndex < text.length) {
+          frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+        }
+        textNode.parentNode.replaceChild(frag, textNode);
+      }
+    });
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    var textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    return Promise.resolve();
+  }
+
+  function addCopyButtons() {
+    document.querySelectorAll('.math-copy').forEach(function(el) {
+      if (el.querySelector('.latex-copy-btn')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'latex-copy-btn';
+      btn.textContent = '复制';
+      btn.setAttribute('aria-label', '复制 LaTeX 代码');
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        copyText(el.getAttribute('data-latex') || el.textContent).then(function() {
+          el.classList.add('latex-copy-done');
+          var success = el.querySelector('.latex-copy-success');
+          if (!success) {
+            success = document.createElement('span');
+            success.className = 'latex-copy-success';
+            success.textContent = '复制成功';
+            el.appendChild(success);
+          }
+          success.classList.add('show');
+          setTimeout(function() {
+            success.classList.remove('show');
+          }, 1500);
+        });
+      });
+
+              el.addEventListener('mouseenter', function() {
+          el.classList.add('math-copy-hover');
+        });
+
+        el.addEventListener('mouseleave', function(e) {
+          var to = e.relatedTarget;
+          if (!to || !el.contains(to)) {
+            el.classList.remove('math-copy-hover');
+            el.classList.remove('latex-copy-done');
+          }
+        });
+
+        btn.addEventListener('mouseenter', function() {
+          el.classList.add('math-copy-hover');
+        });
+
+        btn.addEventListener('mouseleave', function(e) {
+          var to = e.relatedTarget;
+          if (!to || !el.contains(to)) {
+            el.classList.remove('math-copy-hover');
+          }
+        });
+      el.appendChild(btn);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.kdmath').forEach(function(el) {
+      var tex = el.textContent.trim().replace(/^\$+|\$+$/g, '');
+      if (tex) {
+        el.classList.add('math-copy');
+        el.setAttribute('data-latex', tex);
+        el.innerHTML = katex.renderToString(tex, { displayMode: true, throwOnError: false });
+      }
+    });
+
+    wrapMathTextNodes();
+
+    renderMathInElement(document.body, {
+      delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', inline: true},
+          {left: '\\(', right: '\\)', inline: true},
+          {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError : false
+    });
+
+    addCopyButtons();
+  });
 </script>
 
 </head>

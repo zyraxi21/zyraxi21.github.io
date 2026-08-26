@@ -1,7 +1,7 @@
 ---
 layout: page
 title: 我的博客
-subtitle: <span class="mega-octicon octicon-clippy"></span>&nbsp;&nbsp; 记录一切新知识
+subtitle: <svg class="mega-octicon octicon" width="24" height="24" aria-hidden="true"><use href="/assets/vendor/octicons.svg#icon-clippy"></use></svg>&nbsp;&nbsp; 记录一切新知识
 menu: blog
 css: ['blog-page.css']
 ---
