@@ -30,13 +30,13 @@
                             <p class="card-text">{{ repo.description }}</p>
                         </div>
                         <div class="card-text">
-                            <span data-toggle="tooltip" class="meta-info" title="{{ repo.stargazers_count }} stars">
+                            <span data-bs-toggle="tooltip" class="meta-info" title="{{ repo.stargazers_count }} stars">
                                 <span class="octicon octicon-star"></span> {{ repo.stargazers_count }}
                             </span>
-                            <span data-toggle="tooltip" class="meta-info" title="{{ repo.forks_count }} forks">
+                            <span data-bs-toggle="tooltip" class="meta-info" title="{{ repo.forks_count }} forks">
                                 <span class="octicon octicon-git-branch"></span> {{ repo.forks_count }}
                             </span>
-                            <span data-toggle="tooltip" class="meta-info" title="Last updated：{{ repo.updated_at }}">
+                            <span data-bs-toggle="tooltip" class="meta-info" title="Last updated：{{ repo.updated_at }}">
                                 <span class="octicon octicon-clock"></span>
                                 <time datetime="{{ repo.updated_at }}" title="{{ repo.updated_at }}">{{ repo.updated_at | date: '%Y-%m-%d' }}</time>
                             </span>
@@ -53,7 +53,7 @@
     $(document).ready(function(){
 
         // Enable bootstrap tooltip
-        $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) { new bootstrap.Tooltip(el); });
 
         $('.geopattern').each(function(){
             $(this).geopattern($(this).data('pattern-id'));
