@@ -1,4 +1,4 @@
-<h3>目录</h3>
+<h3 class="directory-title">目录</h3>
 <div id="post-directory-module">
 <section class="post-directory">
     <!-- Links that trigger the jumping -->
@@ -10,22 +10,16 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
-        $( "article h2" ).each(function( index ) {
-            $(".post-directory dl").append("<dt><a class=\"jumper\" hre=#" +
+                $( "article h1, article h2, article h3" ).not(".directory-title, #post-directory-module h1, #post-directory-module h2, #post-directory-module h3").each(function( index ) {
+            var tagName = this.tagName.toLowerCase();
+            var wrapperTag = tagName === "h3" ? "dd" : "dt";
+            var wrapperClass = "toc-" + tagName;
+            var prefix = tagName === "h3" ? "&nbsp;&nbsp;- " : "";
+            $(".post-directory dl").append("<" + wrapperTag + " class=\"" + wrapperClass + "\"><a class=\"jumper\" hre=#" +
                     $(this).attr("id")
                     + ">"
-                    + $(this).text()
-                    + "</a></dt>");
-
-            var children = $(this).nextUntil("h2", "h3")
-
-            children.each(function( index ) {
-                $(".post-directory dl").append("<dd><a class=\"jumper\" hre=#" +
-                        $(this).attr("id")
-                        + ">"
-                        + "&nbsp;&nbsp;- " + $(this).text()
-                        + "</a></dd>");
-            });
+                    + prefix + $(this).html()
+                    + "</a></" + wrapperTag + ">");
         });
 
         var fixmeTop = $('#post-directory-module').offset().top - 100;       // get initial position of the element
@@ -49,15 +43,29 @@
 
         });
 
-        $("a.jumper").on("click", function( e ) {
-
+        $("a.jumper").on("click", function( e ) {
             e.preventDefault();
-
-            $("body, html").animate({
-                scrollTop: ($( $(this).attr('hre') ).offset().top - 100)
-            }, 600);
-
+            var id = $(this).attr('hre');
+            var target = id ? document.getElementById(id.substring(1)) : null;
+            if (target) {
+                var top = $(target).offset().top - 100;
+                $("html, body").stop(true, true).animate({ scrollTop: top }, 200);
+            }
         });
+
+
+          if (window.renderMathInElement) {
+            renderMathInElement(document.querySelector('.post-directory'), {
+              delimiters: [
+                  {left: '$$', right: '$$', display: true},
+                  {left: '$', right: '$', inline: true},
+                  {left: '\\(', right: '\\)', inline: true},
+                  {left: '\\[', right: '\\]', display: true}
+              ],
+              throwOnError: false
+            });
+          }
+
     });
 
 </script>

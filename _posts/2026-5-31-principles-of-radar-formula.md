@@ -3,6 +3,7 @@ layout: post
 title: 雷达原理公式总结
 category: 雷达原理
 tags: [考前复习, 雷达原理]
+excerpt: "雷达原理课程公式总结与复习。"
 ---
 总结雷达原理课程的所有公式。
 
@@ -34,10 +35,10 @@ tags: [考前复习, 雷达原理]
 |      “舍脉冲”法的目标距离      |                                                                             $$R=\frac{c}{2}(NT_{\mathrm{r}}+t_{\mathrm{R}}')$$其中 $N$ 为回波跨越的重复周期数                                                                             |
 | 采用“舍脉冲”法测距时最大不模糊测距距离为 |                                                                                       $$R_{\mathrm{max}}=\frac{cMT_{\mathrm{r}}}{2}$$                                                                                        |
 |      数字脉冲测距目标距离       |                                                                                                     $$R=\frac{cn}{2f}$$                                                                                                      |
-|   ==连续三角波调制的目标距离==    |                                                                               $$R=\frac{c}{8f_{\mathrm{A}}} \frac{\Delta F'}{f_{\mathrm{m}}}$$                                                                               |
+|   连续三角波调制的目标距离    |                                                                               $$R=\frac{c}{8f_{\mathrm{A}}} \frac{\Delta F'}{f_{\mathrm{m}}}$$                                                                               |
 |       相位法无模糊测距        |                                                                                                $$R=\frac{c\varphi}{2\omega}$$                                                                                                |
 |      相位法无模糊测距范围       |                                                                                          $$R_{\mathrm{max}}=\frac{c2\pi}{2\omega}$$                                                                                          |
-|    ==相位法测距解模糊方法==     |                                                                                             $$R=\frac{\varPhi c}{4\pi\Delta f}$$                                                                                             |
+|    相位法测距解模糊方法     |                                                                                             $$R=\frac{\varPhi c}{4\pi\Delta f}$$                                                                                             |
 |      相位法解模糊测距的范围      |                                                                                           $$R_{\mathrm{max}}=\frac{c}{2\Delta f}$$                                                                                           |
 |         相位法测角         |                                                                                         $$\varphi=\frac{2\pi}{\lambda}d\sin\theta$$                                                                                          |
 |        相位法测角误差        |                                                                            $$\mathrm{d}\theta=\frac{\lambda}{2\pi d\cos\theta}\mathrm{d}\varphi$$                                                                            |
@@ -47,7 +48,7 @@ tags: [考前复习, 雷达原理]
 |         第一盲速          |                                                                                    $$v_{\mathrm{r0}}=\frac{1}{2}\lambda f_{\mathrm{r}}$$                                                                                     |
 |         各盲速的值         |                                                                                     $$v_{\mathrm{r}}=\frac{n}{2}\lambda f_{\mathrm{r}}$$                                                                                     |
 |    最大无模糊距离和第一盲速的关系    |                                                                                   $$R_{0\mathrm{max}}v_{\mathrm{r0}}=\frac{\lambda c}{4}$$                                                                                   |
-|      ==产生频闪的条件==      |                                                                                     $$v_{\mathrm{r}}>\frac{1}{2}\lambda f_{\mathrm{r}}$$                                                                                     |
+|      产生频闪的条件      |                                                                                     $$v_{\mathrm{r}}>\frac{1}{2}\lambda f_{\mathrm{r}}$$                                                                                     |
 |         杂波衰减          |                                                                      输入杂波功率与对消处理后输出信号中同一杂波的剩余功率的比值$$\mathrm{CA}=\frac{C_{\mathrm{i}}}{C_{\mathrm{o}}}$$                                                                      |
 |          对消比          |                                                       同一杂波对消后的电压和对消的电压之比$$\mathrm{CR}=\sqrt{ \frac{C_{\mathrm{o}}}{C_{\mathrm{i}}} }=\frac{1}{\sqrt{ \mathrm{CA} }}$$                                                        |
 |         改善因子          |               动目标显示系统输出的信号杂波功率比和输入的信号杂波功率比的比值$$I=\frac{\frac{S_{\mathrm{o}}}{C_{\mathrm{o}}}}{\frac{S_{\mathrm{i}}}{C_{\mathrm{i}}}}=G\cdot(\mathrm{CA})=\frac{N_{\mathrm{o}}}{N_{\mathrm{i}}}(\mathrm{CA})$$                |

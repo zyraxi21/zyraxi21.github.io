@@ -3,6 +3,7 @@ layout: post
 title: 怎么用 GitHub Pages 创建网站
 category: tutorials
 tags: [GitHub, Pages, Website]
+excerpt: "介绍如何使用 GitHub Pages 免费创建并发布个人网站。"
 ---
 
 最简单方便的免费建站方法。

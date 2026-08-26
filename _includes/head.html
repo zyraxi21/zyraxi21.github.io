@@ -94,8 +94,13 @@
         }
         var span = document.createElement('span');
         span.className = 'math-copy';
-        span.setAttribute('data-latex', cleanLatex(match[0]));
-        span.textContent = match[0];
+        var tex = cleanLatex(match[0]);
+          span.setAttribute('data-latex', tex);
+        if (/\\begin\{align\}|\\begin\{aligned\}/.test(tex)) {
+          span.textContent = '$$' + tex + '$$';
+        } else {
+          span.textContent = match[0];
+        }
         frag.appendChild(span);
         lastIndex = regex.lastIndex;
       }
