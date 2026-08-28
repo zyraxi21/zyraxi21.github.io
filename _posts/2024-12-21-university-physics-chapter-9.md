@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 第 9 章    气体动理论
-category: 学习资料
+category: 大学物理
 tags: [考前复习, 大学物理]
 excerpt: "大学物理气体动理论章节公式整理与复习。"
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 推荐一款烧脑的解谜游戏
-category: recommendations
+category: 推荐
 tags: [awesome]
 excerpt: "推荐一款烧脑的网页解谜游戏 Nazo Puzzle。"
 ---

@@ -5,13 +5,11 @@
         <div class="copyright float-start">
             <!-- 请不要更改这一行 方便其他人知道模板的来源 谢谢 -->
             <!-- Please keep this line to let others know where this theme comes from. Thank you :D -->
-            Power by <a href="https://github.com/DONGChuan/Yummy-Jekyll">Yummy Jekyll</a>
+            Powered by <a href="https://github.com/DONGChuan/Yummy-Jekyll">Yummy Jekyll</a>
         </div>
 
-                <div class="license-note">
-            文章内容采用
-            <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.zh-hans" target="_blank" rel="license">CC BY-SA 4.0</a>
-            ；网站代码采用 Apache 2.0。
+                        <div class="license-note">
+            文章内容采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.zh-hans" target="_blank" rel="license">CC BY-SA 4.0</a> 协议授权；网站代码采用 <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="license">Apache 2.0</a> 协议授权。
         </div><div class="float-end">
             <a href="javascript:window.scrollTo(0,0)" >TOP</a>
         </div>
@@ -23,6 +21,160 @@
 
     <!-- My JS -->
     <script type="text/javascript" src="/assets/js/script.js"></script>
+
+    <script>
+    function initCodeButtons() {
+        if (window.__codeCopyInitialized) return;
+        window.__codeCopyInitialized = true;
+
+        function copyCode(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(text);
+            }
+            var textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            return Promise.resolve();
+        }
+
+        function markCopied(btn) {
+            btn.textContent = '复制成功';
+            btn.classList.add('copied');
+            setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+            }, 1500);
+        }
+
+        document.querySelectorAll('pre').forEach(function(pre) {
+            var block = pre.closest('.highlighter-rouge') || pre;
+            if (block.querySelector('.code-header')) return;
+            var code = block.querySelector('code');
+            if (!code) return;
+            if ((code.className || '').indexOf('language-mermaid') !== -1) return;
+
+            var lang = 'text';
+            var languageSource = block.closest('.highlighter-rouge') || block;
+            var match =
+                (languageSource.className || '').match(/language-([A-Za-z0-9_+#.-]+)/) ||
+                (code.className || '').match(/language-([A-Za-z0-9_+#.-]+)/);
+            if (match) {
+                lang = match[1];
+                if (lang.toLowerCase() === 'c++' || lang.toLowerCase() === 'cpp') {
+                    lang = 'C++';
+                }
+            }
+
+            var header = document.createElement('div');
+            header.className = 'code-header';
+
+            var langSpan = document.createElement('span');
+            langSpan.className = 'code-lang';
+            langSpan.textContent = lang;
+
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'code-copy-btn';
+            btn.textContent = '复制';
+            btn.addEventListener('click', function() {
+                copyCode(code.innerText).then(function() {
+                    markCopied(btn);
+                });
+            });
+
+            header.appendChild(langSpan);
+            header.appendChild(btn);
+
+            var text = code.innerText || '';
+            var lineCount = text.split('\n').length;
+            if (text.endsWith('\n')) lineCount -= 1;
+            if (lineCount < 1) lineCount = 1;
+
+            var lineNumbers = document.createElement('div');
+            lineNumbers.className = 'code-lines';
+            lineNumbers.setAttribute('aria-hidden', 'true');
+            lineNumbers.style.fontFamily = '"Ubuntu Mono", monospace';
+            for (var i = 1; i <= lineCount; i++) {
+                var num = document.createElement('span');
+                num.textContent = i;
+                num.style.fontFamily = '"Ubuntu Mono", monospace';
+                lineNumbers.appendChild(num);
+            }
+
+            var body = document.createElement('div');
+            body.className = 'code-body';
+
+            var wrapper = document.createElement('div');
+            wrapper.className = 'code-block-wrapper';
+            block.parentNode.insertBefore(wrapper, block);
+            wrapper.appendChild(header);
+            wrapper.appendChild(body);
+            body.appendChild(lineNumbers);
+            body.appendChild(block);
+        });
+
+        document.querySelectorAll('code').forEach(function(code) {
+            if (code.closest('pre')) return;
+            if (code.parentNode.classList.contains('math-copy')) return;
+            var wrap = document.createElement('span');
+            wrap.className = 'math-copy code-copy-wrap';
+            wrap.setAttribute('data-latex', code.innerText);
+            code.parentNode.insertBefore(wrap, code);
+            wrap.appendChild(code);
+        });
+
+        if (typeof addCopyButtons === 'function') {
+            addCopyButtons();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initCodeButtons);
+    if (document.readyState !== 'loading') initCodeButtons();
+    setTimeout(initCodeButtons, 500);
+
+    function shouldOpenInNewTab(link) {
+        return Boolean(link.closest('.site-footer') || link.closest('.post .markdown-body'));
+    }
+
+    document.querySelectorAll('a[href]').forEach(function(link) {
+        var href = link.getAttribute('href') || '';
+        if (!href || href.charAt(0) === '#' || /^javascript:/i.test(href)) return;
+        if (shouldOpenInNewTab(link)) {
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+        } else {
+            link.removeAttribute('target');
+            link.removeAttribute('rel');
+        }
+    });
+
+    document.addEventListener('click', function(event) {
+        var target = event.target;
+        var link = target && target.closest ? target.closest('a[href]') : null;
+        if (!link) return;
+
+        var href = link.getAttribute('href') || '';
+        if (!href || href.charAt(0) === '#' || /^javascript:/i.test(href)) return;
+
+        if (shouldOpenInNewTab(link)) {
+            event.preventDefault();
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            window.open(link.href, '_blank', 'noopener,noreferrer');
+            return;
+        }
+
+        link.removeAttribute('target');
+        link.removeAttribute('rel');
+    });
+</script>
+
 
     {% for javascript in page.javascript %}
     <script src="/assets/js/{{javascript}}"></script>

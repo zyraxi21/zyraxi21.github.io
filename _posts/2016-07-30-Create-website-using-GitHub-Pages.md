@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 怎么用 GitHub Pages 创建网站
-category: tutorials
+category: 教程
 tags: [GitHub, Pages, Website]
 excerpt: "介绍如何使用 GitHub Pages 免费创建并发布个人网站。"
 ---
@@ -32,4 +32,4 @@ excerpt: "介绍如何使用 GitHub Pages 免费创建并发布个人网站。"
 
 :D
 
-> 详见 [GitHub Pages](https://pages.github.com)
+> 详见 [GitHub Pages](https://docs.github.com/zh/pages)

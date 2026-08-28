@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 第 13 章    光学
-category: 学习资料
+category: 大学物理
 tags: [考前复习, 大学物理]
 excerpt: "大学物理光学章节公式整理与复习。"
 ---

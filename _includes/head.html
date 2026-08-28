@@ -2,6 +2,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#f7793c" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#83401e" media="(prefers-color-scheme: dark)">
 
     <!-- Favicon Icon -->
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/{{ site.favicon }}">
@@ -51,6 +54,7 @@
 <script defer src="/assets/vendor/katex.min.js"></script>
 
 <script defer src="/assets/vendor/auto-render.min.js"></script>
+<script defer src="/assets/vendor/mermaid.min.js"></script>
 <script defer>
   function cleanLatex(raw) {
     return raw
@@ -129,6 +133,96 @@
     return Promise.resolve();
   }
 
+  function rasterizeSvg(svg) {
+    return new Promise(function(resolve, reject) {
+      var sourceSvg = svg.cloneNode(true);
+      var viewBox = sourceSvg.viewBox && sourceSvg.viewBox.baseVal;
+      var width = viewBox && viewBox.width ? viewBox.width : 800;
+      var height = viewBox && viewBox.height ? viewBox.height : 600;
+
+      sourceSvg.setAttribute('width', width);
+      sourceSvg.setAttribute('height', height);
+      sourceSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      sourceSvg.style.setProperty('background-color', 'transparent', 'important');
+      sourceSvg.style.setProperty('background', 'transparent', 'important');
+      var transparentStyle = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+      transparentStyle.textContent =
+        'svg{background:transparent!important;background-color:transparent!important}';
+      sourceSvg.appendChild(transparentStyle);
+
+      var markup = new XMLSerializer().serializeToString(sourceSvg);
+      var url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(markup);
+      var img = new Image();
+      var settled = false;
+
+      var timer = setTimeout(function() {
+        if (!settled) {
+          settled = true;
+          reject(new Error('SVG 转 PNG 超时'));
+        }
+      }, 8000);
+
+      img.onload = function() {
+        var scale = width > 1600 ? 1 : 2;
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(width * scale));
+        canvas.height = Math.max(1, Math.round(height * scale));
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.scale(scale, scale);
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(function(pngBlob) {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          if (pngBlob) {
+            resolve(pngBlob);
+          } else {
+            reject(new Error('PNG 转换失败'));
+          }
+        }, 'image/png');
+      };
+
+      img.onerror = function() {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        reject(new Error('SVG 加载失败'));
+      };
+      img.src = url;
+    });
+  }
+
+  function copyMermaidPng(svg) {
+    if (!svg) {
+      return Promise.reject(new Error('Mermaid SVG 尚未生成'));
+    }
+
+    return rasterizeSvg(svg)
+      .then(function(pngBlob) {
+        if (navigator.clipboard && window.ClipboardItem) {
+          try {
+            var item = new ClipboardItem({ 'image/png': pngBlob });
+            return navigator.clipboard.write([item])
+              .then(function() { return true; })
+              .catch(function() { return copyText(svg.outerHTML); });
+          } catch (error) {
+            return copyText(svg.outerHTML);
+          }
+        }
+        return copyText(svg.outerHTML);
+      });
+  }
+
+  function markSvgCopied(btn) {
+    btn.textContent = '复制成功';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = '复制 PNG';
+      btn.classList.remove('copied');
+    }, 1500);
+  }
+
   function addCopyButtons() {
     document.querySelectorAll('.math-copy').forEach(function(el) {
       if (el.querySelector('.latex-copy-btn')) return;
@@ -182,6 +276,86 @@
     });
   }
 
+  function renderMermaidBlocks() {
+    if (!window.mermaid) return;
+
+    var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: dark ? 'dark' : 'default',
+      themeVariables: {
+        background: 'transparent'
+      },
+      securityLevel: 'loose'
+    });
+
+    var blocks = document.querySelectorAll('pre[data-mermaid-source], pre > code.language-mermaid');
+    blocks.forEach(function(item) {
+      var pre = item.tagName === 'PRE' ? item : item.parentElement;
+      if (!pre) return;
+
+      var source = pre.getAttribute('data-mermaid-source');
+      if (!source) {
+        var code = pre.querySelector('code');
+        if (!code) return;
+        source = code.textContent.trim();
+        pre.setAttribute('data-mermaid-source', source);
+      }
+
+      if (!pre.closest('.mermaid-block-wrapper')) {
+        var wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrapper mermaid-block-wrapper';
+
+        var header = document.createElement('div');
+        header.className = 'code-header';
+
+        var langSpan = document.createElement('span');
+        langSpan.className = 'code-lang';
+        langSpan.textContent = 'Mermaid';
+
+        var copyBtn = document.createElement('button');
+        copyBtn.type = 'button';
+        copyBtn.className = 'code-copy-btn';
+        copyBtn.textContent = '复制 PNG';
+        copyBtn.setAttribute('aria-label', '复制 Mermaid PNG');
+        copyBtn.addEventListener('click', function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          copyMermaidPng(pre.querySelector('svg'))
+            .then(function() { markSvgCopied(copyBtn); })
+            .catch(function() {
+              copyBtn.textContent = '复制失败';
+              setTimeout(function() {
+                copyBtn.textContent = '复制 PNG';
+              }, 1500);
+            });
+        });
+
+        header.appendChild(langSpan);
+        header.appendChild(copyBtn);
+
+        var body = document.createElement('div');
+        body.className = 'code-body mermaid-code-body';
+        pre.parentNode.insertBefore(wrapper, pre);
+        wrapper.appendChild(header);
+        wrapper.appendChild(body);
+        body.appendChild(pre);
+      }
+
+      var id = 'mermaid-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+      mermaid.render(id, source)
+        .then(function(result) {
+          pre.innerHTML = result.svg;
+          pre.classList.add('mermaid-rendered');
+          pre.classList.remove('mermaid-error');
+        })
+        .catch(function(error) {
+          pre.classList.add('mermaid-error');
+          console.error('Mermaid 渲染失败：', error);
+        });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.kdmath').forEach(function(el) {
       var tex = el.textContent.trim().replace(/^\$+|\$+$/g, '');
@@ -197,14 +371,24 @@
     renderMathInElement(document.body, {
       delimiters: [
           {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', inline: true},
-          {left: '\\(', right: '\\)', inline: true},
+          {left: '$', right: '$', display: true},
+          {left: '\\(', right: '\\)', display: true},
           {left: '\\[', right: '\\]', display: true}
       ],
       throwOnError : false
     });
 
     addCopyButtons();
+    renderMermaidBlocks();
+
+    if (window.matchMedia) {
+      var darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      if (darkQuery.addEventListener) {
+        darkQuery.addEventListener('change', renderMermaidBlocks);
+      } else if (darkQuery.addListener) {
+        darkQuery.addListener(renderMermaidBlocks);
+      }
+    }
   });
 </script>
 

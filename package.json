@@ -13,6 +13,7 @@
     "hover.css": "^2.3.1",
     "jquery": "^3.7.1",
     "katex": "^0.16.9",
+    "mermaid": "^11.17.2",
     "primer-markdown": "^2.5.1"
   },
   "devDependencies": {

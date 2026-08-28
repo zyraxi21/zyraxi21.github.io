@@ -15,6 +15,24 @@
 </div>
 <script type="text/javascript">
 
+    function applyCategoryFilter(selected) {
+        $("#posts-list .posts-list-item").each(function() {
+            var categories = ($(this).data("categories") || "").toString().toLowerCase();
+            if (selected === "all" || categories.indexOf(selected) !== -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+
+    function setActiveCategory(selected) {
+        $("#blog-categories .category-filter").each(function() {
+            var current = $(this).data("category").toString().toLowerCase();
+            $(this).toggleClass("active", current === selected);
+        });
+    }
+
     $(document).ready(function(){
         $("#blog-categories li").css('text-transform','capitalize');
 
@@ -22,15 +40,24 @@
             e.preventDefault();
             var selected = $(this).data("category").toString().toLowerCase();
 
-            $("#posts-list .posts-list-item").each(function() {
-                var categories = ($(this).data("categories") || "").toString().toLowerCase();
-                if (selected === "all" || categories.indexOf(selected) !== -1) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
+            applyCategoryFilter(selected);
+            setActiveCategory(selected);
+
+            var url = new URL(window.location.href);
+            if (selected === "all") {
+                url.searchParams.delete("category");
+            } else {
+                url.searchParams.set("category", $(this).data("category"));
+            }
+            window.history.replaceState(null, "", url.toString());
         });
+
+        var initialCategory = new URLSearchParams(window.location.search).get("category");
+        if (initialCategory) {
+            var selected = initialCategory.toString().toLowerCase();
+            applyCategoryFilter(selected);
+            setActiveCategory(selected);
+        }
     });
 
 </script>

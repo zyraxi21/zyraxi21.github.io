@@ -41,6 +41,7 @@ defaults: []
 kramdown:
   input: GFM
   math_engine: null
+  smart_quotes: apos,apos,quot,quot
 
 # Disque
 disque: zyraxi.disqus.com

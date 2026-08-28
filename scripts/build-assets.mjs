@@ -39,10 +39,11 @@ await build({
   logLevel: 'info'
 });
 
-// 3. Copy KaTeX runtime files used by the custom math script.
+// 3. Copy runtime files used by the custom math and Mermaid scripts.
 const katexRuntime = [
   ['katex/dist/katex.min.js', 'katex.min.js'],
   ['katex/dist/contrib/auto-render.min.js', 'auto-render.min.js'],
+  ['mermaid/dist/mermaid.min.js', 'mermaid.min.js'],
 ];
 for (const [src, dest] of katexRuntime) {
   const srcPath = join(nodeModules, src);

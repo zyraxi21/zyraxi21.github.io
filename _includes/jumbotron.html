@@ -10,15 +10,20 @@
                 <svg class="octicon" width="16" height="16" aria-hidden="true"><use href="/assets/vendor/octicons.svg#icon-calendar"></use></svg> {{ page.date | date: "%Y/%m/%d" }}
                 {% endif %}
             </span>
+            {% if page.category %}
+            <a class="meta-info post-category" href="/blog?category={{ page.category | url_encode }}"
+               title="在“我的博客”查看该分类">
+                <svg class="octicon" width="16" height="16" aria-hidden="true"><use href="/assets/vendor/octicons.svg#icon-tag"></use></svg>
+                {{ page.category }}
+            </a>
+            {% endif %}
         </div>
     </div>
 </section>
 <script>
     $(document).ready(function(){
-
         $('.geopattern').each(function(){
             $(this).geopattern($(this).data('pattern-id'));
         });
-
     });
 </script>

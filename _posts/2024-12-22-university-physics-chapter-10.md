@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 第 10 章    热力学基础
-category: 学习资料
+category: 大学物理
 tags: [考前复习, 大学物理]
 excerpt: "大学物理热力学基础章节公式整理与复习。"
 ---
