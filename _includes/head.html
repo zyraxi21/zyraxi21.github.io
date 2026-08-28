@@ -357,7 +357,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.kdmath').forEach(function(el) {
+    document.querySelectorAll('.markdown-body .kdmath').forEach(function(el) {
       var tex = el.textContent.trim().replace(/^\$+|\$+$/g, '');
       if (tex) {
         el.classList.add('math-copy');
@@ -368,7 +368,7 @@
 
     wrapMathTextNodes();
 
-    renderMathInElement(document.body, {
+    renderMathInElement(document.querySelector('.markdown-body'), {
       delimiters: [
           {left: '$$', right: '$$', display: true},
           {left: '$', right: '$', display: true},

@@ -173,6 +173,156 @@
         link.removeAttribute('target');
         link.removeAttribute('rel');
     });
+
+    /* 每个表格一条可浮动的横向滚动条，范围被限制在表格边界内 */
+    (function () {
+        if (window.__tableFloatingScrollInitialized) return;
+        window.__tableFloatingScrollInitialized = true;
+
+        var dragState = null;
+
+        function getOverflowingTables() {
+            return Array.from(document.querySelectorAll('.markdown-body table')).filter(function(table) {
+                return table.scrollWidth > table.clientWidth + 1;
+            });
+        }
+
+        function createScrollBar(table) {
+            if (table.__tableFloatingScrollBar) return table.__tableFloatingScrollBar;
+
+            var bar = document.createElement('div');
+            bar.className = 'table-floating-scrollbar';
+            bar.setAttribute('aria-hidden', 'true');
+
+            var track = document.createElement('div');
+            track.className = 'table-floating-scroll-track';
+
+            var thumb = document.createElement('div');
+            thumb.className = 'table-floating-scroll-thumb';
+
+            track.appendChild(thumb);
+            bar.appendChild(track);
+            document.body.appendChild(bar);
+            table.classList.add('has-custom-scrollbar');
+
+            var state = { table: table, bar: bar, track: track, thumb: thumb };
+            table.__tableFloatingScrollBar = state;
+
+            table.addEventListener('scroll', function() {
+                updateThumb(state);
+            });
+            track.addEventListener('pointerdown', function(event) {
+                onPointerDown(event, state);
+            });
+            thumb.addEventListener('pointerdown', function(event) {
+                onPointerDown(event, state);
+            });
+
+            return state;
+        }
+
+        function hideBar(state) {
+            state.bar.style.display = 'none';
+            state.bar.classList.remove('visible');
+        }
+
+        function positionBar(state) {
+            var table = state.table;
+            var rect = table.getBoundingClientRect();
+            var viewportWidth = document.documentElement.clientWidth;
+            var viewportHeight = window.innerHeight;
+            var maxScroll = table.scrollWidth - table.clientWidth;
+
+            if (maxScroll <= 0 || rect.bottom <= 0 || rect.top >= viewportHeight) {
+                hideBar(state);
+                return false;
+            }
+
+            var left = Math.max(8, Math.min(rect.left, viewportWidth - 8));
+            var right = Math.min(viewportWidth - 8, Math.max(left + 8, rect.right));
+
+            state.bar.style.left = left + 'px';
+            state.bar.style.right = 'auto';
+            state.bar.style.width = Math.max(8, right - left) + 'px';
+            state.bar.style.bottom = rect.bottom < viewportHeight - 8
+                ? Math.max(8, viewportHeight - rect.bottom + 8)
+                : '8px';
+            state.bar.style.display = '';
+            state.bar.classList.add('visible');
+            return true;
+        }
+
+        function updateThumb(state) {
+            if (!positionBar(state)) return;
+
+            var table = state.table;
+            var maxScroll = table.scrollWidth - table.clientWidth;
+            var trackWidth = state.track.clientWidth;
+            var thumbWidth = Math.max(36, trackWidth * table.clientWidth / table.scrollWidth);
+            var ratio = table.scrollLeft / maxScroll;
+
+            state.thumb.style.width = thumbWidth + 'px';
+            state.thumb.style.transform = 'translateX(' +
+                (ratio * Math.max(0, trackWidth - thumbWidth)) + 'px)';
+        }
+
+        function syncTables() {
+            getOverflowingTables().forEach(function(table) {
+                updateThumb(createScrollBar(table));
+            });
+
+            Array.from(document.querySelectorAll('table.has-custom-scrollbar')).forEach(function(table) {
+                var state = table.__tableFloatingScrollBar;
+                if (state && (table.scrollWidth <= table.clientWidth + 1 || !positionBar(state))) {
+                    hideBar(state);
+                }
+            });
+        }
+
+        function onPointerDown(event, state) {
+            event.preventDefault();
+            dragState = {
+                state: state,
+                startX: event.clientX,
+                startScroll: state.table.scrollLeft
+            };
+        }
+
+        function onPointerMove(event) {
+            if (!dragState) return;
+            event.preventDefault();
+
+            var table = dragState.state.table;
+            var maxScroll = table.scrollWidth - table.clientWidth;
+            if (maxScroll <= 0) return;
+
+            var thumbWidth = dragState.state.thumb.getBoundingClientRect().width;
+            var usableWidth = Math.max(
+                1,
+                dragState.state.track.getBoundingClientRect().width - thumbWidth
+            );
+            var ratioDelta = (event.clientX - dragState.startX) / usableWidth;
+
+            table.scrollLeft = dragState.startScroll + ratioDelta * maxScroll;
+        }
+
+        function onPointerUp() {
+            dragState = null;
+        }
+
+        function initScrollBars() {
+            syncTables();
+        }
+
+        document.addEventListener('DOMContentLoaded', initScrollBars);
+        if (document.readyState !== 'loading') initScrollBars();
+        setTimeout(initScrollBars, 500);
+        window.addEventListener('scroll', initScrollBars, { passive: true });
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('resize', initScrollBars);
+        window.addEventListener('load', initScrollBars);
+    })();
 </script>
 
 

@@ -798,6 +798,67 @@ html {
     background-color: var(--surface-muted);
 }
 
+table.has-custom-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+table.has-custom-scrollbar::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+.table-floating-scrollbar {
+    position: fixed;
+    left: 16px;
+    right: auto;
+    bottom: 10px;
+    z-index: 120;
+    display: none;
+    width: auto;
+    padding: 5px;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    box-sizing: border-box;
+}
+
+.table-floating-scrollbar.visible {
+    opacity: 1;
+    pointer-events: auto;
+    display: block;
+}
+
+.table-floating-scroll-track {
+    position: relative;
+    height: 8px;
+    background: var(--surface-muted);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    touch-action: none;
+}
+
+.table-floating-scroll-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    min-width: 36px;
+    background: var(--brand-primary);
+    border-radius: 4px;
+    cursor: grab;
+}
+
+.table-floating-scroll-thumb:active {
+    cursor: grabbing;
+}
+
 .markdown-body pre,
 .markdown-body .highlight pre {
     color: var(--brand-primary-hover);
