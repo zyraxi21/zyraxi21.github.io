@@ -174,7 +174,7 @@
         link.removeAttribute('rel');
     });
 
-    /* 每个表格一条可浮动的横向滚动条，范围被限制在表格边界内 */
+    /* 每个溢出的表格各创建一条跟随表格移动的横向滚动条 */
     (function () {
         if (window.__tableFloatingScrollInitialized) return;
         window.__tableFloatingScrollInitialized = true;
@@ -227,11 +227,10 @@
         }
 
         function positionBar(state) {
-            var table = state.table;
-            var rect = table.getBoundingClientRect();
+            var rect = state.table.getBoundingClientRect();
             var viewportWidth = document.documentElement.clientWidth;
             var viewportHeight = window.innerHeight;
-            var maxScroll = table.scrollWidth - table.clientWidth;
+            var maxScroll = state.table.scrollWidth - state.table.clientWidth;
 
             if (maxScroll <= 0 || rect.bottom <= 0 || rect.top >= viewportHeight) {
                 hideBar(state);
@@ -240,23 +239,30 @@
 
             var left = Math.max(8, Math.min(rect.left, viewportWidth - 8));
             var right = Math.min(viewportWidth - 8, Math.max(left + 8, rect.right));
+            var bottomY = Math.min(rect.bottom - 8, viewportHeight - 18);
+
+            if (bottomY < Math.max(rect.top, 0) + 18) {
+                hideBar(state);
+                return false;
+            }
 
             state.bar.style.left = left + 'px';
             state.bar.style.right = 'auto';
             state.bar.style.width = Math.max(8, right - left) + 'px';
-            state.bar.style.bottom = rect.bottom < viewportHeight - 8
-                ? Math.max(8, viewportHeight - rect.bottom + 8)
-                : '8px';
+            state.bar.style.bottom = Math.max(8, viewportHeight - bottomY) + 'px';
             state.bar.style.display = '';
             state.bar.classList.add('visible');
             return true;
         }
 
         function updateThumb(state) {
-            if (!positionBar(state)) return;
-
             var table = state.table;
             var maxScroll = table.scrollWidth - table.clientWidth;
+            if (maxScroll <= 0 || !positionBar(state)) {
+                hideBar(state);
+                return;
+            }
+
             var trackWidth = state.track.clientWidth;
             var thumbWidth = Math.max(36, trackWidth * table.clientWidth / table.scrollWidth);
             var ratio = table.scrollLeft / maxScroll;
@@ -264,6 +270,8 @@
             state.thumb.style.width = thumbWidth + 'px';
             state.thumb.style.transform = 'translateX(' +
                 (ratio * Math.max(0, trackWidth - thumbWidth)) + 'px)';
+            state.bar.style.display = '';
+            state.bar.classList.add('visible');
         }
 
         function syncTables() {
