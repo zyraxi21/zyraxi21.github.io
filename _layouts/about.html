@@ -1,0 +1,15 @@
+---
+layout: default
+css: ['about.css', 'sidebar-popular-repo.css']
+---
+{% include jumbotron.html %}
+<article class="post container">
+    <div class="row">
+        <div class="col-md-8 markdown-body about">
+            {{ content }}
+        </div>
+        <div class="col-md-4">
+            {% include sidebar-popular-repo.html %}
+        </div>
+    </div>
+</article>

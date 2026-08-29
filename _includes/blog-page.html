@@ -8,7 +8,10 @@
             <li class="posts-list-item" data-categories="{{ post.categories | join: ',' | downcase }}">
                 <div class="posts-content">
                     <span class="posts-list-meta">{{ post.date | date: "%Y-%m-%d" }}</span>
-                    <a class="posts-list-name bubble-float-left" href="{{ post.url | relative_url }}">[{{ post.categories | first }}] {{ post.title }}</a>
+                    <a class="posts-list-name bubble-float-left" href="{{ post.url | relative_url }}">
+                        <span class="badge post-category-badge">{{ post.categories | first }}</span>
+                        {{ post.title }}
+                    </a>
                     <span class='circle'></span>
                 </div>
             </li>

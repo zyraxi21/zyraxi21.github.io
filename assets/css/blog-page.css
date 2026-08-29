@@ -118,3 +118,9 @@
     color: inherit;
     text-decoration: none;
 }
+
+#blog-categories .list-group {
+    --bs-list-group-border-radius: 12px;
+    border-radius: 12px;
+    overflow: hidden;
+}

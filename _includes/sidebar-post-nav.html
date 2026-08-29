@@ -32,13 +32,16 @@
                     + "</a></" + wrapperTag + ">");
         });
 
-        $("a.jumper").on("click", function( e ) {
+        $(".post-directory").on("click", "dt, dd", function(e) {
             e.preventDefault();
-            var id = $(this).attr('hre');
+            var link = $(this).find("a.jumper").first();
+            if (!link.length) return;
+
+            var id = link.attr('hre');
             var target = id ? document.getElementById(id.substring(1)) : null;
             if (target) {
                 var top = $(target).offset().top - 100;
-                $("html, body").stop(true, true).animate({ scrollTop: top }, 200);
+                $("html, body").stop(true, true).animate({ scrollTop: top }, 120);
             }
         });
 
