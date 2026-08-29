@@ -39,6 +39,11 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Fetch project list
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run fetch:projects
+
       - name: Install frontend dependencies
         run: npm install
 

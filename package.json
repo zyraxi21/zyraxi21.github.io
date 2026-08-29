@@ -5,7 +5,8 @@
   "description": "Frontend assets for zyraxi21.github.io",
   "scripts": {
     "build": "node scripts/build-assets.mjs",
-    "build:assets": "node scripts/build-assets.mjs"
+    "build:assets": "node scripts/build-assets.mjs",
+    "fetch:projects": "node scripts/fetch-projects.mjs"
   },
   "dependencies": {
     "@primer/octicons": "^19.0.0",

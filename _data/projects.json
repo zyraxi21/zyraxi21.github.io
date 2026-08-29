@@ -1,0 +1,32 @@
+[
+  {
+    "name": "zyraxi21.github.io",
+    "link": "https://github.com/zyraxi21/zyraxi21.github.io",
+    "description": "zyraxi 的个人主页",
+    "stargazers_count": 0,
+    "forks_count": 0,
+    "updated_at": "2026-08-29T07:21:47Z",
+    "fork": false,
+    "owner": "zyraxi21"
+  },
+  {
+    "name": "Yummy-Modern",
+    "link": "https://github.com/zyraxi21/Yummy-Modern",
+    "description": "对 Yummy Jekyll 主题的现代化改造",
+    "stargazers_count": 0,
+    "forks_count": 0,
+    "updated_at": "2026-08-29T02:42:24Z",
+    "fork": true,
+    "owner": "zyraxi21"
+  },
+  {
+    "name": "Android-NFC-Example",
+    "link": "https://github.com/Friends-of-zyraxi/Android-NFC-Example",
+    "description": "",
+    "stargazers_count": 0,
+    "forks_count": 0,
+    "updated_at": "2026-06-29T04:03:13Z",
+    "fork": false,
+    "owner": "Friends-of-zyraxi"
+  }
+]

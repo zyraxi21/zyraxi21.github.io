@@ -1,17 +1,13 @@
 <div class="sidebar-popular-repo">
 <h3 class="sidebar-title">我的项目</h3>
-{% if site.github.public_repositories %}
-{% assign sorted_repos = site.github.public_repositories | sort: 'stargazers_count' | reverse | where: "fork", "false" %}
-{% else %}
-{% assign sorted_repos = '' | split: ',' %}
-{% endif %}
-{% for repo in sorted_repos | limit: site.side_bar_repo_limit %}
+{% assign projects = site.data.projects | default: site.projects %}
+{% for repo in projects %}
 <div class="card text-center">
     <div class="thumbnail">
         <div class="card-image geopattern" data-pattern-id="{{ repo.name }}">
             <div class="card-image-cell">
                 <h3 class="card-title">
-                    <a href="{{ repo.html_url }}" target="_blank">{{ repo.name }}</a>
+                    <a href="{{ repo.link }}" target="_blank">{{ repo.name }}</a>
                 </h3>
             </div>
         </div>
@@ -20,16 +16,22 @@
                 <p class="card-text">{{ repo.description }}</p>
             </div>
             <div class="card-text">
+                {% if repo.stargazers_count %}
                 <span data-bs-toggle="tooltip" class="meta-info" title="{{ repo.stargazers_count }} stars">
                     <svg class="octicon" width="16" height="16" aria-hidden="true"><use href="/assets/vendor/octicons.svg#icon-star"></use></svg> {{ repo.stargazers_count }}
                 </span>
+                {% endif %}
+                {% if repo.forks_count %}
                 <span data-bs-toggle="tooltip" class="meta-info" title="{{ repo.forks_count }} forks">
                     <svg class="octicon" width="16" height="16" aria-hidden="true"><use href="/assets/vendor/octicons.svg#icon-git-branch"></use></svg> {{ repo.forks_count }}
                 </span>
+                {% endif %}
+                {% if repo.updated_at %}
                 <span data-bs-toggle="tooltip" class="meta-info" title="Last updated：{{ repo.updated_at }}">
                     <svg class="octicon" width="16" height="16" aria-hidden="true"><use href="/assets/vendor/octicons.svg#icon-clock"></use></svg>
                     <time datetime="{{ repo.updated_at }}" title="{{ repo.updated_at }}">{{ repo.updated_at | date: '%Y-%m-%d' }}</time>
                 </span>
+                {% endif %}
             </div>
         </div>
     </div>
