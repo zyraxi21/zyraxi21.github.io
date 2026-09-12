@@ -856,7 +856,8 @@ html {
     left: 16px;
     right: auto;
     bottom: 10px;
-    z-index: 120;
+    /* 保持在固定顶栏（z-index: 103）之下。 */
+    z-index: 102;
     display: none;
     width: auto;
     padding: 5px;

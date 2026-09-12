@@ -237,24 +237,28 @@
             var viewportHeight = window.innerHeight;
             var maxScroll = state.target.scrollWidth - state.target.clientWidth;
 
-            if (maxScroll <= 0 || rect.bottom <= 0 || rect.top >= viewportHeight) {
+            if (maxScroll <= 0) {
                 hideBar(state);
                 return false;
             }
 
             var left = Math.max(8, Math.min(rect.left, viewportWidth - 8));
             var right = Math.min(viewportWidth - 8, Math.max(left + 8, rect.right));
-            var bottomY = Math.min(rect.bottom - 8, viewportHeight - 18);
-
-            if (bottomY < Math.max(rect.top, 0) + 18) {
-                hideBar(state);
-                return false;
-            }
+            /*
+             * 滚动条的底边始终受内容框上下边界约束：内容向下延伸
+             * 到视口外时贴住视口底部，否则贴住内容框底部。内容完全
+             * 离开视口后，它会跟随内容框离开，而不是在边界处突然消失。
+             */
+            var barHeight = state.bar.offsetHeight || 20;
+            var bottomY = Math.max(
+                rect.top + barHeight + 8,
+                Math.min(rect.bottom - 8, viewportHeight - 10)
+            );
 
             state.bar.style.left = left + 'px';
             state.bar.style.right = 'auto';
             state.bar.style.width = Math.max(8, right - left) + 'px';
-            state.bar.style.bottom = Math.max(8, viewportHeight - bottomY) + 'px';
+            state.bar.style.bottom = (viewportHeight - bottomY) + 'px';
             state.bar.style.display = '';
             state.bar.classList.add('visible');
             return true;
