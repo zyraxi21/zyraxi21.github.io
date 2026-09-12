@@ -218,6 +218,12 @@
             target.addEventListener('scroll', function() {
                 updateThumb(state);
             });
+            target.addEventListener('wheel', function(event) {
+                onHorizontalWheel(event, state);
+            }, { passive: false });
+            bar.addEventListener('wheel', function(event) {
+                onHorizontalWheel(event, state);
+            }, { passive: false });
             track.addEventListener('pointerdown', function(event) {
                 onPointerDown(event, state);
             });
@@ -299,16 +305,23 @@
         }
 
         function onPointerDown(event, state) {
+            if (event.button !== 0) return;
             event.preventDefault();
+            var captureTarget = event.currentTarget;
+            if (captureTarget.setPointerCapture) {
+                captureTarget.setPointerCapture(event.pointerId);
+            }
             dragState = {
                 state: state,
                 startX: event.clientX,
-                startScroll: state.target.scrollLeft
+                startScroll: state.target.scrollLeft,
+                pointerId: event.pointerId,
+                captureTarget: captureTarget
             };
         }
 
         function onPointerMove(event) {
-            if (!dragState) return;
+            if (!dragState || event.pointerId !== dragState.pointerId) return;
             event.preventDefault();
 
             var target = dragState.state.target;
@@ -325,7 +338,20 @@
             target.scrollLeft = dragState.startScroll + ratioDelta * maxScroll;
         }
 
-        function onPointerUp() {
+        function onHorizontalWheel(event, state) {
+            var delta = event.deltaX || (event.shiftKey ? event.deltaY : 0);
+            if (!delta) return;
+
+            event.preventDefault();
+            state.target.scrollLeft += delta;
+        }
+
+        function onPointerUp(event) {
+            if (!dragState || (event && event.pointerId !== dragState.pointerId)) return;
+            if (dragState.captureTarget && dragState.captureTarget.hasPointerCapture &&
+                dragState.captureTarget.hasPointerCapture(dragState.pointerId)) {
+                dragState.captureTarget.releasePointerCapture(dragState.pointerId);
+            }
             dragState = null;
         }
 
@@ -339,6 +365,7 @@
         window.addEventListener('scroll', initScrollBars, { passive: true });
         window.addEventListener('pointermove', onPointerMove);
         window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointercancel', onPointerUp);
         window.addEventListener('resize', initScrollBars);
         window.addEventListener('load', initScrollBars);
     })();

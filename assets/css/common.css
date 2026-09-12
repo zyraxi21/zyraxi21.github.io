@@ -856,6 +856,11 @@ html {
     padding-bottom: 40px;
 }
 
+/* 表格同样在底部保留轨道空间，避免遮住最后一行。 */
+.markdown-body table.has-custom-scrollbar {
+    padding-bottom: 28px;
+}
+
 .table-floating-scrollbar {
     position: fixed;
     left: 16px;
