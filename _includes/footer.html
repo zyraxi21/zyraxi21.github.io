@@ -56,7 +56,7 @@
         }
 
         document.querySelectorAll('pre').forEach(function(pre) {
-            /* Jekyll 的 {% highlight %} 输出为 figure.highlight，围栏代码则为
+            /* Jekyll 的高亮标签输出为 figure.highlight，围栏代码则为
              * .highlighter-rouge；两者都必须整体移入圆角容器。 */
             var block = pre.closest('.highlighter-rouge, figure.highlight') || pre;
             if (block.querySelector('.code-header')) return;
