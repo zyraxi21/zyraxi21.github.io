@@ -107,13 +107,14 @@
     font-display: swap;
 }
 
-/* LXGW WenKai Mono */
+/* 思源黑体：代码中的中文字符回退字体。 */
 @font-face {
-    font-family: "LXGW WenKai Mono";
-    src: url("/assets/fonts/LXGWWenKaiMono-Regular.ttf") format("truetype");
-    font-weight: 400;
+    font-family: "Source Han Sans CN VF";
+    src: url("/assets/fonts/SourceHanSansCN-VF.otf.woff2") format("woff2-variations");
+    font-weight: 100 900;
     font-style: normal;
     font-display: swap;
+    unicode-range: U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF;
 }
 
 * {
@@ -628,7 +629,7 @@ samp,
 .highlight pre,
 .markdown-body code,
 .markdown-body pre {
-    font-family: "Ubuntu Mono", "LXGW WenKai Mono", "Source Code Pro", Consolas, Menlo, monospace;
+    font-family: "Ubuntu Mono", "Source Han Sans CN VF", monospace;
 }
 /* Code copy buttons */
 .highlighter-rouge {
@@ -653,7 +654,7 @@ samp,
 }
 
 .code-lang {
-    font-family: "Ubuntu Mono", Consolas, Menlo, monospace;
+    font-family: "Ubuntu Mono", "Source Han Sans CN VF", monospace;
     color: var(--brand-primary-hover);
 }
 
@@ -777,7 +778,7 @@ samp,
     background: var(--brand-primary-soft);
     border-right: 1px solid var(--brand-primary-border);
     user-select: none;
-    font-family: "Ubuntu Mono", Consolas, Menlo, monospace !important;
+    font-family: "Ubuntu Mono", "Source Han Sans CN VF", monospace !important;
     font-size: 85%;
     line-height: 1.45;
 }
@@ -854,6 +855,15 @@ html {
 /* 给发生横向溢出的代码预留框内轨道，避免悬浮条遮住末行。 */
 .code-block-wrapper pre.has-custom-scrollbar {
     padding-bottom: 40px;
+}
+
+/* 语法高亮生成的嵌套元素也使用站点统一的代码字体。 */
+.code-block-wrapper pre,
+.code-block-wrapper pre code,
+.code-block-wrapper .highlight,
+.code-block-wrapper .highlight pre,
+.code-block-wrapper .highlight code {
+    font-family: "Ubuntu Mono", "Source Han Sans CN VF", monospace !important;
 }
 
 /* 表格同样在底部保留轨道空间，避免遮住最后一行。 */
