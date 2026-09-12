@@ -218,18 +218,13 @@
             target.addEventListener('scroll', function() {
                 updateThumb(state);
             });
-            target.addEventListener('wheel', function(event) {
-                onHorizontalWheel(event, state);
-            }, { passive: false });
-            bar.addEventListener('wheel', function(event) {
-                onHorizontalWheel(event, state);
-            }, { passive: false });
-            track.addEventListener('pointerdown', function(event) {
+            bar.addEventListener('pointerdown', function(event) {
                 onPointerDown(event, state);
             });
-            thumb.addEventListener('pointerdown', function(event) {
-                onPointerDown(event, state);
-            });
+            /* 捕获后的指针事件直接由悬浮条接收，避免依赖页面级冒泡。 */
+            bar.addEventListener('pointermove', onPointerMove);
+            bar.addEventListener('pointerup', onPointerUp);
+            bar.addEventListener('pointercancel', onPointerUp);
 
             return state;
         }
@@ -336,14 +331,6 @@
             var ratioDelta = (event.clientX - dragState.startX) / usableWidth;
 
             target.scrollLeft = dragState.startScroll + ratioDelta * maxScroll;
-        }
-
-        function onHorizontalWheel(event, state) {
-            var delta = event.deltaX || (event.shiftKey ? event.deltaY : 0);
-            if (!delta) return;
-
-            event.preventDefault();
-            state.target.scrollLeft += delta;
         }
 
         function onPointerUp(event) {
