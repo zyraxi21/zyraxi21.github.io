@@ -851,6 +851,11 @@ html {
     height: 0;
 }
 
+/* 给发生横向溢出的代码预留框内轨道，避免悬浮条遮住末行。 */
+.code-block-wrapper pre.has-custom-scrollbar {
+    padding-bottom: 40px;
+}
+
 .table-floating-scrollbar {
     position: fixed;
     left: 16px;

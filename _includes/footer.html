@@ -56,14 +56,16 @@
         }
 
         document.querySelectorAll('pre').forEach(function(pre) {
-            var block = pre.closest('.highlighter-rouge') || pre;
+            /* Jekyll 的 {% highlight %} 输出为 figure.highlight，围栏代码则为
+             * .highlighter-rouge；两者都必须整体移入圆角容器。 */
+            var block = pre.closest('.highlighter-rouge, figure.highlight') || pre;
             if (block.querySelector('.code-header')) return;
             var code = block.querySelector('code');
             if (!code) return;
             if ((code.className || '').indexOf('language-mermaid') !== -1) return;
 
             var lang = 'text';
-            var languageSource = block.closest('.highlighter-rouge') || block;
+            var languageSource = block.closest('.highlighter-rouge, figure.highlight') || block;
             var match =
                 (languageSource.className || '').match(/language-([A-Za-z0-9_+#.-]+)/) ||
                 (code.className || '').match(/language-([A-Za-z0-9_+#.-]+)/);
