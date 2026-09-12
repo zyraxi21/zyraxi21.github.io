@@ -717,10 +717,11 @@ samp,
     margin: 0.8em 0;
 }
 .code-block-wrapper {
+    position: relative;
+    isolation: isolate;
     border: 1.5px solid var(--brand-primary-border);
     border-radius: 12px;
     overflow: hidden;
-    clip-path: inset(0 round 12px);
     margin: 1em 0;
     background: var(--brand-primary-soft);
     background-clip: padding-box;
@@ -763,6 +764,7 @@ samp,
     display: flex;
     overflow: hidden;
     border-radius: 0 0 12px 12px;
+    background: var(--brand-primary-soft);
 }
 
 .code-block-wrapper .code-lines {
@@ -838,12 +840,12 @@ html {
     background-color: var(--surface-muted);
 }
 
-table.has-custom-scrollbar {
+.has-custom-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
 
-table.has-custom-scrollbar::-webkit-scrollbar {
+.has-custom-scrollbar::-webkit-scrollbar {
     display: none;
     width: 0;
     height: 0;
