@@ -107,20 +107,19 @@
     font-display: swap;
 }
 
-/* 思源黑体：代码中的中文字符回退字体。 */
+/* 霞鹜文楷：个人网站代码中的中文字符回退字体。 */
 @font-face {
-    font-family: "Source Han Sans CN VF";
-    src: url("/assets/fonts/SourceHanSansCN-VF.otf.woff2") format("woff2-variations");
-    font-weight: 100 900;
+    font-family: "LXGW WenKai Mono";
+    src: url("/assets/fonts/LXGWWenKaiMono-Regular.ttf") format("truetype");
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
-    unicode-range: U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF;
 }
 
 * {
     margin: 0;
     padding: 0;
-    font-family: "NewCM10", "Source Han Serif CN VF", 思源宋体, "Source Han Serif", 思源黑体, "Source Han Sans", "MiSans", "Harmony Sans", "OPPO Sans", 微软雅黑, "Microsoft YaHei", "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "NewCM10", "Source Han Serif CN VF", 思源宋体, "Source Han Serif", "MiSans", "Harmony Sans", "OPPO Sans", 微软雅黑, "Microsoft YaHei", "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 /* Bootstrap 3 style compatibility for Bootstrap 5 */
@@ -629,7 +628,7 @@ samp,
 .highlight pre,
 .markdown-body code,
 .markdown-body pre {
-    font-family: "Ubuntu Mono", "Source Han Sans CN VF", monospace;
+    font-family: "Ubuntu Mono", "LXGW WenKai Mono", monospace;
 }
 /* Code copy buttons */
 .highlighter-rouge {
@@ -654,7 +653,7 @@ samp,
 }
 
 .code-lang {
-    font-family: "Ubuntu Mono", "Source Han Sans CN VF", monospace;
+    font-family: "Ubuntu Mono", "LXGW WenKai Mono", monospace;
     color: var(--brand-primary-hover);
 }
 
@@ -778,7 +777,7 @@ samp,
     background: var(--brand-primary-soft);
     border-right: 1px solid var(--brand-primary-border);
     user-select: none;
-    font-family: "Ubuntu Mono", "Source Han Sans CN VF", monospace !important;
+    font-family: "Ubuntu Mono", "LXGW WenKai Mono", monospace !important;
     font-size: 85%;
     line-height: 1.45;
 }
@@ -863,7 +862,7 @@ html {
 .code-block-wrapper .highlight,
 .code-block-wrapper .highlight pre,
 .code-block-wrapper .highlight code {
-    font-family: "Ubuntu Mono", "Source Han Sans CN VF", monospace !important;
+    font-family: "Ubuntu Mono", "LXGW WenKai Mono", monospace !important;
 }
 
 /* 表格同样在底部保留轨道空间，避免遮住最后一行。 */
