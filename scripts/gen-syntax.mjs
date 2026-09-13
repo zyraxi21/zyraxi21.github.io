@@ -14,6 +14,11 @@
  * 主题用 TextMate scope 描述 token 颜色，脚本按下表把 scope 折算到 Rouge/Pygments
  * 的 class 上。带祖先上下文的选择器（如 `string variable`）需要 scope 栈才能判定，
  * 而这里只有单个 scope 字符串，因此忽略它们，避免把带条件的规则错套上去。
+ *
+ * 已用各语言的真实 Rouge 渲染结果核对过覆盖范围：
+ *   bash/shell、PowerShell、Python、MATLAB、C、C++、Kotlin、CSS。
+ * 仍未配色的 class 剩 .n / .p（普通标识符与标点）、.w（空白）与 .py（Kotlin 属性名），
+ * 它们在 VS Code 里本来就是"默认前景色"，所以这里同样让它们继承站点主题色。
  */
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -137,12 +142,14 @@ function resolveScope(scope, rules, prop) {
 /* ---------- 3. Rouge/Pygments class -> TextMate scope 映射 ---------- */
 
 const GROUPS = [
-  ['注释', 'comment', ['.c', '.c1', '.cm', '.cs', '.cd', '.cp', '.go', '.gp', '.gr', '.ge', '.gt']],
+  ['注释', 'comment', ['.c', '.c1', '.cm', '.cs', '.cd', '.go', '.gp', '.gr', '.ge', '.gt']],
+  ['预处理指令', 'keyword.control', ['.cp']],
   ['关键字', 'keyword', ['.k', '.kc', '.kd', '.kn', '.kp', '.kr', '.kv']],
   ['类型关键字', 'storage.type', ['.kt']],
   ['运算符', 'keyword.operator', ['.o', '.ow']],
   ['数字', 'constant.numeric', ['.m', '.mb', '.mf', '.mh', '.mi', '.mo', '.mx', '.il']],
-  ['字符串', 'string', ['.s', '.s1', '.s2', '.sb', '.sc', '.sd', '.sh', '.si', '.sx', '.ss']],
+  ['字符串', 'string', ['.s', '.s1', '.s2', '.sa', '.sb', '.sc', '.sd', '.sh', '.si', '.sx', '.ss']],
+  ['头文件名', 'string.quoted.other.lt-gte', ['.cpf']],
   ['正则', 'string.regexp', ['.sr']],
   ['转义字符', 'constant.character.escape', ['.se']],
   ['函数名', 'entity.name.function', ['.nf', '.gs']],
@@ -204,6 +211,11 @@ const HEADER = `/*
  *   --brand-primary-soft   背景
  *   --brand-primary-hover  无类型文本
  * 所以这里不写 .highlight 的背景色与基底文字色，也不给 .n / .p 定义颜色。
+ *
+ * 已用各语言的真实 Rouge 渲染结果核对过覆盖范围：
+ *   bash/shell、PowerShell、Python、MATLAB、C、C++、Kotlin、CSS。
+ * 仍未配色的 class 剩 .n / .p（普通标识符与标点）、.w（空白）与 .py（Kotlin 属性名），
+ * 它们在 VS Code 里本来就是"默认前景色"，所以这里同样让它们继承站点主题色。
  *
  * 主题用 TextMate scope 描述 token 颜色，脚本按下述映射折算到 Rouge/Pygments 的
  * class 上。带祖先上下文的选择器（如 \`string variable\`）需要 scope 栈才能判定，
