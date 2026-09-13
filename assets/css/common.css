@@ -116,10 +116,14 @@
     font-display: swap;
 }
 
+/* 正文字体：英文与中文统一使用思源宋体。
+ * 之前把 NewCM10 放在首位，是为了让公式里 \mathrm 等正体字符回退到正文时
+ * 仍与数学字体风格一致；现在公式已改用 KaTeX 自带字体（见下方“数学字体”一节），
+ * 不再需要这个折中，正文因此可以直接与中文统一。 */
 * {
     margin: 0;
     padding: 0;
-    font-family: "NewCM10", "Source Han Serif CN VF", 思源宋体, "Source Han Serif", "MiSans", "Harmony Sans", "OPPO Sans", 微软雅黑, "Microsoft YaHei", "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: "Source Han Serif CN VF", 思源宋体, "Source Han Serif", "MiSans", "Harmony Sans", "OPPO Sans", 微软雅黑, "Microsoft YaHei", "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 /* Bootstrap 3 style compatibility for Bootstrap 5 */
@@ -437,28 +441,37 @@ ol, ul, dl {
     text-align: center;
 }
 
-/* 数学渲染优化 */
-/* 修正 KaTeX 整体字体，特别是正体部分 */
+/* ===== 数学字体：统一使用 KaTeX 自带字体 =====
+ * 为什么必须显式声明到每个后代：正文的通用选择器 `*` 会给每个元素直接声明
+ * 正文字体，而 KaTeX 生成的 mrow / mord / vlist / mfrac 等中间层元素自身没有
+ * 字体声明，本应从 .katex 继承数学字体；继承被打断后，∂ Δ ∇ 这类取自 main
+ * 字族的字符、以及 \mathrm 里的正体字符就落到了正文字体上（正文字体 NewCM10
+ * 里同样没有 ∂ Δ ∇，会一路回退到中文正文字体）。
+ *
+ * KaTeX 自带的字体就够用，不需要外挂别的数学字体：
+ *   KaTeX_Main       正体（含 ∂ Δ ∇ Ω ∫ ∞ ≤ 等），\mathrm 与 main 字族用它
+ *   KaTeX_Math       数学斜体（\mathnormal / \mathit / \boldsymbol）
+ *   KaTeX_Size1–4    伸缩定界符（\left( \big[ \sum \int）的分级字形
+ * 它们本身就是 Computer Modern 设计，风格天然统一。
+ *
+ * 不加 !important，让 KaTeX 自己优先级更高的规则（类选择器 0,2,0 高于
+ * `.katex *` 的 0,1,1）继续生效，从而保住上面后两类字体。 */
+.katex,
+.katex * {
+    font-family: KaTeX_Main, "Source Han Serif CN VF", serif;
+}
+
 .katex {
-    font-family: KaTeX_Main, "Times New Roman", serif !important;
     font-size: 1.1em !important;
     text-rendering: optimizeLegibility;
     vertical-align: baseline;
 }
 
-/* 专门针对 mathrm 字符的字体强制映射 */
+/* \mathrm 的正体字符：显式声明并保持正体 */
 .katex .mathrm {
-    font-family: KaTeX_Main !important;
+    font-family: KaTeX_Main, serif !important;
     font-style: normal !important;
 }
-
-/* 确保数学符号使用 KaTeX 字体 */
-.katex .mathit,
-.katex .mathnormal {
-    font-family: KaTeX_Math, "Times New Roman", serif !important;
-    font-style: italic !important;
-}
-
 
 /* 无论在哪，只要是显示模式的公式，必须独占一行并居中 */
 .katex-display {
