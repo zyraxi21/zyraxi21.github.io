@@ -50,8 +50,9 @@
     opacity: 1;
 }
 
+/* 悬停只提亮卡片本身，标题链接保持白色，不要改成正文色。 */
 .card .thumbnail:hover .card-title a{
-    color: var(--text-color);
+    color: var(--brand-on-primary);
     text-decoration:none;
 }
 
