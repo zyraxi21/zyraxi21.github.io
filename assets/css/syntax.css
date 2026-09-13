@@ -1,313 +1,352 @@
+/*
+ * 代码配色：取自 VS Code 内置默认主题扩展 vscode.theme-defaults
+ *   · 浅色 "2026 Light"
+ *   · 深色 "2026 Dark"
+ *
+ * 本文件只负责"不同 token 类型各自的文字颜色"。代码框与行内代码的**背景色**、
+ * 以及**无类型文本**（未落入任何 token 的代码，如 Rouge 的 .n / .p）的基色，
+ * 仍由 common.css 用站点主题色控制：
+ *   --brand-primary-soft   背景
+ *   --brand-primary-hover  无类型文本
+ * 所以这里不写 .highlight 的背景色与基底文字色，也不给 .n / .p 定义颜色。
+ *
+ * 主题用 TextMate scope 描述 token 颜色，脚本按下述映射折算到 Rouge/Pygments 的
+ * class 上。带祖先上下文的选择器（如 `string variable`）需要 scope 栈才能判定，
+ * 生成脚本会忽略它们，只取无上下文的选择器。
+ *
+ * 本文件由脚本生成：node scripts/gen-syntax.mjs
+ * 改配色请改主题或脚本后重新生成，不要手改。
+ */
+
 .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
-.highlight .cm {
-  color: #999988;
-  font-style: italic;
-}
-.highlight .cp {
-  color: #999999;
-  font-weight: bold;
-}
-.highlight .c1 {
-  color: #999988;
-  font-style: italic;
-}
-.highlight .cs {
-  color: #999999;
-  font-weight: bold;
-  font-style: italic;
-}
-.highlight .c, .highlight .cd {
-  color: #999988;
-  font-style: italic;
-}
-.highlight .err {
-  color: #a61717;
-  background-color: #e3d2d2;
-}
-.highlight .gd {
-  color: #000000;
-  background-color: #ffdddd;
-}
-.highlight .ge {
-  color: #000000;
-  font-style: italic;
-}
-.highlight .gr {
-  color: #aa0000;
-}
-.highlight .gh {
-  color: #999999;
-}
-.highlight .gi {
-  color: #000000;
-  background-color: #ddffdd;
-}
-.highlight .go {
-  color: #888888;
-}
-.highlight .gp {
-  color: #555555;
-}
-.highlight .gs {
-  font-weight: bold;
-}
-.highlight .gu {
-  color: #aaaaaa;
-}
+
+/* 注释 ← comment */
+.highlight .c,
+.highlight .c1,
+.highlight .cm,
+.highlight .cs,
+.highlight .cd,
+.highlight .cp,
+.highlight .go,
+.highlight .gp,
+.highlight .gr,
+.highlight .ge,
 .highlight .gt {
-  color: #aa0000;
+    color: #6e7781;
 }
-.highlight .kc {
-  color: #000000;
-  font-weight: bold;
+
+/* 关键字 ← keyword */
+.highlight .k,
+.highlight .kc,
+.highlight .kd,
+.highlight .kn,
+.highlight .kp,
+.highlight .kr,
+.highlight .kv {
+    color: #cf222e;
 }
-.highlight .kd {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kn {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kp {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kr {
-  color: #000000;
-  font-weight: bold;
-}
+
+/* 类型关键字 ← storage.type */
 .highlight .kt {
-  color: #445588;
-  font-weight: bold;
+    color: #cf222e;
 }
-.highlight .k, .highlight .kv {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .mf {
-  color: #009999;
-}
-.highlight .mh {
-  color: #009999;
-}
-.highlight .il {
-  color: #009999;
-}
-.highlight .mi {
-  color: #009999;
-}
-.highlight .mo {
-  color: #009999;
-}
-.highlight .m, .highlight .mb, .highlight .mx {
-  color: #009999;
-}
-.highlight .sb {
-  color: #d14;
-}
-.highlight .sc {
-  color: #d14;
-}
-.highlight .sd {
-  color: #d14;
-}
-.highlight .s2 {
-  color: #d14;
-}
-.highlight .se {
-  color: #d14;
-}
-.highlight .sh {
-  color: #d14;
-}
-.highlight .si {
-  color: #d14;
-}
-.highlight .sx {
-  color: #d14;
-}
-.highlight .sr {
-  color: #009926;
-}
-.highlight .s1 {
-  color: #d14;
-}
-.highlight .ss {
-  color: #990073;
-}
-.highlight .s {
-  color: #d14;
-}
-.highlight .na {
-  color: #008080;
-}
-.highlight .bp {
-  color: #999999;
-}
-.highlight .nb {
-  color: #0086B3;
-}
-.highlight .nc {
-  color: #445588;
-  font-weight: bold;
-}
-.highlight .no {
-  color: #008080;
-}
-.highlight .nd {
-  color: #3c5d5d;
-  font-weight: bold;
-}
-.highlight .ni {
-  color: #800080;
-}
-.highlight .ne {
-  color: #990000;
-  font-weight: bold;
-}
-.highlight .nf {
-  color: #990000;
-  font-weight: bold;
-}
-.highlight .nl {
-  color: #990000;
-  font-weight: bold;
-}
-.highlight .nn {
-  color: #555555;
-}
-.highlight .nt {
-  color: #000080;
-}
-.highlight .vc {
-  color: #008080;
-}
-.highlight .vg {
-  color: #008080;
-}
-.highlight .vi {
-  color: #008080;
-}
-.highlight .nv {
-  color: #008080;
-}
+
+/* 运算符 ← keyword.operator */
+.highlight .o,
 .highlight .ow {
-  color: #000000;
-  font-weight: bold;
+    color: #000000;
 }
-.highlight .o {
-  color: #000000;
-  font-weight: bold;
+
+/* 数字 ← constant.numeric */
+.highlight .m,
+.highlight .mb,
+.highlight .mf,
+.highlight .mh,
+.highlight .mi,
+.highlight .mo,
+.highlight .mx,
+.highlight .il {
+    color: #098658;
 }
-.highlight .w {
-  color: #bbbbbb;
+
+/* 字符串 ← string */
+.highlight .s,
+.highlight .s1,
+.highlight .s2,
+.highlight .sb,
+.highlight .sc,
+.highlight .sd,
+.highlight .sh,
+.highlight .si,
+.highlight .sx,
+.highlight .ss {
+    color: #0a3069;
 }
-.highlight {
-  background-color: #f8f8f8;
+
+/* 正则 ← string.regexp */
+.highlight .sr {
+    color: #0a3069;
+}
+
+/* 转义字符 ← constant.character.escape */
+.highlight .se {
+    color: #EE0000;
+}
+
+/* 函数名 ← entity.name.function */
+.highlight .nf,
+.highlight .gs {
+    color: #8250df;
+}
+
+/* 标识符 ← entity.name */
+.highlight .ni {
+    color: #953800;
+}
+
+/* 内置函数 ← support.function */
+.highlight .nb {
+    color: #795E26;
+}
+
+/* 内置伪名 ← support.constant */
+.highlight .bp {
+    color: #0550ae;
+}
+
+/* 常量 ← constant */
+.highlight .no {
+    color: #0550ae;
+}
+
+/* 类 / 类型 ← entity.name.class */
+.highlight .nc,
+.highlight .ne,
+.highlight .nn {
+    color: #267f99;
+}
+
+/* 标签 ← entity.name.tag */
+.highlight .nt {
+    color: #116329;
+}
+
+/* 属性名 ← entity.other.attribute-name */
+.highlight .na {
+    color: #e50000;
+}
+
+/* 伪类 / 伪元素 ← entity.other.attribute-name.pseudo-class */
+.highlight .nd {
+    color: #e50000;
+}
+
+/* CSS 属性名 ← support.type.property-name */
+.highlight .nl {
+    color: #e50000;
+}
+
+/* CSS 属性值 ← support.constant.property-value */
+.highlight .nx {
+    color: #0451a5;
+}
+
+/* 变量 ← variable */
+.highlight .nv,
+.highlight .vc,
+.highlight .vg,
+.highlight .vi {
+    color: #953800;
+}
+
+/* 错误 ← invalid */
+.highlight .err {
+    color: #cd3131;
+}
+
+/* 新增行 ← markup.inserted */
+.highlight .gi {
+    color: #116329;
+}
+
+/* 删除行 ← markup.deleted */
+.highlight .gd {
+    color: #82071e;
+}
+
+/* 变更行 ← markup.changed */
+.highlight .gu {
+    color: #953800;
+}
+
+/* 标题 ← markup.heading */
+.highlight .gh {
+    color: #0550ae; font-weight: bold;
 }
 
 @media (prefers-color-scheme: dark) {
-  .highlight {
-    background-color: #0d1117;
-  }
+    /* 注释 ← comment */
+    .highlight .c,
+    .highlight .c1,
+    .highlight .cm,
+    .highlight .cs,
+    .highlight .cd,
+    .highlight .cp,
+    .highlight .go,
+    .highlight .gp,
+    .highlight .gr,
+    .highlight .ge,
+    .highlight .gt {
+        color: #8b949e;
+    }
 
-  .highlight .cm,
-  .highlight .cp,
-  .highlight .c1,
-  .highlight .cs,
-  .highlight .c,
-  .highlight .cd,
-  .highlight .go,
-  .highlight .gp,
-  .highlight .gh,
-  .highlight .gu,
-  .highlight .w {
-    color: #8b949e;
-  }
+    /* 关键字 ← keyword */
+    .highlight .k,
+    .highlight .kc,
+    .highlight .kd,
+    .highlight .kn,
+    .highlight .kp,
+    .highlight .kr,
+    .highlight .kv {
+        color: #ff7b72;
+    }
 
-  .highlight .err {
-    color: #f85149;
-    background-color: #2d1a1a;
-  }
+    /* 类型关键字 ← storage.type */
+    .highlight .kt {
+        color: #ff7b72;
+    }
 
-  .highlight .gd {
-    color: #ffa198;
-    background-color: #361d1d;
-  }
+    /* 运算符 ← keyword.operator */
+    .highlight .o,
+    .highlight .ow {
+        color: #d4d4d4;
+    }
 
-  .highlight .gr,
-  .highlight .gt,
-  .highlight .ne {
-    color: #ff7b72;
-  }
+    /* 数字 ← constant.numeric */
+    .highlight .m,
+    .highlight .mb,
+    .highlight .mf,
+    .highlight .mh,
+    .highlight .mi,
+    .highlight .mo,
+    .highlight .mx,
+    .highlight .il {
+        color: #b5cea8;
+    }
 
-  .highlight .gi {
-    color: #aff5b4;
-    background-color: #12261e;
-  }
+    /* 字符串 ← string */
+    .highlight .s,
+    .highlight .s1,
+    .highlight .s2,
+    .highlight .sb,
+    .highlight .sc,
+    .highlight .sd,
+    .highlight .sh,
+    .highlight .si,
+    .highlight .sx,
+    .highlight .ss {
+        color: #a5d6ff;
+    }
 
-  .highlight .kc,
-  .highlight .kd,
-  .highlight .kn,
-  .highlight .kp,
-  .highlight .kr,
-  .highlight .k,
-  .highlight .kv,
-  .highlight .ow,
-  .highlight .o,
-  .highlight .nl {
-    color: #ff7b72;
-  }
+    /* 正则 ← string.regexp */
+    .highlight .sr {
+        color: #a5d6ff;
+    }
 
-  .highlight .kt,
-  .highlight .nc,
-  .highlight .nf,
-  .highlight .ss,
-  .highlight .nd {
-    color: #d2a8ff;
-  }
+    /* 转义字符 ← constant.character.escape */
+    .highlight .se {
+        color: #d7ba7d;
+    }
 
-  .highlight .mf,
-  .highlight .mh,
-  .highlight .il,
-  .highlight .mi,
-  .highlight .mo,
-  .highlight .m,
-  .highlight .mb,
-  .highlight .mx,
-  .highlight .bp,
-  .highlight .nb,
-  .highlight .nn {
-    color: #79c0ff;
-  }
+    /* 函数名 ← entity.name.function */
+    .highlight .nf,
+    .highlight .gs {
+        color: #d2a8ff;
+    }
 
-  .highlight .sb,
-  .highlight .sc,
-  .highlight .sd,
-  .highlight .s2,
-  .highlight .se,
-  .highlight .sh,
-  .highlight .si,
-  .highlight .sx,
-  .highlight .sr,
-  .highlight .s1,
-  .highlight .s {
-    color: #a5d6ff;
-  }
+    /* 标识符 ← entity.name */
+    .highlight .ni {
+        color: #ffa657;
+    }
 
-  .highlight .na,
-  .highlight .no,
-  .highlight .ni,
-  .highlight .vc,
-  .highlight .vg,
-  .highlight .vi,
-  .highlight .nv {
-    color: #ffa657;
-  }
+    /* 内置函数 ← support.function */
+    .highlight .nb {
+        color: #DCDCAA;
+    }
 
-  .highlight .nt {
-    color: #7ee787;
-  }
+    /* 内置伪名 ← support.constant */
+    .highlight .bp {
+        color: #79c0ff;
+    }
+
+    /* 常量 ← constant */
+    .highlight .no {
+        color: #79c0ff;
+    }
+
+    /* 类 / 类型 ← entity.name.class */
+    .highlight .nc,
+    .highlight .ne,
+    .highlight .nn {
+        color: #4EC9B0;
+    }
+
+    /* 标签 ← entity.name.tag */
+    .highlight .nt {
+        color: #7ee787;
+    }
+
+    /* 属性名 ← entity.other.attribute-name */
+    .highlight .na {
+        color: #9cdcfe;
+    }
+
+    /* 伪类 / 伪元素 ← entity.other.attribute-name.pseudo-class */
+    .highlight .nd {
+        color: #9cdcfe;
+    }
+
+    /* CSS 属性名 ← support.type.property-name */
+    .highlight .nl {
+        color: #9cdcfe;
+    }
+
+    /* CSS 属性值 ← support.constant.property-value */
+    .highlight .nx {
+        color: #CE9178;
+    }
+
+    /* 变量 ← variable */
+    .highlight .nv,
+    .highlight .vc,
+    .highlight .vg,
+    .highlight .vi {
+        color: #ffa657;
+    }
+
+    /* 错误 ← invalid */
+    .highlight .err {
+        color: #f44747;
+    }
+
+    /* 新增行 ← markup.inserted */
+    .highlight .gi {
+        color: #7ee787;
+    }
+
+    /* 删除行 ← markup.deleted */
+    .highlight .gd {
+        color: #ffa198;
+    }
+
+    /* 变更行 ← markup.changed */
+    .highlight .gu {
+        color: #ffa657;
+    }
+
+    /* 标题 ← markup.heading */
+    .highlight .gh {
+        color: #79c0ff; font-weight: bold;
+    }
 }
