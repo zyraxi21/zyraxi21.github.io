@@ -566,8 +566,10 @@ ol, ul, dl {
 .post-list-meta .octicon {
     vertical-align: -0.125em;
 }
-/* Pagination spacing */
+/* 翻页：Bootstrap 把 .pagination 设成 display:flex，默认靠文章栏左侧。
+ * 这里让它相对文章栏（.col-md-8 的内容区）水平居中，再留出与正文的间距。 */
 .pagination {
+    justify-content: center;
     margin-top: 30px;
     margin-bottom: 30px;
 }
