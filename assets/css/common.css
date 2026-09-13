@@ -737,10 +737,18 @@ samp,
     border-radius: 0;
 }
 
-.code-block-wrapper .highlighter-rouge,
-.code-block-wrapper .highlighter-rouge .highlight {
+.code-block-wrapper .highlighter-rouge {
     border-radius: 0;
     overflow: visible;
+}
+
+/* <pre> 必须是一个真正的滚动容器，否则对它赋值 scrollLeft 一律无效，
+ * 悬浮滚动条就会"拖不动"，Shift+滚轮也没有任何反应。
+ * 原生滚动条由 .has-custom-scrollbar 隐藏，外观仍完全由悬浮条呈现。 */
+.code-block-wrapper .highlighter-rouge .highlight {
+    border-radius: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .code-block-wrapper pre,
