@@ -74,39 +74,6 @@
     font-display: swap;
 }
 
-/* NewCM10 */
-@font-face {
-    font-family: "NewCM10";
-    src: url("/assets/fonts/NewCM10-Book.otf") format("opentype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "NewCM10";
-    src: url("/assets/fonts/NewCM10-BookItalic.otf") format("opentype");
-    font-weight: 400;
-    font-style: italic;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "NewCM10";
-    src: url("/assets/fonts/NewCM10-Bold.otf") format("opentype");
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "NewCM10";
-    src: url("/assets/fonts/NewCM10-BoldItalic.otf") format("opentype");
-    font-weight: 700;
-    font-style: italic;
-    font-display: swap;
-}
-
 /* 霞鹜文楷：个人网站代码中的中文字符回退字体。 */
 @font-face {
     font-family: "LXGW WenKai Mono";
@@ -604,33 +571,14 @@ ol, ul, dl {
     margin-top: 30px;
     margin-bottom: 30px;
 }
-/* Ubuntu Mono for code blocks */
+/* Ubuntu Mono for code blocks
+ * 仓库只保留 Regular（RI/B/BI 已移除）：需要加粗或倾斜时，由浏览器基于 400
+ * 合成，这样代码仍然留在 Ubuntu Mono，而不是掉到后面的中文回退字体上。 */
 @font-face {
     font-family: "Ubuntu Mono";
     src: url("/assets/fonts/UbuntuMono-R.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
-}
-
-@font-face {
-    font-family: "Ubuntu Mono";
-    src: url("/assets/fonts/UbuntuMono-RI.ttf") format("truetype");
-    font-weight: 400;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: "Ubuntu Mono";
-    src: url("/assets/fonts/UbuntuMono-B.ttf") format("truetype");
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Ubuntu Mono";
-    src: url("/assets/fonts/UbuntuMono-BI.ttf") format("truetype");
-    font-weight: 700;
-    font-style: italic;
 }
 
 /* 代码字体：容器本身之外，Rouge 语法高亮还会为每个 token 生成 <span>。
