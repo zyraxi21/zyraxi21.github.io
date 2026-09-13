@@ -620,12 +620,19 @@ ol, ul, dl {
     font-style: italic;
 }
 
+/* 代码字体：容器本身之外，Rouge 语法高亮还会为每个 token 生成 <span>。
+ * 文件顶部的通用选择器 `*` 已为这些元素单独声明了正文字体，它们不会
+ * 从 pre/code 继承，因此这里必须把代码区域内的所有后代一并声明。 */
 code,
+code *,
 kbd,
-pre,
+kbd *,
+pre:not(.mermaid-rendered),
+pre:not(.mermaid-rendered) *,
 samp,
+samp *,
 .highlight,
-.highlight pre,
+.highlight *,
 .markdown-body code,
 .markdown-body pre {
     font-family: "Ubuntu Mono", "LXGW WenKai Mono", monospace;
