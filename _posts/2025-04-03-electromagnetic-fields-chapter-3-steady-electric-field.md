@@ -54,4 +54,4 @@ $$\mathrm{d}I=\boldsymbol{J}_{\mathrm{s}}\boldsymbol{\cdot}\mathrm{d}\boldsymbol
 - 由 $J_{1n}=J_{2n}$ 可得 $\sigma_{1}E_{1n}=\sigma_{2}E_{2n}$，则 $\sigma_{1} \frac{\partial \phi_{1}}{\partial n}=\sigma_{2} \frac{\partial \phi_{2}}{\partial n}$。
 
 # 3.7    恒定电场与静电场的比较
-![图](/assets/images/electromagnetic-fields-and-waves/1743509235719.jpg)
+![图]({{ '/assets/images/electromagnetic-fields-and-waves/1743509235719.jpg' | relative_url }})

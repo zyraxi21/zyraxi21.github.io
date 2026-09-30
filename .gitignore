@@ -1,8 +1,9 @@
 _site/
 .jekyll-cache/
-vendor/
+/vendor/
 .bundle/
 node_modules/
+.cache/
 assets/vendor/
 dump.html
 fetched-page.html

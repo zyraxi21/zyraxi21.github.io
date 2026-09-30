@@ -14,7 +14,7 @@ $$\begin{matrix}&电荷&\xrightarrow{\text{定向运动}} &电流\\&\downarrow &
 
 ## 4.1.1    安培定律
 安培定律：
-![图](/assets/images/electromagnetic-fields-and-waves/1743509247103.jpg)
+![图]({{ '/assets/images/electromagnetic-fields-and-waves/1743509247103.jpg' | relative_url }})
 如图，$C_{1}$ 对 $C_{2}$ 的作用力为$$\boldsymbol{F}_{C_{1}C_{2}}=\frac{\mu_{0}}{4\pi}\oint_{C_{1}}\oint_{C_{2}} \frac{I_{2}\mathrm{d}\boldsymbol{l}_{2}\times(I_{1}\mathrm{d}\boldsymbol{l}_{1}\times \boldsymbol{R}_{12})}{R_{12}^{3}}$$式中 $R_{12}$ 为电流元 $I_{1}\mathrm{d}\boldsymbol{l}_{1}$ 指向 $I_{2}\mathrm{d}\boldsymbol{l}_{2}$ 的距离矢量，$\mu_{0}=4\pi \times 10^{-7}\  \mathrm{H /m}$ 称为真空磁导率。
 
 安培定律：电流元 $I_{1}\mathrm{d}\boldsymbol{l}_{1}$ 作用在 $I_{2}\mathrm{d}\boldsymbol{l}_{2}$ 上的力$$\mathrm{d}\boldsymbol{F}_{12}=\frac{\mu_{0}}{4\pi} \frac{I_{2}\mathrm{d}\boldsymbol{l}_{2}\times(I_{1}\mathrm{d}\boldsymbol{l}_{1}\times \boldsymbol{R}_{12})}{R_{12}^{3}}$$

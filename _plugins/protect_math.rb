@@ -1,62 +1,63 @@
-# Protect LaTeX math from Kramdown parsing.
-# Kramdown treats `_`, `|`, and backslashes inside math as Markdown syntax.
-# This patch replaces them with HTML entities before Kramdown sees them,
-# so KaTeX will receive the original LaTeX after the browser decodes HTML.
-
+# Protect LaTeX from Markdown while preserving fenced and inline code verbatim.
+# HTML entities are decoded by the browser before KaTeX reads the math source.
 module MathProtector
+  ENTITIES = {
+    '\\' => '&#92;', '_' => '&#95;', '|' => '&#124;', "'" => '&#39;',
+    '"' => '&#34;', '*' => '&#42;', '<' => '&lt;', '>' => '&gt;',
+    '&' => '&amp;', '[' => '&#91;', ']' => '&#93;'
+  }.freeze
+  MATH = /(?<!\\)(\$\$.+?\$\$|\$(?!\$)[^$\n]+?(?<!\\)\$|\\\[.+?\\\]|\\\(.+?\\\))/m
+
   def self.protect(content)
     result = +''
-    cursor = 0
-
-    while (fence_start = content.index('```', cursor))
-      result << protect_code_aware(content[cursor...fence_start])
-      fence_end = content.index('```', fence_start + 3)
-      break unless fence_end
-      result << content[fence_start..(fence_end + 2)]
-      cursor = fence_end + 3
+    text = +''
+    fence = nil
+    content.each_line do |line|
+      if fence
+        result << line
+        closing = /\A[ ]{0,3}#{Regexp.escape(fence[0])}{#{fence.length},}[ \t]*(?:\r?\n)?\z/
+        fence = nil if line.match?(closing)
+      elsif (opening = line.match(/\A[ ]{0,3}(`{3,}|~{3,})([^\r\n]*)(?:\r?\n)?\z/)) &&
+            !(opening[1].start_with?('`') && opening[2].include?('`'))
+        result << protect_code_aware(text)
+        text.clear
+        result << line
+        fence = opening[1]
+      else
+        text << line
+      end
     end
-
-    result << protect_code_aware(content[cursor..-1] || '')
-    result
+    result << protect_code_aware(text)
   end
 
   def self.protect_code_aware(text)
     result = +''
     cursor = 0
-
-    while (span_start = text.index('`', cursor))
-      result << protect_math(text[cursor...span_start])
-      span_end = text.index('`', span_start + 1)
-      break unless span_end
-      result << text[span_start..span_end]
-      cursor = span_end + 1
+    while (opening = text.match(/`+/, cursor))
+      result << protect_math(text[cursor...opening.begin(0)])
+      marker = Regexp.escape(opening[0])
+      closing = text.match(/(?<!`)#{marker}(?!`)/, opening.end(0))
+      unless closing
+        result << protect_math(text[opening.begin(0)..])
+        return result
+      end
+      result << text[opening.begin(0)...closing.end(0)]
+      cursor = closing.end(0)
     end
-
-    result << protect_math(text[cursor..-1] || '')
-    result
+    result << protect_math(text[cursor..] || '')
   end
 
   def self.protect_math(text)
-    text.gsub(/(\$\$[\s\S]+?\$\$|\$(?!\$)[^$\n]+?\$)/) do |match|
-      match
-        .gsub(/\\/, '&#92;')
-        .gsub('_', '&#95;')
-        .gsub('|', '&#124;')
-        .gsub("'", '&#39;')
+    text.gsub(MATH) do |match|
+      match.gsub(/[\\_|'"*<>&\[\]]/) { |character| ENTITIES.fetch(character) }
     end
   end
 end
 
-module Jekyll
-  module Converters
-    class Markdown
-      class KramdownParser
-        alias_method :convert_without_math_protection, :convert
-
-        def convert(content)
-          convert_without_math_protection(MathProtector.protect(content))
-        end
-      end
-    end
+module MathProtectedMarkdown
+  def convert(content)
+    super(MathProtector.protect(content))
   end
 end
+
+Jekyll::Converters::Markdown::KramdownParser.prepend(MathProtectedMarkdown)

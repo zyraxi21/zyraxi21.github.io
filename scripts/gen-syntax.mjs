@@ -148,7 +148,11 @@ const GROUPS = [
   ['类型关键字', 'storage.type', ['.kt']],
   ['运算符', 'keyword.operator', ['.o', '.ow']],
   ['数字', 'constant.numeric', ['.m', '.mb', '.mf', '.mh', '.mi', '.mo', '.mx', '.il']],
-  ['字符串', 'string', ['.s', '.s1', '.s2', '.sa', '.sb', '.sc', '.sd', '.sh', '.si', '.sx', '.ss']],
+  [
+    '字符串',
+    'string',
+    ['.s', '.s1', '.s2', '.sa', '.sb', '.sc', '.sd', '.sh', '.si', '.sx', '.ss'],
+  ],
   ['头文件名', 'string.quoted.other.lt-gte', ['.cpf']],
   ['正则', 'string.regexp', ['.sr']],
   ['转义字符', 'constant.character.escape', ['.se']],
@@ -240,5 +244,7 @@ console.log('已写入', OUT, `(${out.length} 字符)`);
 console.log('\n==== token 颜色（light / dark）====');
 for (const [l, d] of light.rows.map((r, i) => [r, dark.rows[i]])) {
   if (!l.fg && !d.fg) continue;
-  console.log(`  ${l.scope.padEnd(40)} ${String(l.fg).padEnd(9)} / ${String(d.fg).padEnd(9)} ${l.fs || '-'}`);
+  console.log(
+    `  ${l.scope.padEnd(40)} ${String(l.fg).padEnd(9)} / ${String(d.fg).padEnd(9)} ${l.fs || '-'}`,
+  );
 }

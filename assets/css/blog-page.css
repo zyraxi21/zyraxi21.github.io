@@ -1,126 +1,195 @@
 #posts-list {
-    list-style-type: none;
-    margin: 20px 0 20px 120px;
-    padding-left: 30px;
-    border-left: 8px solid var(--brand-primary);
+  list-style-type: none;
+  margin: 20px 0 20px 120px;
+  padding-left: 30px;
+  border-left: 8px solid var(--brand-primary);
 }
 
 #posts-list li {
-    margin: 40px 0;
-    position: relative;
+  margin: 40px 0;
+  position: relative;
 }
 
 .posts-content {
-    position: relative;
+  position: relative;
 }
 
 .circle {
-    margin-top: -10px;
-    top: 50%;
-    left: -44px;
-    width: 20px;
-    height: 20px;
-    background: var(--surface);
-    border: 6px solid var(--brand-primary);
-    border-radius: 50%;
-    display: block;
-    position: absolute;
+  margin-top: -10px;
+  top: 50%;
+  left: -44px;
+  width: 20px;
+  height: 20px;
+  background: var(--surface);
+  border: 6px solid var(--brand-primary);
+  border-radius: 50%;
+  display: block;
+  position: absolute;
 }
 
 .posts-list-meta {
-    margin-top: -10px;
-    top: 50%;
-    left: -158px;
-    font-size: 0.95em;
-    line-height: 20px;
-    position: absolute;
+  margin-top: -10px;
+  top: 50%;
+  left: -158px;
+  font-size: 0.95em;
+  line-height: 20px;
+  position: absolute;
 }
 
-.tooltip, .tooltip-inner {
-    width: 500px;
+.tooltip,
+.tooltip-inner {
+  max-width: min(500px, calc(100vw - 36px));
 }
 
 .posts-list-name {
-    font-size: 25px;
-    text-decoration: none;
-    opacity: 0.8;
+  font-size: 25px;
+  text-decoration: none;
+  opacity: 0.8;
 }
 
 .posts-list-name:hover {
-    text-decoration: none;
-    opacity: 1;
+  text-decoration: none;
+  opacity: 1;
 }
 
 .posts-content:hover .circle {
-    background: var(--brand-primary);
+  background: var(--brand-primary);
 }
 
 /* Bubble Float Left - override animate.css */
 .bubble-float-left {
-    display: inline-block;
-    vertical-align: middle;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -moz-osx-font-smoothing: grayscale;
-    position: relative;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-    -webkit-transition-property: transform;
-    transition-property: transform;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
 }
 .bubble-float-left:before {
-    position: absolute;
-    z-index: -1;
-    content: '';
-    top: calc(50% - 10px);
-    left: 0;
-    border-style: solid;
-    border-width: 10px 10px 10px 0;
-    border-color: transparent var(--surface) transparent transparent;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-    -webkit-transition-property: transform;
-    transition-property: transform;
+  position: absolute;
+  z-index: -1;
+  content: '';
+  top: calc(50% - 10px);
+  left: 0;
+  border-style: solid;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent var(--surface) transparent transparent;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
 }
-.bubble-float-left:hover, .bubble-float-left:focus, .bubble-float-left:active {
-    border-color: transparent var(--brand-primary) transparent transparent;
-    -webkit-transform: translateX(10px);
-    transform: translateX(10px);
+.bubble-float-left:hover,
+.bubble-float-left:focus,
+.bubble-float-left:active {
+  border-color: transparent var(--brand-primary) transparent transparent;
+  -webkit-transform: translateX(10px);
+  transform: translateX(10px);
 }
-.bubble-float-left:hover:before, .bubble-float-left:focus:before, .bubble-float-left:active:before {
-    border-color: transparent var(--brand-primary) transparent transparent;
-    -webkit-transform: translateX(-20px);
-    transform: translateX(-20px);
+.bubble-float-left:hover:before,
+.bubble-float-left:focus:before,
+.bubble-float-left:active:before {
+  border-color: transparent var(--brand-primary) transparent transparent;
+  -webkit-transform: translateX(-20px);
+  transform: translateX(-20px);
 }
 /* Blog category filter */
 .category-filter {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .category-filter:hover {
-    background-color: var(--surface-hover);
+  background-color: var(--surface-hover);
 }
 
 .blog-slogan {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .blog-slogan .mega-octicon {
-    flex: 0 0 auto;
+  flex: 0 0 auto;
 }
 
 .category-link {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 
 #blog-categories .list-group {
-    --bs-list-group-border-radius: 12px;
-    border-radius: 12px;
-    overflow: hidden;
+  --bs-list-group-border-radius: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+@media (max-width: 991px) {
+  #posts-list {
+    margin: 16px 0;
+    padding-left: 24px;
+    border-left-width: 3px;
+  }
+  #posts-list li {
+    margin: 24px 0;
+  }
+  .posts-list-meta {
+    position: static;
+    display: block;
+    margin: 0 0 8px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .posts-list-name {
+    font-size: clamp(19px, 3.6vw, 23px);
+    line-height: 1.65;
+  }
+  .posts-content .circle {
+    top: 4px;
+    left: -32px;
+    width: 13px;
+    height: 13px;
+    margin: 0;
+    border-width: 3px;
+  }
+  .bubble-float-left:hover,
+  .bubble-float-left:focus,
+  .bubble-float-left:active {
+    transform: none;
+  }
+  .bubble-float-left::before {
+    display: none;
+  }
+  #blog-categories .list-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+    overflow: visible;
+    border-radius: 0;
+  }
+  #blog-categories .category-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+  }
+  .category-filter.active .badge {
+    color: var(--brand-primary);
+    background: var(--surface);
+  }
+  .blog-layout .sidebar-title {
+    margin-bottom: 12px;
+    text-align: left;
+    font-size: 18px;
+  }
 }

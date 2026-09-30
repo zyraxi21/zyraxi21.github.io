@@ -1,0 +1,86 @@
+# 代码规范、现代化与竖屏适配检查
+
+检查日期：2026-10-01。
+
+## 范围与同步
+
+以个人站点 zyraxi21.github.io 为主要检查对象，并将主题通用修改同步到 Yummy-Modern。捐赠页及文章图片路径的修复保留在个人站点。
+
+共用的 JavaScript 模块、构建脚本、回归检查、响应式样式和规范配置已同步到两个本地仓库。站点名称、配色、导航、项目配置、文章及许可证分别保留各自设置。
+
+## 发现与修复
+
+| 问题                                                          | 修改后的行为                                                       |
+| ------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 页面头部和页脚包含大量内联 JavaScript，依赖 jQuery 和全局对象 | 拆为原生 ES 模块，按职责组织；只导入 Bootstrap Tooltip             |
+| 所有页面都加载公式与图表脚本                                  | 检测文章内容后动态加载 KaTeX、Mermaid，首页不请求这些模块          |
+| 复制失败仍可能显示成功；图表复制结果含糊                      | 文本复制有失败反馈和回退；图表明确反馈 PNG 或 SVG                  |
+| 分类按子字符串匹配，目录缺少正常锚点                          | 精确匹配分类，筛选状态写入 URL；目录使用真实链接                   |
+| 数学保护插件遇到未闭合代码围栏会重复或截断正文                | 采用 prepend，覆盖反引号、波浪线围栏及未闭合代码的回归场景         |
+| 根路径资源和字体路径阻碍项目子目录部署                        | 模板使用 relative_url / absolute_url，字体采用相对 CSS 路径        |
+| 模板分享图片不存在、图标部分尺寸为空、项目列表来源固定        | 分享图片可选，图标选择可用尺寸；项目来源由配置决定                 |
+| GitHub 项目列表只取一页，网络失败可能破坏缓存                 | 分页、去重、超时与输入检查；成功后原子写入                         |
+| 开发源码和抓取页面可能进入发布目录                            | 明确排除并检查生成目录                                             |
+| 缺少一致的编码、格式、检查入口                                | UTF-8 / LF / 两空格；ESLint、Prettier（含 Liquid）及 npm run check |
+| 模板未填写仓库身份时，生产构建触发 GitHub Metadata 异常       | 模板默认按需开启此插件；启用时同时配置 repository                  |
+| 部署缺少构建结果检查                                          | 加入严格 Jekyll 构建、生成站点检查及独立质量工作流                 |
+
+第三方 GeoPattern 文件保持原内容，移到 src/vendor；不格式化第三方源码。生成资源位于 assets/vendor，由构建脚本重建。文章目录不参加自动格式化。
+
+## 竖屏调整
+
+改动前，320px 博客列表的整页宽度达到 345px；768px 文章页达到 819px。固定宽度目录、时间线大缩进及浮动导航是主要原因。
+
+- 991px 以下采用可展开导航菜单，支持 Escape 关闭并恢复焦点。
+- 文章正文使用整行宽度；目录移到正文前，以 details 默认折叠。
+- 博客分类位于列表前并可换行；时间线减少缩进，日期置于标题上方。
+- 标题、页脚和项目卡片适应窄屏；目录、导航及返回顶部保留足够的触摸区域。
+- 单美元标记及 \(…\) 保持行内公式，双美元标记及 \[...\] 独立居中，避免文字被拆成多行。
+- 长公式、代码及表格在自身区域滚动；滚动条支持键盘与拖动。
+- 提供跳至正文、可见焦点和减少动画的偏好支持，保留两站各自的配色和字体。
+
+## 验证
+
+| 检查                         | 结果 / 范围                                                                                                                           |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| npm run check                | 两仓库 ESLint、Prettier、5 项 Node 测试和 12 项 Ruby 回归均通过                                                                       |
+| npm run build                | 两仓库前端构建通过，无构建警告                                                                                                        |
+| Jekyll 严格构建与 check:site | 根路径均通过；个人站 1481、模板站 1181 条本地引用                                                                                     |
+| /preview 子目录              | 两仓库严格构建、本地引用及浏览器检查均通过                                                                                            |
+| Chromium 浏览器              | 根路径的菜单、分类、目录、代码/公式/图表复制、深色图表与滚动条通过；子目录中新增的关于页、模板项目/书签页、个人捐赠页和分页检查均通过 |
+| 竖屏宽度                     | 首页、博客、示例文章及导航页面在 320、375、390、414、768px 下无整页横向溢出；抽样页头高度为 64px                                      |
+| npm audit                    | 个人站依赖报告为 0 项漏洞                                                                                                             |
+
+本次在 Windows、Node 24.19.0、Ruby 4.0.6 和 Chrome 上验证。工作流按 .node-version（24）及 .ruby-version（3.4）安装环境；新增工作流尚未在 GitHub 远程运行。
+
+本地 Windows 构建补充了 tzinfo / tzinfo-data，验证用依赖放在忽略的 .cache 中，未修改系统 Ruby 安装。新克隆应按 README 执行 npm ci 和 bundle install。
+
+生成站点检查验证本地引用、模块资源、baseurl 及开发文件排除。浏览器检查屏蔽第三方请求，涵盖本站功能；Disqus 服务状态和外部链接可用性不在本次验证范围内。npm audit 的结果来自本次检查时的漏洞数据库。
+
+## 后续维护
+
+```bash
+npm ci
+bundle install
+npm run check
+npm run build
+bundle exec jekyll build --strict_front_matter
+npm run check:site
+bundle exec jekyll build --strict_front_matter --baseurl /preview --destination .cache/preview
+npm run check:site -- --site .cache/preview --baseurl /preview
+python -m pip install playwright==1.63.0
+python -m playwright install chromium
+python tests/browser_smoke.py --site .cache/preview --baseurl /preview
+```
+
+浏览器检查使用仓库自带的演示文章，不依赖最新文章排序。更换演示内容后，可用 --post blog/新示例.html 指定包含代码、公式和 Mermaid 的页面。
+
+更新依赖时通过锁文件固定实际版本，再执行以上检查。此次保留 Bootstrap 5、KaTeX 0.16、Mermaid 11 的主要版本，避免依赖升级改变已有文章的呈现。
+
+## 规范依据
+
+- [Jekyll URL 与转义过滤器](https://jekyllrb.com/docs/liquid/filters/)
+- [ESLint 配置文件](https://eslint.org/docs/latest/use/configure/configuration-files)
+- [esbuild 代码分割](https://esbuild.github.io/api/#splitting)
+- [Mermaid 配置](https://mermaid.js.org/config/schema-docs/config.html)
+- [GitHub Metadata 生产环境的仓库身份配置](https://github.com/jekyll/github-metadata/blob/main/docs/configuration.md)

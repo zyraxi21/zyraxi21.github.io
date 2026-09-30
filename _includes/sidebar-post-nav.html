@@ -1,63 +1,6 @@
-
-<div id="post-directory-module">
-<h3 class="directory-title">目录</h3>
-
-
-<section class="post-directory">
-    <!-- Links that trigger the jumping -->
-    <!-- Added by javascript below -->
-    <dl></dl>
-</section>
-</div>
-
-<script type="text/javascript">
-
-    document.querySelectorAll("article h1, article h2, article h3").forEach(function(heading) {
-        if (!heading.hasAttribute("data-directory-source")) {
-            heading.setAttribute("data-directory-source", heading.innerHTML);
-        }
-    });
-
-    $(document).ready(function(){
-                $( "article h1, article h2, article h3" ).not(".directory-title, #post-directory-module h1, #post-directory-module h2, #post-directory-module h3").each(function( index ) {
-            var tagName = this.tagName.toLowerCase();
-            var wrapperTag = tagName === "h3" ? "dd" : "dt";
-            var wrapperClass = "toc-" + tagName;
-            var prefix = tagName === "h3" ? "&nbsp;&nbsp;- " : "";
-            var headingSource = this.getAttribute("data-directory-source") || this.innerHTML;
-            $(".post-directory dl").append("<" + wrapperTag + " class=\"" + wrapperClass + "\"><a class=\"jumper\" hre=#" +
-                    $(this).attr("id")
-                    + ">"
-                    + prefix + headingSource
-                    + "</a></" + wrapperTag + ">");
-        });
-
-        $(".post-directory").on("click", "dt, dd", function(e) {
-            e.preventDefault();
-            var link = $(this).find("a.jumper").first();
-            if (!link.length) return;
-
-            var id = link.attr('hre');
-            var target = id ? document.getElementById(id.substring(1)) : null;
-            if (target) {
-                var top = $(target).offset().top - 100;
-                $("html, body").stop(true, true).animate({ scrollTop: top }, 120);
-            }
-        });
-
-
-          if (window.renderMathInElement) {
-            renderMathInElement(document.querySelector('.post-directory'), {
-              delimiters: [
-                  {left: '$$', right: '$$', display: false},
-                  {left: '$', right: '$', display: false},
-                  {left: '\\(', right: '\\)', display: false},
-                  {left: '\\[', right: '\\]', display: false}
-              ],
-              throwOnError: false
-            });
-          }
-
-    });
-
-</script>
+<details id='post-directory-module'>
+  <summary class='directory-title'>目录</summary>
+  <nav class='post-directory' aria-label='文章目录'>
+    <ol></ol>
+  </nav>
+</details>

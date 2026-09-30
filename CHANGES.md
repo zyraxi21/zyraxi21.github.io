@@ -14,3 +14,14 @@ Changes made by zyraxi21 include, but are not limited to:
 - Added Open Graph / Twitter Card social sharing tags.
 - Updated blog category filtering.
 - Reorganized and cleaned site content.
+
+## 2026-10-01 代码规范与竖屏适配
+
+- 加入 EditorConfig、LF 换行约定、ESLint、Prettier 和 Liquid 模板格式化。
+- 将内联页面行为拆分为 ES 模块，移除 jQuery；KaTeX 与 Mermaid 按文章内容加载。
+- 修复目录锚点、完整分类匹配、剪贴板失败反馈和数学保护插件的未闭合代码处理。
+- 统一资源、字体、RSS 和导航路径，支持 `baseurl`；排除开发源码与临时页面的发布。
+- 采用配置驱动、分页、超时保护和原子写入的 GitHub 项目获取脚本。
+- 加入窄屏导航菜单、正文前的折叠目录、紧凑博客时间线和独立内容横向滚动。
+- 加入回归检查、生成站点检查和 GitHub Actions 质量检查。
+- 按公式标记区分行内与独立公式，改善窄屏科学笔记的段落排版。

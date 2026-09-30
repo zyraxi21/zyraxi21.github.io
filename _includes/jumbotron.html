@@ -1,29 +1,39 @@
-<section class="jumbotron geopattern" data-pattern-id="{{ page.title }}">
-    <div class="container">
-        <div id="jumbotron-meta-info">
-            <h1>{{ page.title }}</h1>
-            <span class="meta-info">
-                {% if page.subtitle %}
-                    {{ page.subtitle }}
-                {% endif %}
-                {% if page.date %}
-                <svg class="octicon" width="16" height="16" aria-hidden="true"><use href="/assets/vendor/octicons.svg#icon-calendar"></use></svg> {{ page.date | date: "%Y/%m/%d" }}
-                {% endif %}
-            </span>
-            {% if page.category %}
-            <a class="meta-info post-category" href="/blog?category={{ page.category | url_encode }}"
-               title="在“我的博客”查看该分类">
-                <svg class="octicon" width="16" height="16" aria-hidden="true"><use href="/assets/vendor/octicons.svg#icon-tag"></use></svg>
-                {{ page.category }}
-            </a>
-            {% endif %}
-        </div>
+<section class='jumbotron geopattern' data-pattern-id='{{ page.title }}'>
+  <div class='container'>
+    <div id='jumbotron-meta-info'>
+      <h1>{{ page.title }}</h1>
+      <span class='meta-info'>
+        {% if page.subtitle %}
+          {% if page.subtitle_icon -%}
+            <span class='blog-slogan'>
+              <svg class='mega-octicon octicon' width='24' height='24' aria-hidden='true'>
+                <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-{{ page.subtitle_icon | escape }}"></use>
+              </svg>
+              <span>{{ page.subtitle }}</span></span
+            >
+          {%- else -%}
+            {{- page.subtitle -}}
+          {%- endif %}
+        {% endif %}
+        {% if page.date %}
+          <svg class='octicon' width='16' height='16' aria-hidden='true'>
+            <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-calendar"></use>
+          </svg>
+          {{ page.date | date: '%Y/%m/%d' }}
+        {% endif %}
+      </span>
+      {% if page.category %}
+        <a
+          class='meta-info post-category'
+          href='{{ '/blog' | relative_url }}?category={{ page.category | url_encode }}'
+          title='在“我的博客”查看该分类'
+        >
+          <svg class='octicon' width='16' height='16' aria-hidden='true'>
+            <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-tag"></use>
+          </svg>
+          {{ page.category }}
+        </a>
+      {% endif %}
     </div>
+  </div>
 </section>
-<script>
-    $(document).ready(function(){
-        $('.geopattern').each(function(){
-            $(this).geopattern($(this).data('pattern-id'));
-        });
-    });
-</script>

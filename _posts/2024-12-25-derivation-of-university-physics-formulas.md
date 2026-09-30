@@ -29,7 +29,7 @@ excerpt: "大物下册期末考试推导题复习。"
 >其中$$\overline{\varepsilon}_{\mathrm{kt}} = \frac{1}{2}m_0 \overline{v^2}$$称为**气体分子的平均平动动能**。
 
 # 2.    气体分子的平均自由程和平均碰撞频率
-![](/assets/images/university-physics/IMG_20241225_202907.jpg)
+![]({{ '/assets/images/university-physics/IMG_20241225_202907.jpg' | relative_url }})
 平均自由程为$$\overline{\lambda}=\frac{\overline{v}\Delta t}{\overline{z}\Delta t}=\frac{\overline{v}}{\overline{z}}\text{。}\tag{9-31}$$
 分子的碰撞截面（collision cross-section）为 $\sigma=\pi d^2$。在 $\Delta t$ 时间内，分子所走过的路程为 $\overline{u}\Delta t$，相应的圆柱体体积为 $\sigma \overline{u}\Delta t$，那么圆柱体内的总分子数就是分子与其他分子的碰撞次数，即为 $n\sigma \overline{u}\Delta t$，因此，平均碰撞频率为$$\overline{z}=\frac{n\sigma \overline{u}\Delta t}{\Delta t}=\sigma \overline{u}n\text{，}\tag{9-32}$$式中，$n$ 为分子数密度。
 
@@ -42,7 +42,7 @@ excerpt: "大物下册期末考试推导题复习。"
 > 利用理想气体物态方程，还可以将式（10-22a）写成以下两种形式：$$TV^{\gamma -1}=C_2\text{，}\tag{10-22b}$$ $$\frac{p^{\gamma -1}}{T^{\gamma}}=C_3\text{。}\tag{10-22c}$$
 
 # 4.    卡诺循环
-![](/assets/images/university-physics/IMG_20241225_202925.jpg)
+![]({{ '/assets/images/university-physics/IMG_20241225_202925.jpg' | relative_url }})
 状态 1 到状态 2 的过程是等温膨胀过程，工作物质从高温热源（$T_1$）吸收热量 $Q_1$，$$Q_1=\frac{M}{M_{\mathrm{mol}}}RT_1\ln\frac{V_2}{V_1}\text{。}$$
 状态 2 到状态 3 是绝热膨胀过程，该过程工作物质与高温热源分开，没有热量交换，但对外界做功，温度降到 $T_2$，体积变为 $V_3$。
 
@@ -54,7 +54,7 @@ excerpt: "大物下册期末考试推导题复习。"
 两式相比，便得$$\frac{V_2}{V_1}=\frac{V_3}{V_4}\text{，}$$代入效率公式，可得$$\eta=1-\frac{T_2}{T_1}\text{。}$$
 
 # 5.    热力学第二定律两种表述的等效性
-![](/assets/images/university-physics/IMG_20241225_202943.jpg)
+![]({{ '/assets/images/university-physics/IMG_20241225_202943.jpg' | relative_url }})
 可以用反证法来证明热力学第二定律的两种表述是等效的。
 
 首先我们证明，如果开尔文表述不成立，则克劳修斯表述也不成立。
@@ -66,7 +66,7 @@ excerpt: "大物下册期末考试推导题复习。"
 如果克劳修斯表述不成立，即存在一部制冷机 $\text{A}'$，外界不需要对它做功，热量 $Q$ 便可以从低温热源 $T_2$ 传到高温热源 $T_1$ 去，现在可以设想另有一部热机 $\text{B}'$，它从高温热源吸收热量 $Q_1=Q$，向低温热源放出热量 $Q_2$，对外做功 $W=Q_1-Q_2$，当把 $\text{A}'$ 和 $\text{B}'$ 一起看作一部联合热机时，其净效果是：高温热源 $T_1$ 没有发生任何变化，而只从单一的低温热源 $T_2$ 吸收了热量 $Q_1-Q_2$，全部用于对外做功 $W=Q_1-Q_2$，这违反了热力学第二定律的开尔文表述。
 
 # 6.    薄膜的等倾干涉
-![](/assets/images/university-physics/IMG_20241225_202959.jpg)
+![]({{ '/assets/images/university-physics/IMG_20241225_202959.jpg' | relative_url }})
 反射光 $AD$ 与折射光 $(AC+CB)$ 之间的光程差（设 $n_2\gt n_1$）为$$\delta =n_2(AC+CB)-n_1AD+\frac{\lambda}{2}\text{。}\tag{13-49}$$式中加了 $\frac{\lambda}{2}$ 这一项，是由于光束在介质的上表面反射时有半波损失的缘故。
 
 利用折射定律 $n_1\sin i=n_2\sin i'$ 和几何关系$$\overline{AC}=\overline{CB}=\frac{e}{\cos i'}\text{，}$$ $$\overline{AD}=\overline{AB}\sin i=2e\tan i'\sin i\text{，}$$代入式（13-49）可得$$\begin{align}\delta &=\frac{2n_2e}{\cos i'}-2en_1\tan i'\sin i +\frac{\lambda}{2}\\&=\frac{2n_2e}{\cos i'}(1-\sin ^2 i')+\frac{\lambda}{2}\\&=2n_2e\cos i'+\frac{\lambda}{2}\\&=2e\sqrt{n_2^2-n_1^2\sin ^2 i}+\frac{\lambda}{2}\text{。}\end{align}$$

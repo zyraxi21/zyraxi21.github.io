@@ -2,23 +2,41 @@
   "name": "zyraxi21-github-io",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Frontend assets for zyraxi21.github.io",
+  "engines": {
+    "node": ">=22.13.0",
+    "npm": ">=10"
+  },
   "scripts": {
     "build": "node scripts/build-assets.mjs",
     "build:assets": "node scripts/build-assets.mjs",
     "fetch:projects": "node scripts/fetch-projects.mjs",
-    "gen:syntax": "node scripts/gen-syntax.mjs"
+    "gen:syntax": "node scripts/gen-syntax.mjs",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "node --test tests/*.test.mjs",
+    "test:ruby": "bundle exec ruby tests/protect_math_test.rb",
+    "check:site": "node scripts/check-site.mjs",
+    "check": "npm run lint && npm run format:check && npm test && npm run test:ruby"
   },
   "dependencies": {
     "@primer/octicons": "^19.0.0",
     "bootstrap": "^5.3.3",
     "hover.css": "^2.3.1",
-    "jquery": "^3.7.1",
     "katex": "^0.16.9",
     "mermaid": "^11.17.2",
     "primer-markdown": "^2.5.1"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0"
+    "@eslint/js": "^10.0.1",
+    "@shopify/prettier-plugin-liquid": "^1.11.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.9",
+    "yaml": "^2.8.1"
   }
 }

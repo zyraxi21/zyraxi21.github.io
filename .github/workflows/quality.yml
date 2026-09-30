@@ -1,0 +1,51 @@
+name: Code quality and build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - name: Build and validate root deployment
+        run: |
+          bundle exec jekyll build --strict_front_matter
+          npm run check:site
+        env:
+          JEKYLL_ENV: production
+          JEKYLL_GITHUB_TOKEN: ${{ github.token }}
+      - name: Build and validate subpath deployment
+        run: |
+          bundle exec jekyll build --strict_front_matter --baseurl /preview --destination .cache/preview
+          npm run check:site -- --site .cache/preview --baseurl /preview
+        env:
+          JEKYLL_ENV: production
+          JEKYLL_GITHUB_TOKEN: ${{ github.token }}
+      - name: Install browser test dependencies
+        run: |
+          python3 -m venv .cache/browser-env
+          .cache/browser-env/bin/python -m pip install playwright==1.63.0
+          .cache/browser-env/bin/python -m playwright install --with-deps chromium
+      - name: Check browser interactions and portrait layouts
+        run: .cache/browser-env/bin/python tests/browser_smoke.py --site .cache/preview --baseurl /preview

@@ -3,32 +3,16 @@ layout: default
 css: ['sidebar-post-nav.css']
 ---
 {% include jumbotron.html %}
-<article class="post container" itemscope itemtype="http://schema.org/BlogPosting">
-
-    <div class="row">
-
-        {% if page.no-post-nav %}
-        <div class="col-md-12 markdown-body">
-
-            {{ content }}
-
-            <!-- Comments -->
-            {% include disqus-comments.html %}
-        </div>
-        {% else %}
-        <div class="col-md-8 markdown-body">
-
-            {{ content }}
-
-            <!-- Comments -->
-            {% include disqus-comments.html %}
-        </div>
-
-        <div class="col-md-4">
-            {% include sidebar-post-nav.html %}
-        </div>
-        {% endif %}
-
+<article class='post container' itemscope itemtype='https://schema.org/BlogPosting'>
+  <div class='row'>
+    {% unless page['no-post-nav'] %}
+      <aside class='col-md-4 post-sidebar order-lg-2' aria-label='文章目录'>
+        {% include sidebar-post-nav.html %}
+      </aside>
+    {% endunless %}
+    <div class='{% if page['no-post-nav'] %}col-12{% else %}col-md-8{% endif %} markdown-body post-content order-lg-1'>
+      {{ content }}
+      {% include disqus-comments.html %}
     </div>
-
+  </div>
 </article>

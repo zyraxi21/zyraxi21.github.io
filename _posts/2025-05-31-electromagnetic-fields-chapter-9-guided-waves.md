@@ -96,7 +96,7 @@ $y=0$ 和 $y=a$ 处：$E_{x}=0$，故 $\frac{\partial H_{z}}{\partial y}=0$。
 
 > TE 模与 TM 模有无限多种。不同的模式对应不同的截止波长，只有小于 $\lambda_{\mathrm{c}}$ 的模式才能传播。
 
-![图](/assets/images/electromagnetic-fields-and-waves/1748264330824.png)
+![图]({{ '/assets/images/electromagnetic-fields-and-waves/1748264330824.png' | relative_url }})
 在模式分布图中，称截止波长最长（截止频率最低）的模式为主模（最低波型）。一般横截面尺寸 $a>b$，故 $\mathrm{TE}_{10}$ 模为矩形波导的主模式。
 
 模式分布图中，Ⅰ区为截止区，Ⅱ区为单模区，Ⅲ区为多模区。
@@ -105,8 +105,8 @@ $y=0$ 和 $y=a$ 处：$E_{x}=0$，故 $\frac{\partial H_{z}}{\partial y}=0$。
 将不同模式具有相同截止波长的情况称为模式简并，把截止波长相同的不同模式称为简并模式。
 
 场分布图：
-![图](/assets/images/electromagnetic-fields-and-waves/Screenshot_2025-05-26-21-13-22-902_com.miui.galle.png)
-![图](/assets/images/electromagnetic-fields-and-waves/1748265528077.jpg)
+![图]({{ '/assets/images/electromagnetic-fields-and-waves/Screenshot_2025-05-26-21-13-22-902_com.miui.galle.png' | relative_url }})
+![图]({{ '/assets/images/electromagnetic-fields-and-waves/1748265528077.jpg' | relative_url }})
 
 电力线：实线，可以闭合，也可以不闭合。发于导体表面正电荷，止于负电荷。
 磁力线：虚线，闭合。
@@ -155,4 +155,4 @@ $y=0$ 和 $y=a$ 处：$E_{x}=0$，故 $\frac{\partial H_{z}}{\partial y}=0$。
 
 5. 两侧壁只存在沿 $y$ 方向的横向电流，且方向相同，沿轴向开一槽缝将会切断横向电流造成辐射，这一性质被广泛应用于槽缝天线。
 
-![图](/assets/images/electromagnetic-fields-and-waves/1748267319273.jpg)
+![图]({{ '/assets/images/electromagnetic-fields-and-waves/1748267319273.jpg' | relative_url }})

@@ -1,367 +1,42 @@
-<footer class="container">
-
-    <div class="site-footer">
-
-        <div class="copyright float-start">
-            <!-- 请不要更改这一行 方便其他人知道模板的来源 谢谢 -->
-            <!-- Please keep this line to let others know where this theme comes from. Thank you :D -->
-            模板来自 <a href="https://github.com/zyraxi21/Yummy-Modern">Yummy Modern</a>。
-        </div>
-
-                        <div class="license-note">
-            文章内容采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.zh-hans" target="_blank" rel="license">CC BY-SA 4.0</a> 协议授权
-            <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em; max-height: 1em; margin-left: .2em;">
-            <img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em; max-height: 1em; margin-left: .2em;">
-            <img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1em; max-height: 1em; margin-left: .2em;">
-        </div><div class="float-end">
-            <a href="javascript:window.scrollTo(0,0)">回到顶部</a>
-        </div>
-
+<footer class='container'>
+  <div class='site-footer'>
+    <div class='copyright float-start'>
+      <!-- 请不要更改这一行 方便其他人知道模板的来源 谢谢 -->
+      <!-- Please keep this line to let others know where this theme comes from. Thank you :D -->
+      模板来自 <a href='https://github.com/zyraxi21/Yummy-Modern'>Yummy Modern</a>。
     </div>
 
-    <!-- Third-Party JS -->
-    <script type="text/javascript" src="/assets/js/geopattern.min.js"></script>
+    <div class='license-note'>
+      文章内容采用
+      <a
+        href='https://creativecommons.org/licenses/by-sa/4.0/legalcode.zh-hans'
+        target='_blank'
+        rel='license'
+        >CC BY-SA 4.0</a
+      >
+      协议授权
+      <img
+        src='https://mirrors.creativecommons.org/presskit/icons/cc.svg'
+        alt=''
+        style='max-width: 1em; max-height: 1em; margin-left: .2em;'
+      >
+      <img
+        src='https://mirrors.creativecommons.org/presskit/icons/by.svg'
+        alt=''
+        style='max-width: 1em; max-height: 1em; margin-left: .2em;'
+      >
+      <img
+        src='https://mirrors.creativecommons.org/presskit/icons/sa.svg'
+        alt=''
+        style='max-width: 1em; max-height: 1em; margin-left: .2em;'
+      >
+    </div>
+    <div class='float-end'>
+      <a href='#top' data-back-to-top>回到顶部</a>
+    </div>
+  </div>
 
-    <!-- My JS -->
-    <script type="text/javascript" src="/assets/js/script.js"></script>
-
-    <script>
-    function initCodeButtons() {
-        if (window.__codeCopyInitialized) return;
-        window.__codeCopyInitialized = true;
-
-        function copyCode(text) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                return navigator.clipboard.writeText(text);
-            }
-            var textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.setAttribute('readonly', '');
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            return Promise.resolve();
-        }
-
-        function markCopied(btn) {
-            btn.textContent = '复制成功';
-            btn.classList.add('copied');
-            setTimeout(function() {
-                btn.textContent = '复制';
-                btn.classList.remove('copied');
-            }, 1500);
-        }
-
-        document.querySelectorAll('pre').forEach(function(pre) {
-            /* Jekyll 的高亮标签输出为 figure.highlight，围栏代码则为
-             * .highlighter-rouge；两者都必须整体移入圆角容器。 */
-            var block = pre.closest('.highlighter-rouge, figure.highlight') || pre;
-            if (block.querySelector('.code-header')) return;
-            var code = block.querySelector('code');
-            if (!code) return;
-            if ((code.className || '').indexOf('language-mermaid') !== -1) return;
-
-            var lang = 'text';
-            var languageSource = block.closest('.highlighter-rouge, figure.highlight') || block;
-            var match =
-                (languageSource.className || '').match(/language-([A-Za-z0-9_+#.-]+)/) ||
-                (code.className || '').match(/language-([A-Za-z0-9_+#.-]+)/);
-            if (match) {
-                lang = match[1];
-                if (lang.toLowerCase() === 'c++' || lang.toLowerCase() === 'cpp') {
-                    lang = 'C++';
-                }
-            }
-
-            var header = document.createElement('div');
-            header.className = 'code-header';
-
-            var langSpan = document.createElement('span');
-            langSpan.className = 'code-lang';
-            langSpan.textContent = lang;
-
-            var btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'code-copy-btn';
-            btn.textContent = '复制';
-            btn.addEventListener('click', function() {
-                copyCode(code.innerText).then(function() {
-                    markCopied(btn);
-                });
-            });
-
-            header.appendChild(langSpan);
-            header.appendChild(btn);
-
-            var text = code.innerText || '';
-            var lineCount = text.split('\n').length;
-            if (text.endsWith('\n')) lineCount -= 1;
-            if (lineCount < 1) lineCount = 1;
-
-            var lineNumbers = document.createElement('div');
-            lineNumbers.className = 'code-lines';
-            lineNumbers.setAttribute('aria-hidden', 'true');
-            lineNumbers.style.fontFamily = '"Ubuntu Mono", monospace';
-            for (var i = 1; i <= lineCount; i++) {
-                var num = document.createElement('span');
-                num.textContent = i;
-                num.style.fontFamily = '"Ubuntu Mono", monospace';
-                lineNumbers.appendChild(num);
-            }
-
-            var body = document.createElement('div');
-            body.className = 'code-body';
-
-            var wrapper = document.createElement('div');
-            wrapper.className = 'code-block-wrapper';
-            block.parentNode.insertBefore(wrapper, block);
-            wrapper.appendChild(header);
-            wrapper.appendChild(body);
-            body.appendChild(lineNumbers);
-            body.appendChild(block);
-        });
-
-        document.querySelectorAll('code').forEach(function(code) {
-            if (code.closest('pre')) return;
-            if (code.parentNode.classList.contains('math-copy')) return;
-            var wrap = document.createElement('span');
-            wrap.className = 'math-copy code-copy-wrap';
-            wrap.setAttribute('data-latex', code.innerText);
-            code.parentNode.insertBefore(wrap, code);
-            wrap.appendChild(code);
-        });
-
-        if (typeof addCopyButtons === 'function') {
-            addCopyButtons();
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', initCodeButtons);
-    if (document.readyState !== 'loading') initCodeButtons();
-    setTimeout(initCodeButtons, 500);
-
-    function shouldOpenInNewTab(link) {
-        return Boolean(link.closest('.site-footer') || link.closest('.post .markdown-body'));
-    }
-
-    document.querySelectorAll('a[href]').forEach(function(link) {
-        var href = link.getAttribute('href') || '';
-        if (!href || href.charAt(0) === '#' || /^javascript:/i.test(href)) return;
-        if (shouldOpenInNewTab(link)) {
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-        } else {
-            link.removeAttribute('target');
-            link.removeAttribute('rel');
-        }
-    });
-
-    document.addEventListener('click', function(event) {
-        var target = event.target;
-        var link = target && target.closest ? target.closest('a[href]') : null;
-        if (!link) return;
-
-        var href = link.getAttribute('href') || '';
-        if (!href || href.charAt(0) === '#' || /^javascript:/i.test(href)) return;
-
-        if (shouldOpenInNewTab(link)) {
-            event.preventDefault();
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            window.open(link.href, '_blank', 'noopener,noreferrer');
-            return;
-        }
-
-        link.removeAttribute('target');
-        link.removeAttribute('rel');
-    });
-
-    /* 溢出的表格与代码块共用一条跟随内容移动的横向滚动条 */
-    (function () {
-        if (window.__floatingScrollInitialized) return;
-        window.__floatingScrollInitialized = true;
-
-        var dragState = null;
-
-        function getOverflowingTargets() {
-            return Array.from(document.querySelectorAll(
-                '.markdown-body table, .code-block-wrapper pre:not(.mermaid-rendered)'
-            )).filter(function(target) {
-                return target.scrollWidth > target.clientWidth + 1;
-            });
-        }
-
-        function createScrollBar(target) {
-            if (target.__floatingScrollBar) return target.__floatingScrollBar;
-
-            var bar = document.createElement('div');
-            bar.className = 'table-floating-scrollbar';
-            bar.setAttribute('aria-hidden', 'true');
-
-            var track = document.createElement('div');
-            track.className = 'table-floating-scroll-track';
-
-            var thumb = document.createElement('div');
-            thumb.className = 'table-floating-scroll-thumb';
-
-            track.appendChild(thumb);
-            bar.appendChild(track);
-            document.body.appendChild(bar);
-            target.classList.add('has-custom-scrollbar');
-
-            var state = { target: target, bar: bar, track: track, thumb: thumb };
-            target.__floatingScrollBar = state;
-
-            target.addEventListener('scroll', function() {
-                updateThumb(state);
-            });
-            bar.addEventListener('pointerdown', function(event) {
-                onPointerDown(event, state);
-            });
-            /* 捕获后的指针事件直接由悬浮条接收，避免依赖页面级冒泡。 */
-            bar.addEventListener('pointermove', onPointerMove);
-            bar.addEventListener('pointerup', onPointerUp);
-            bar.addEventListener('pointercancel', onPointerUp);
-
-            return state;
-        }
-
-        function hideBar(state) {
-            state.bar.style.display = 'none';
-            state.bar.classList.remove('visible');
-        }
-
-        function positionBar(state) {
-            var rect = state.target.getBoundingClientRect();
-            var viewportWidth = document.documentElement.clientWidth;
-            var viewportHeight = window.innerHeight;
-            var maxScroll = state.target.scrollWidth - state.target.clientWidth;
-
-            if (maxScroll <= 0) {
-                hideBar(state);
-                return false;
-            }
-
-            var left = Math.max(8, Math.min(rect.left, viewportWidth - 8));
-            var right = Math.min(viewportWidth - 8, Math.max(left + 8, rect.right));
-            /*
-             * 滚动条的底边始终受内容框上下边界约束：内容向下延伸
-             * 到视口外时贴住视口底部，否则贴住内容框底部。内容完全
-             * 离开视口后，它会跟随内容框离开，而不是在边界处突然消失。
-             */
-            var barHeight = state.bar.offsetHeight || 20;
-            var bottomY = Math.max(
-                rect.top + barHeight + 8,
-                Math.min(rect.bottom - 8, viewportHeight - 10)
-            );
-
-            state.bar.style.left = left + 'px';
-            state.bar.style.right = 'auto';
-            state.bar.style.width = Math.max(8, right - left) + 'px';
-            state.bar.style.bottom = (viewportHeight - bottomY) + 'px';
-            state.bar.style.display = '';
-            state.bar.classList.add('visible');
-            return true;
-        }
-
-        function updateThumb(state) {
-            var target = state.target;
-            var maxScroll = target.scrollWidth - target.clientWidth;
-            if (maxScroll <= 0 || !positionBar(state)) {
-                hideBar(state);
-                return;
-            }
-
-            var trackWidth = state.track.clientWidth;
-            var thumbWidth = Math.max(36, trackWidth * target.clientWidth / target.scrollWidth);
-            var ratio = target.scrollLeft / maxScroll;
-
-            state.thumb.style.width = thumbWidth + 'px';
-            state.thumb.style.transform = 'translateX(' +
-                (ratio * Math.max(0, trackWidth - thumbWidth)) + 'px)';
-            state.bar.style.display = '';
-            state.bar.classList.add('visible');
-        }
-
-        function syncScrollBars() {
-            getOverflowingTargets().forEach(function(target) {
-                updateThumb(createScrollBar(target));
-            });
-
-            Array.from(document.querySelectorAll('.has-custom-scrollbar')).forEach(function(target) {
-                var state = target.__floatingScrollBar;
-                if (state && (target.scrollWidth <= target.clientWidth + 1 || !positionBar(state))) {
-                    hideBar(state);
-                }
-            });
-        }
-
-        function onPointerDown(event, state) {
-            if (event.button !== 0) return;
-            event.preventDefault();
-            var captureTarget = event.currentTarget;
-            if (captureTarget.setPointerCapture) {
-                captureTarget.setPointerCapture(event.pointerId);
-            }
-            dragState = {
-                state: state,
-                startX: event.clientX,
-                startScroll: state.target.scrollLeft,
-                pointerId: event.pointerId,
-                captureTarget: captureTarget
-            };
-        }
-
-        function onPointerMove(event) {
-            if (!dragState || event.pointerId !== dragState.pointerId) return;
-            event.preventDefault();
-
-            var target = dragState.state.target;
-            var maxScroll = target.scrollWidth - target.clientWidth;
-            if (maxScroll <= 0) return;
-
-            var thumbWidth = dragState.state.thumb.getBoundingClientRect().width;
-            var usableWidth = Math.max(
-                1,
-                dragState.state.track.getBoundingClientRect().width - thumbWidth
-            );
-            var ratioDelta = (event.clientX - dragState.startX) / usableWidth;
-
-            target.scrollLeft = dragState.startScroll + ratioDelta * maxScroll;
-        }
-
-        function onPointerUp(event) {
-            if (!dragState || (event && event.pointerId !== dragState.pointerId)) return;
-            if (dragState.captureTarget && dragState.captureTarget.hasPointerCapture &&
-                dragState.captureTarget.hasPointerCapture(dragState.pointerId)) {
-                dragState.captureTarget.releasePointerCapture(dragState.pointerId);
-            }
-            dragState = null;
-        }
-
-        function initScrollBars() {
-            syncScrollBars();
-        }
-
-        document.addEventListener('DOMContentLoaded', initScrollBars);
-        if (document.readyState !== 'loading') initScrollBars();
-        setTimeout(initScrollBars, 500);
-        window.addEventListener('scroll', initScrollBars, { passive: true });
-        window.addEventListener('pointermove', onPointerMove);
-        window.addEventListener('pointerup', onPointerUp);
-        window.addEventListener('pointercancel', onPointerUp);
-        window.addEventListener('resize', initScrollBars);
-        window.addEventListener('load', initScrollBars);
-    })();
-</script>
-
-
-    {% for javascript in page.javascript %}
-    <script src="/assets/js/{{javascript}}"></script>
-    {% endfor %}
-
-
+  {% for javascript in page.javascript %}
+    <script defer src='{{ '/assets/js/' | append: javascript | relative_url }}'></script>
+  {% endfor %}
 </footer>

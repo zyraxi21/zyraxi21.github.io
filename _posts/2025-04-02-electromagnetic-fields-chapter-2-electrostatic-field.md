@@ -106,7 +106,7 @@ $$\boldsymbol{F}_{12}=\frac{q_{1}q_{2}\boldsymbol{R}_{12}}{4\pi \varepsilon_{0}R
 
 介质均匀极化时，$\boldsymbol{P}$ 为常矢，$\nabla \boldsymbol{\cdot P}=0$，极化电荷只出现在介质的分界面上，称为面极化电荷。
 
-如图，$\boldsymbol{a}_{n}$ 为分界面上由介质 2 指向介质 1 的法向单位矢量。![图](/assets/images/electromagnetic-fields-and-waves/1743148826852.jpg)
+如图，$\boldsymbol{a}_{n}$ 为分界面上由介质 2 指向介质 1 的法向单位矢量。![图]({{ '/assets/images/electromagnetic-fields-and-waves/1743148826852.jpg' | relative_url }})
 分界面上的极化电荷面密度 $\rho_{\mathrm{sp}}$ 为：$$\rho_{\mathrm{sp}}=-\boldsymbol{n\cdot}(\boldsymbol{P}_{1}-\boldsymbol{P}_{2})$$若介质 1 为真空，$$\rho_{\mathrm{sp}}=\boldsymbol{n\cdot P}$$
 
 ## 2.5.2    电位移矢量和介质中静电场的基本方程

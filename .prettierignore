@@ -1,0 +1,15 @@
+_site/
+.jekyll-cache/
+.bundle/
+.cache/
+vendor/
+node_modules/
+assets/vendor/
+assets/js/*.min.js
+src/vendor/
+assets/css/syntax.css
+_posts/
+_data/
+dump.html
+fetched-page*.html
+Gemfile.lock

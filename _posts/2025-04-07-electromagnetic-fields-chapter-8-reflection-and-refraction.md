@@ -75,7 +75,7 @@ excerpt: "电磁场与电磁波平面电磁波反射与折射章节公式整理�
 - 平均坡印廷矢量$$\boldsymbol{S}_{\mathrm{1av}}=\boldsymbol{S}_{\mathrm{2av}}$$其中 $\boldsymbol{S}_{\mathrm{1av}}=\boldsymbol{S}_{\mathrm{iav}}-\boldsymbol{S}_{\mathrm{rav}}$。
 
 # 8.2    电磁波斜入射媒质分界面
-![图](/assets/images/electromagnetic-fields-and-waves/IMG_20250525_160627.jpg)
+![图]({{ '/assets/images/electromagnetic-fields-and-waves/IMG_20250525_160627.jpg' | relative_url }})
 传播条件：入射波为单色均匀平面波，媒质为 L、H、I 媒质。
 
 入射波$$\boldsymbol{E}_{\mathrm{i}}(z)=\boldsymbol{E}_{\mathrm{i 0}}\mathrm{e}^{\mathrm{j(\omega_{\mathrm{i}}t-\boldsymbol{k}_{\mathrm{i}}\boldsymbol{\cdot r})}}$$ $$\boldsymbol{H}_{\mathrm{i}}(z)=\frac{1}{\omega_{\mathrm{i}}\mu_{1}}\boldsymbol{k}_{\mathrm{i}}\times \boldsymbol{E}_{\mathrm{i}}(z)$$

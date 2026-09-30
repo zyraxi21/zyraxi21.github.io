@@ -1,37 +1,50 @@
 {% if paginator.total_pages > 1 %}
-<div class="pagination text-align">
-    <div class="btn-group">
-
-        {% if paginator.previous_page %}
-        {% if paginator.previous_page == 1 %}
-        <a href="/" class="btn btn-outline-secondary">&laquo;</a>
-        {% else %}
-        <a href="/page{{paginator.previous_page}}" class="btn btn-outline-secondary">&laquo;</a>
-        {% endif %}
-        {% else %}
-        <button disabled="disabled" href="javascript:;" class="btn btn-outline-secondary">&laquo;</button>
-        {% endif %}
-
-        {% if paginator.page == 1 %}
-        <a href="javascript:;" class="active btn btn-outline-secondary">1</a>
-        {% else %}
-        <a href="/" class="btn btn-outline-secondary">1</a>
-        {% endif %}
-
-        {% for count in (2..paginator.total_pages) %}
+  <nav class='pagination text-align' aria-label='文章分页'>
+    <div class='btn-group'>
+      {% if paginator.previous_page %}
+        <a
+          href='{{ paginator.previous_page_path | relative_url }}'
+          class='btn btn-outline-secondary'
+          rel='prev'
+          aria-label='上一页'
+          >&laquo;</a
+        >
+      {% else %}
+        <button type='button' disabled class='btn btn-outline-secondary' aria-label='上一页'>
+          &laquo;
+        </button>
+      {% endif %}
+      {% for count in (1..paginator.total_pages) %}
         {% if count == paginator.page %}
-        <a href="javascript:;" class="active btn btn-outline-secondary">{{count}}</a>
+          <span class='active btn btn-outline-secondary' aria-current='page'>{{ count }}</span>
         {% else %}
-        <a href="/page{{count}}" class="btn btn-outline-secondary">{{count}}</a>
+          {% if count == 1 %}
+            {% assign pagination_url = '/' %}
+          {% else %}
+            {% assign pagination_url = site.paginate_path | replace: ':num', count %}
+          {% endif %}
+          <a
+            href='{{ pagination_url | relative_url }}'
+            class='btn btn-outline-secondary'
+            aria-label='第 {{ count }} 页'
+          >
+            {{- count -}}
+          </a>
         {% endif %}
-        {% endfor %}
-
-        {% if paginator.next_page %}
-        <a href="/page{{paginator.next_page}}" class="btn btn-outline-secondary">&raquo;</a>
-        {% else %}
-        <button disabled="disabled" href="javascript:;" class="btn btn-outline-secondary">&raquo;</button>
-        {% endif %}
-
+      {% endfor %}
+      {% if paginator.next_page %}
+        <a
+          href='{{ paginator.next_page_path | relative_url }}'
+          class='btn btn-outline-secondary'
+          rel='next'
+          aria-label='下一页'
+          >&raquo;</a
+        >
+      {% else %}
+        <button type='button' disabled class='btn btn-outline-secondary' aria-label='下一页'>
+          &raquo;
+        </button>
+      {% endif %}
     </div>
-</div>
+  </nav>
 {% endif %}

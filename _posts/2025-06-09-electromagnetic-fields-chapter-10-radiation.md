@@ -92,9 +92,9 @@ excerpt: "电磁场与电磁波电磁波辐射章节公式整理。"
 电场强度的归一化方向性函数为：$$F(\theta,\varphi)=\frac{|E(\theta,\varphi)|}{|E_{\mathrm{max}}|}=|\sin\theta|$$式中 $|E(\theta,\varphi)|$ 为指定距离上某方向 $(\theta,\varphi)$ 的电场强度，$|E_{\mathrm{max}}|$ 为同一距离上最大的电场强度。
 
 把方向性函数绘制成图，称为**方向图**。
-![图](/assets/images/electromagnetic-fields-and-waves/IMG_20250531_222231.jpg)
-![图](/assets/images/electromagnetic-fields-and-waves/IMG_20250531_222336.jpg)
-![图](/assets/images/electromagnetic-fields-and-waves/IMG_20250531_222629.png)
+![图]({{ '/assets/images/electromagnetic-fields-and-waves/IMG_20250531_222231.jpg' | relative_url }})
+![图]({{ '/assets/images/electromagnetic-fields-and-waves/IMG_20250531_222336.jpg' | relative_url }})
+![图]({{ '/assets/images/electromagnetic-fields-and-waves/IMG_20250531_222629.png' | relative_url }})
 主波瓣方向：最大辐射功率的方向。
 半功率点方向：达到最大辐射功率的一半的方向。半功率点也是相应场强下降为最大值的 $\frac{\sqrt{ 2 }}{2}$ 的位置。
 主瓣宽度：主波瓣方向两侧半功率点方向之间的夹角。记作 $2\theta_{0.5}$。

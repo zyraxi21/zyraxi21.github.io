@@ -1,41 +1,28 @@
-<div class="row">
+<div class='row blog-layout'>
+  <aside class='col-md-4 order-lg-2' aria-label='博客分类'>
+    {% include sidebar-post-tag.html %}
+  </aside>
+  <div class='col-md-8 order-lg-1'>
+    <!-- Blog list -->
+    <ul id='posts-list'>
+      {% for post in site.posts %}
+        <li class='posts-list-item' data-categories='{{ post.categories | jsonify | escape }}'>
+          <div class='posts-content'>
+            <span class='posts-list-meta'>{{ post.date | date: '%Y-%m-%d' }}</span>
+            <a class='posts-list-name bubble-float-left' href='{{ post.url | relative_url }}'>
+              <span class='badge post-category-badge'>{{ post.categories | first }}</span>
+              {{ post.title }}
+            </a>
+            <span class='circle'></span>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
 
-    <div class="col-md-8">
+    <!-- Pagination -->
+    {% include pagination.html %}
 
-        <!-- Blog list -->
-        <ul id="posts-list">
-            {% for post in site.posts %}
-            <li class="posts-list-item" data-categories="{{ post.categories | join: ',' | downcase }}">
-                <div class="posts-content">
-                    <span class="posts-list-meta">{{ post.date | date: "%Y-%m-%d" }}</span>
-                    <a class="posts-list-name bubble-float-left" href="{{ post.url | relative_url }}">
-                        <span class="badge post-category-badge">{{ post.categories | first }}</span>
-                        {{ post.title }}
-                    </a>
-                    <span class='circle'></span>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <!-- Pagination -->
-        {% include pagination.html %}
-
-        <!-- Comments -->
-        {% include disqus-comments.html %}
-
-    </div>
-
-    <div class="col-md-4">
-        {% include sidebar-post-tag.html %}
-    </div>
-
+    <!-- Comments -->
+    {% include disqus-comments.html %}
+  </div>
 </div>
-<script>
-    $(document).ready(function(){
-
-        // Enable bootstrap tooltip
-        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) { new bootstrap.Tooltip(el); });
-
-    });
-</script>

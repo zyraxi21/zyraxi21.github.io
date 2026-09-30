@@ -1,19 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <!-- lang 声明页面语言为简体中文（中国），浏览器据此识别语言，不再弹出翻译气泡 -->
-<html lang="zh-Hans-CN">
+<html lang='{{ site.lang | default: 'zh-Hans-CN' }}'>
+  {% include head.html %}
 
-{% include head.html %}
-
-    <body class="page-{{ page.menu | default: 'other' }}">
+  <body id='top' class='page-{{ page.menu | default: 'other' | escape }}'>
+    <a class='skip-link' href='#main-content'>跳到正文</a>
 
     {% include header.html %}
 
-        <div class="content">
-            {{ content }}
-        </div>
+    <main id='main-content' class='content' tabindex='-1'>
+      {{ content }}
+    </main>
 
     {% include footer.html %}
-
-    </body>
-
+  </body>
 </html>

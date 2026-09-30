@@ -144,7 +144,7 @@ $\psi=0$ 时，$S$ 内没有源或者 $S$ 内的正源和负源完全相等并�
 
 若某一区域内所有的点上的矢量场的散度都等于零，则称该区域内的矢量场为无源场。
 
-散度的物理意义如图：![图](/assets/images/electromagnetic-fields-and-waves/1742287819667.jpg)
+散度的物理意义如图：![图]({{ '/assets/images/electromagnetic-fields-and-waves/1742287819667.jpg' | relative_url }})
 
 ### 2. 散度的计算
 

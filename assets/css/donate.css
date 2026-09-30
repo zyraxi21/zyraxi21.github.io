@@ -1,0 +1,60 @@
+* {
+  margin: auto;
+  padding: 0;
+  border: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family:
+    Noto Sans CJK SC DemiLight,
+    -apple-system,
+    SF UI Text,
+    Arial,
+    Microsoft YaHei,
+    Hiragino Sans GB,
+    WenQuanYi Micro Hei,
+    sans-serif;
+  color: #333;
+}
+
+img {
+  max-width: 100%;
+}
+
+h3 {
+  padding: 10px;
+}
+
+.container {
+  text-align: center;
+}
+
+.title {
+  padding: 2em 0;
+  background-color: #fff;
+}
+
+.content {
+  padding: 2em 1em;
+  color: #fff;
+}
+
+.wepay {
+  background-color: #22ab38;
+}
+
+.qq {
+  background-color: #12b7f5;
+}
+
+.other {
+  background-color: #ff7055;
+}
+
+#qrcode {
+  border-radius: 32px;
+}
