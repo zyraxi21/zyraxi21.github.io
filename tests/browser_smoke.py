@@ -1,6 +1,7 @@
 """Exercise the built site in Chromium, including Jekyll's extensionless URLs."""
 import argparse
 import json
+import re
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -8,6 +9,59 @@ import threading
 from urllib.parse import unquote, urlsplit
 
 from playwright.sync_api import expect, sync_playwright
+
+
+def contrast_ratio(foreground, background):
+    def luminance(color):
+        channels = [float(value) / 255 for value in re.findall(r'[\d.]+', color)[:3]]
+        linear = [value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4 for value in channels]
+        return sum(value * weight for value, weight in zip(linear, [0.2126, 0.7152, 0.0722]))
+    values = sorted([luminance(foreground), luminance(background)])
+    return (values[1] + 0.05) / (values[0] + 0.05)
+
+
+def check_code_alignment(page):
+    metrics = page.locator('.code-block-wrapper:not(.mermaid-block-wrapper)').evaluate_all('''(blocks) => blocks.map((block) => {
+      const code = block.querySelector('pre code');
+      const gutter = block.querySelector('.code-lines');
+      const codeRange = document.createRange(); codeRange.selectNodeContents(code);
+      const numberRange = document.createRange(); numberRange.selectNodeContents(gutter.firstElementChild);
+      return {
+        topDifference: Math.abs(codeRange.getClientRects()[0].top - numberRange.getBoundingClientRect().top),
+        codeLine: parseFloat(getComputedStyle(code).lineHeight),
+        numberLine: parseFloat(getComputedStyle(gutter).lineHeight),
+        codeFont: getComputedStyle(code).fontSize,
+        numberFont: getComputedStyle(gutter).fontSize,
+      };
+    })''')
+    assert metrics
+    for metric in metrics:
+        assert metric['topDifference'] <= 1.5 and abs(metric['codeLine'] - metric['numberLine']) < 0.1, metric
+        assert metric['codeFont'] == metric['numberFont'], metric
+
+
+def check_glass(element):
+    style = element.evaluate('(element) => ({background: getComputedStyle(element).backgroundColor, blur: getComputedStyle(element).backdropFilter})')
+    rgba = [float(value) for value in re.findall(r'[\d.]+', style['background'])]
+    assert len(rgba) == 4 and 0.5 < rgba[3] < 1, style
+    assert 'blur(' in style['blur'], style
+
+
+def open_panel_with_motion(page, trigger, panel):
+    motion = page.evaluate('''async ({trigger, panel}) => {
+      const dialog = document.querySelector(panel);
+      document.querySelector(trigger).click();
+      const start = dialog.getBoundingClientRect();
+      await new Promise(requestAnimationFrame);
+      const animations = dialog.getAnimations();
+      const durations = animations.map((animation) => animation.effect.getTiming().duration);
+      await Promise.allSettled(animations.map((animation) => animation.finished));
+      const end = dialog.getBoundingClientRect();
+      return {distance: Math.hypot(start.x - end.x, start.y - end.y), durations};
+    }''', {'trigger': trigger, 'panel': panel})
+    assert motion['durations'] and max(motion['durations']) >= 150, motion
+    assert motion['distance'] >= 8, motion
+    assert page.locator(panel).evaluate('(dialog) => dialog.matches(":modal")')
 
 
 def main():
@@ -108,6 +162,26 @@ def main():
             category = filters.nth(1).get_attribute('data-category')
             filters.nth(1).locator('a').click()
             expect(filters.nth(1)).to_have_class('list-group-item category-filter active')
+            for width in [1440, 375]:
+                page.set_viewport_size({'width': width, 'height': 1000})
+                for scheme in ['light', 'dark']:
+                    page.emulate_media(color_scheme=scheme)
+                    selected = filters.nth(1)
+                    page.mouse.move(0, 0)
+                    normal_background = selected.evaluate('(element) => getComputedStyle(element).backgroundColor')
+                    selected.hover()
+                    selected.locator('a').focus()
+                    colors = selected.evaluate('''(element) => ({
+                      background:getComputedStyle(element).backgroundColor,
+                      foreground:getComputedStyle(element.querySelector('a')).color,
+                      badgeBackground:getComputedStyle(element.querySelector('.badge')).backgroundColor,
+                      badgeForeground:getComputedStyle(element.querySelector('.badge')).color,
+                    })''')
+                    assert normal_background == colors['background'], colors
+                    assert contrast_ratio(colors['foreground'], colors['background']) >= 4.5, colors
+                    assert contrast_ratio(colors['badgeForeground'], colors['badgeBackground']) >= 4.5, colors
+            page.set_viewport_size({'width': 1440, 'height': 1000})
+            page.emulate_media(color_scheme='light')
             visible_categories = page.locator('#posts-list .posts-list-item:not([hidden])').evaluate_all('(items) => items.map((item) => JSON.parse(item.dataset.categories))')
             assert visible_categories and all(category in categories for categories in visible_categories)
             page.reload()
@@ -195,31 +269,91 @@ def main():
             page.evaluate('document.getElementById("smoke-overflow").remove(); document.dispatchEvent(new Event("site:content-updated"))')
 
             page.set_viewport_size({'width': 375, 'height': 812})
-            page.emulate_media(reduced_motion='reduce')
+            page.emulate_media(reduced_motion='no-preference')
             page.goto(url)
             page.wait_for_load_state('networkidle')
             assert page.evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1')
             toggle = page.locator('.site-nav-toggle')
             expect(toggle).to_be_visible()
-            expect(page.locator('#site-navigation')).to_be_hidden()
-            toggle.click()
+            drawer = page.locator('#site-nav-panel')
+            expect(drawer).to_be_hidden()
+            open_panel_with_motion(page, '.site-nav-toggle', '#site-nav-panel')
             expect(toggle).to_have_attribute('aria-expanded', 'true')
             expect(page.locator('#site-navigation')).to_be_visible()
+            check_glass(drawer)
+            assert page.evaluate('getComputedStyle(document.documentElement).overflowY') == 'hidden'
+            for _ in range(page.locator('.site-header-nav-item').count() + 2):
+                page.keyboard.press('Tab')
+                assert page.evaluate('Boolean(document.activeElement.closest("#site-nav-panel"))')
+            page.keyboard.press('Shift+Tab')
+            assert page.evaluate('Boolean(document.activeElement.closest("#site-nav-panel"))')
+            page.screenshot(path=str(screenshots / 'mobile-drawer.png'))
+            exit_motion = page.evaluate('''() => {
+              const dialog = document.querySelector('#site-nav-panel');
+              dialog.querySelector('.mobile-panel-close').click();
+              return {open:dialog.open, durations:dialog.getAnimations().map((animation) => animation.effect.getTiming().duration)};
+            }''')
+            assert exit_motion['open'] and exit_motion['durations'], exit_motion
+            expect(drawer).to_be_hidden()
+            expect(toggle).to_be_focused()
+            toggle.click()
             page.keyboard.press('Escape')
             expect(toggle).to_be_focused()
-            expect(page.locator('#site-navigation')).to_be_hidden()
-            page.evaluate('window.scrollTo(0, 200)')
+            expect(drawer).to_be_hidden()
+            toggle.click()
+            drawer.locator('h2').click()
+            assert drawer.evaluate('(dialog) => dialog.open')
+            page.mouse.click(8, 300)
+            expect(drawer).to_be_hidden()
+            assert page.evaluate('getComputedStyle(document.documentElement).overflowY') != 'hidden'
+            toggle.click()
+            page.set_viewport_size({'width': 1440, 'height': 1000})
+            expect(drawer).to_be_hidden()
+            expect(page.locator('.site-header #site-navigation')).to_be_visible()
+            page.set_viewport_size({'width': 375, 'height': 812})
+            page.evaluate('window.scrollTo({top:200, behavior:"instant"})')
             expect(page.locator('.site-header')).to_have_class('site-header site-header-nav-scrolled-ph')
+            page.locator('.site-header').evaluate('async (header) => { await Promise.allSettled(header.getAnimations().map((animation) => animation.finished)); }')
+            check_glass(page.locator('.site-header'))
             page.screenshot(path=str(screenshots / 'home-mobile-dark.png'))
+            toggle.click()
+            drawer.locator('.site-header-nav-item', has_text='博客').click()
+            page.wait_for_load_state('networkidle')
+            assert urlsplit(page.url).path == baseurl + '/blog'
+            assert page.evaluate('getComputedStyle(document.documentElement).overflowY') != 'hidden'
             page.goto(origin + post_url)
             page.wait_for_load_state('networkidle')
             page.locator('.mermaid-rendered svg').first.wait_for(timeout=30000)
             directory = page.locator('#post-directory-module')
-            assert not directory.evaluate('(element) => element.open')
-            directory.locator('summary').click()
-            expect(directory.locator('nav')).to_be_visible()
-            directory.locator('a').first.click()
-            assert not directory.evaluate('(element) => element.open')
+            expect(directory).to_be_hidden()
+            directory_toggle = page.locator('.post-directory-toggle')
+            expect(directory_toggle).to_be_visible()
+            check_glass(directory_toggle)
+            check_code_alignment(page)
+            position = directory_toggle.bounding_box()
+            assert position['x'] > 200 and position['y'] > 650, position
+            open_panel_with_motion(page, '.post-directory-toggle', '#post-directory-panel')
+            directory_panel = page.locator('#post-directory-panel')
+            check_glass(directory_panel)
+            page.screenshot(path=str(screenshots / 'mobile-directory.png'))
+            first_heading_id = page.locator('.post-directory a').first.get_attribute('href')[1:]
+            page.locator('.post-directory a').first.click()
+            expect(directory_panel).to_be_hidden()
+            expect(directory_toggle).to_have_attribute('aria-expanded', 'false')
+            page.wait_for_function('(id) => document.activeElement.id === decodeURIComponent(id)', arg=first_heading_id)
+            directory_toggle.click()
+            page.keyboard.press('Escape')
+            expect(directory_panel).to_be_hidden()
+            expect(directory_toggle).to_be_focused()
+            after_scroll = directory_toggle.bounding_box()
+            assert abs(position['x'] - after_scroll['x']) < 1 and abs(position['y'] - after_scroll['y']) < 1, after_scroll
+            page.emulate_media(reduced_motion='reduce')
+            directory_toggle.click()
+            expect(directory_panel).to_be_visible()
+            page.set_viewport_size({'width': 1440, 'height': 1000})
+            expect(directory_panel).to_be_hidden()
+            expect(directory.locator('.post-directory')).to_be_visible()
+            page.set_viewport_size({'width': 375, 'height': 812})
             page.screenshot(path=str(screenshots / 'post-mobile-dark.png'))
             for width in [320, 375, 390, 414, 768]:
                 page.set_viewport_size({'width': width, 'height': 900})
@@ -227,10 +361,15 @@ def main():
                     page.goto(origin + route)
                     page.wait_for_load_state('networkidle')
                     assert page.evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1'), f'Page overflow at {width}px: {route}'
+                    if route == post_url:
+                        check_code_alignment(page)
+                        expect(page.locator('.post-directory-toggle')).to_be_visible()
+                    if 'Example-No-Sidebar-Nav' in route:
+                        assert page.locator('.post-directory-toggle').count() == 0
             assert not errors, errors
             assert not missing, missing
             browser.close()
-            print(f'Browser checks passed (desktop/mobile, math/diagrams, copy/fallbacks, categories, TOC, scrollbars; baseurl={baseurl or "/"}).')
+            print(f'Browser checks passed (animated panels/focus/blur, category contrast, line alignment, math/diagrams, copy, scrollbars, portrait layouts; baseurl={baseurl or "/"}).')
     finally:
         server.shutdown()
         server.server_close()

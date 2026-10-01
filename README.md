@@ -56,7 +56,7 @@ bundle exec jekyll build --baseurl /preview --destination .cache/preview
 npm run check:site -- --site .cache/preview --baseurl /preview
 ```
 
-仓库已提供代码质量和 GitHub Pages 部署工作流。竖屏使用可展开导航菜单；文章目录在窄屏中位于正文前并默认折叠，博客分类显示为可换行的筛选按钮。
+仓库已提供代码质量和 GitHub Pages 部署工作流。竖屏使用带动画的导航侧栏；文章目录通过右下角的浮动玻璃按钮打开，博客分类显示为可换行的筛选按钮。
 
 浏览器回归检查需要 Python 3.9+ 与 Playwright，覆盖复制、公式、图表、分类、目录、导航及 320–768px 竖屏布局：
 

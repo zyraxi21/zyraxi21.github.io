@@ -4,3 +4,49 @@
     <ol></ol>
   </nav>
 </details>
+<button
+  class='post-directory-toggle'
+  type='button'
+  aria-label='打开文章目录'
+  aria-haspopup='dialog'
+  aria-expanded='false'
+  aria-controls='post-directory-panel'
+  hidden
+>
+  <svg
+    width='20'
+    height='20'
+    viewBox='0 0 24 24'
+    fill='none'
+    stroke='currentColor'
+    stroke-width='2'
+    aria-hidden='true'
+  >
+    <path d='M8 5h13M8 12h13M8 19h13M3 5h1M3 12h1M3 19h1'></path>
+  </svg>
+  <span>目录</span>
+</button>
+<dialog
+  id='post-directory-panel'
+  class='mobile-panel mobile-directory-panel'
+  aria-labelledby='post-directory-panel-title'
+>
+  <div class='mobile-panel-header'>
+    <h2 id='post-directory-panel-title'>文章目录</h2>
+    <button class='mobile-panel-close' type='button' aria-label='关闭文章目录'>
+      <span>关闭</span>
+      <svg
+        width='18'
+        height='18'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        aria-hidden='true'
+      >
+        <path d='m6 6 12 12M6 18 18 6'></path>
+      </svg>
+    </button>
+  </div>
+  <div class='mobile-panel-body'></div>
+</dialog>

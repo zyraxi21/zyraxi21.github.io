@@ -105,8 +105,35 @@
   cursor: pointer;
 }
 
-.category-filter:hover {
+/* Selected filters keep the same readable theme color during hover and focus. */
+#blog-categories .category-filter:not(.active):hover,
+#blog-categories .category-filter:not(.active):focus-within {
   background-color: var(--surface-hover);
+}
+
+#blog-categories .category-filter.active,
+#blog-categories .category-filter.active:hover,
+#blog-categories .category-filter.active:focus-within {
+  color: var(--brand-on-primary);
+  background-color: var(--brand-primary-strong);
+  border-color: var(--brand-primary-strong);
+}
+
+#blog-categories .category-link,
+#blog-categories .category-link:hover,
+#blog-categories .category-link:focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+#blog-categories .badge {
+  color: var(--brand-on-primary);
+  background: var(--brand-primary-strong);
+}
+
+#blog-categories .category-filter.active .badge {
+  color: var(--text-color);
+  background: var(--surface);
 }
 
 .blog-slogan {
@@ -182,10 +209,6 @@
     padding: 6px 12px;
     border: 1px solid var(--border-color);
     border-radius: 24px;
-  }
-  .category-filter.active .badge {
-    color: var(--brand-primary);
-    background: var(--surface);
   }
   .blog-layout .sidebar-title {
     margin-bottom: 12px;

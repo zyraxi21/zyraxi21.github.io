@@ -1,3 +1,5 @@
+import { createMobilePanel } from './panels.js';
+
 function initDirectory() {
   const directory = document.querySelector('.post-directory ol');
   if (!directory) return;
@@ -30,13 +32,35 @@ export function initNavigation() {
   const compact = window.matchMedia('(max-width: 991px)');
   const directory = document.querySelector('#post-directory-module');
   if (directory) {
+    const nav = directory.querySelector('nav');
+    const dialog = document.querySelector('#post-directory-panel');
+    const toggle = document.querySelector('.post-directory-toggle');
+    const panel = createMobilePanel(dialog, toggle);
     const updateDirectory = () => {
+      void panel.close({ immediate: true, restoreFocus: false });
+      directory.hidden = compact.matches;
       directory.open = !compact.matches;
+      toggle.hidden = !compact.matches;
+      (compact.matches ? dialog.querySelector('.mobile-panel-body') : directory).append(nav);
     };
     updateDirectory();
     compact.addEventListener('change', updateDirectory);
-    directory.querySelector('nav')?.addEventListener('click', (event) => {
-      if (compact.matches && event.target.closest('a')) directory.open = false;
+    nav.addEventListener('click', (event) => {
+      const link = event.target.closest('a');
+      if (
+        !compact.matches ||
+        !link ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        event.altKey
+      )
+        return;
+      const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+      void panel.close({ restoreFocus: false }).then(() => {
+        heading?.setAttribute('tabindex', '-1');
+        heading?.focus({ preventScroll: true });
+      });
     });
   }
 
@@ -44,29 +68,18 @@ export function initNavigation() {
   if (header) {
     const toggle = header.querySelector('.site-nav-toggle');
     const navigation = header.querySelector('.site-header-nav');
-    function setMenu(open) {
-      toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? '收起导航菜单' : '展开导航菜单');
-      navigation.hidden = compact.matches && !open;
-    }
+    const dialog = document.querySelector('#site-nav-panel');
+    const panel = createMobilePanel(dialog, toggle);
+    const originalPosition = document.createComment('desktop navigation');
+    navigation.before(originalPosition);
     function updateMenu() {
+      void panel.close({ immediate: true, restoreFocus: false });
       toggle.hidden = !compact.matches;
-      setMenu(false);
+      if (compact.matches) dialog.querySelector('.mobile-panel-body').append(navigation);
+      else originalPosition.after(navigation);
     }
-    toggle.addEventListener('click', () =>
-      setMenu(toggle.getAttribute('aria-expanded') !== 'true'),
-    );
     navigation.addEventListener('click', (event) => {
-      if (event.target.closest('a')) setMenu(false);
-    });
-    document.addEventListener('click', (event) => {
-      if (!header.contains(event.target)) setMenu(false);
-    });
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-        setMenu(false);
-        toggle.focus();
-      }
+      if (event.target.closest('a')) void panel.close({ immediate: true, restoreFocus: false });
     });
     compact.addEventListener('change', updateMenu);
     updateMenu();

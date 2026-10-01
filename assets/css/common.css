@@ -20,6 +20,7 @@
   --text-subtle: #9aa2ab;
   --code-bg: #f6f8fa;
   --header-bg: rgba(255, 255, 255, 0.14);
+  --glass-surface: rgba(255, 255, 255, 0.86);
   --shadow-color: rgba(0, 0, 0, 0.12);
 
   --success: #28a745;
@@ -57,6 +58,7 @@
     --text-subtle: #7d8894;
     --code-bg: #0d1117;
     --header-bg: rgba(16, 20, 24, 0.42);
+    --glass-surface: rgba(23, 28, 33, 0.86);
     --shadow-color: rgba(0, 0, 0, 0.45);
 
     --success: #3fb950;
@@ -702,6 +704,10 @@ samp *,
   margin: 0.8em 0;
 }
 .code-block-wrapper {
+  --code-font-size: 0.85em;
+  --code-line-height: 1.45;
+  --code-padding-y: 16px;
+  --code-padding-x: 16px;
   position: relative;
   isolation: isolate;
   border: 1.5px solid var(--brand-primary-border);
@@ -749,6 +755,8 @@ samp *,
 
 .code-block-wrapper pre code,
 .code-block-wrapper .highlight code {
+  font-size: inherit;
+  line-height: inherit;
   display: block;
   color: var(--brand-primary-hover);
 }
@@ -765,14 +773,24 @@ samp *,
   flex-direction: column;
   align-items: flex-end;
   /* 与 Primer Markdown 的 pre 排版保持一致，避免行号纵向偏移 */
-  padding: 16px 8px;
+  padding: var(--code-padding-y) 8px;
   color: var(--brand-primary-hover);
   background: var(--brand-primary-soft);
   border-right: 1px solid var(--brand-primary-border);
   user-select: none;
   font-family: 'Ubuntu Mono', 'LXGW WenKai Mono', monospace !important;
-  font-size: 85%;
-  line-height: 1.45;
+  font-size: var(--code-font-size);
+  line-height: var(--code-line-height);
+}
+
+.code-block-wrapper .code-body pre {
+  padding: var(--code-padding-y) var(--code-padding-x);
+  font-size: var(--code-font-size);
+  line-height: var(--code-line-height);
+}
+
+.code-block-wrapper .code-body pre.has-custom-scrollbar {
+  padding-bottom: 40px;
 }
 
 .code-block-wrapper .code-body > pre,
