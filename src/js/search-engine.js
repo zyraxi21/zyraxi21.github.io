@@ -23,17 +23,34 @@ export function prepareSearchIndex(entries) {
     )
       return [];
     seen.add(entry.url);
+    const tagNames = [];
+    const seenTags = new Set();
+    for (const tag of Array.isArray(entry.tags) ? entry.tags : []) {
+      if (typeof tag !== 'string') continue;
+      const key = normalizeSearch(tag).trim();
+      if (!key || seenTags.has(key)) continue;
+      seenTags.add(key);
+      tagNames.push(tag.trim());
+    }
     const document = {
       title: entry.title,
       url: entry.url,
       type: entry.type === 'post' ? 'post' : 'page',
       date: typeof entry.date === 'string' ? entry.date : '',
-      tags: Array.isArray(entry.tags) ? entry.tags.filter((tag) => typeof tag === 'string') : [],
+      tags: tagNames,
       content: typeof entry.content === 'string' ? entry.content : '',
+      excerpt:
+        typeof entry.excerpt === 'string'
+          ? entry.excerpt
+          : typeof entry.content === 'string'
+            ? entry.content
+            : '',
     };
     const title = normalizeSearch(document.title);
     const tags = normalizeSearch(document.tags.join(' '));
-    const content = normalizeSearch(document.content);
+    const source = normalizeSearch(document.content);
+    const preview = normalizeSearch(document.excerpt);
+    const content = source === preview ? source : `${source} ${preview}`;
     return [
       { ...document, fields: { title, tags, content, all: [title, tags, content].join(' ') } },
     ];
@@ -109,4 +126,13 @@ export function searchExcerpt(text, query, limit = 160) {
   if (/[\uDC00-\uDFFF]/u.test(source[start] ?? '')) start -= 1;
   if (/[\uDC00-\uDFFF]/u.test(source[end] ?? '')) end += 1;
   return (start ? '…' : '') + source.slice(start, end).trim() + (end < source.length ? '…' : '');
+}
+
+export function searchResultExcerpt(document, query, limit = 160) {
+  const visible = normalizeSearch(
+    [document.title, document.tags.join(' '), document.excerpt].join(' '),
+  );
+  // 直接查 LaTeX 命令时仍展示命中源码，避免摘要掩盖匹配依据。
+  const sourceOnly = queryTerms(query).some((term) => !visible.includes(term));
+  return searchExcerpt(sourceOnly ? document.content : document.excerpt, query, limit);
 }

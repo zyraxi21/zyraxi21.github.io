@@ -209,6 +209,40 @@
   font-size: 13px;
 }
 
+/* 输入时可视区域较低，优先保留完整的点击目标和结果标题。 */
+.site-search-popover.is-compact .site-search-scroll {
+  padding: 4px;
+}
+
+.site-search-popover.is-compact:has([role='option']) .search-preview-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.site-search-popover.is-compact .search-preview-link {
+  min-height: 44px;
+  padding: 8px 12px;
+  gap: 0;
+  align-items: center;
+}
+
+.site-search-popover.is-compact .search-result-meta,
+.site-search-popover.is-compact .search-result-excerpt {
+  display: none;
+}
+
+.site-search-popover.is-compact .search-result-title {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .site-search-popover mark,
 .search-page mark {
   padding: 0 0.08em;

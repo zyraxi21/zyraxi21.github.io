@@ -1,7 +1,31 @@
 import mermaid from 'mermaid';
 import { copyText, createCopyButton } from './copy.js';
 
+function keepDiagramLabelsReadable(svg) {
+  const labels = [...svg.querySelectorAll('text')].filter((text) => text.textContent.trim());
+  const minimumHeight = () =>
+    Math.min(
+      ...labels.map((text) => text.getBoundingClientRect().height).filter((height) => height > 0),
+    );
+  const height = minimumHeight();
+  if (!Number.isFinite(height)) return;
+  let width = Math.ceil((svg.getBoundingClientRect().width * 13) / height);
+  const previousWidth = svg.style.width;
+  // 在最小宽度下实际测量，为缩放文字的像素取整保留余量。
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    svg.style.minWidth = `${width}px`;
+    svg.style.width = `${width}px`;
+    const measured = minimumHeight();
+    if (measured >= 12) break;
+    width = Math.ceil((width * 13) / measured);
+  }
+  svg.style.width = previousWidth;
+}
+
 async function rasterizeSvg(svg) {
+  const background = getComputedStyle(document.documentElement)
+    .getPropertyValue('--page-bg')
+    .trim();
   const source = svg.cloneNode(true);
   const viewBox = source.viewBox.baseVal;
   const width = viewBox.width || 800;
@@ -10,6 +34,7 @@ async function rasterizeSvg(svg) {
   source.setAttribute('height', height);
   source.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
   source.style.setProperty('background', 'transparent', 'important');
+  source.style.removeProperty('min-width');
   const markup = new XMLSerializer().serializeToString(source);
 
   return new Promise((resolve, reject) => {
@@ -24,6 +49,9 @@ async function rasterizeSvg(svg) {
         canvas.height = Math.max(1, Math.round(height * scale));
         const context = canvas.getContext('2d');
         if (!context) throw new Error('浏览器不支持画布');
+        // PNG 自带当前模式的底色，粘贴到其他背景时仍能辨认连线。
+        context.fillStyle = background;
+        context.fillRect(0, 0, canvas.width, canvas.height);
         context.scale(scale, scale);
         context.drawImage(image, 0, 0, width, height);
         canvas.toBlob((blob) => {
@@ -70,16 +98,15 @@ export async function initDiagrams(content) {
     const label = document.createElement('span');
     label.className = 'code-lang';
     label.textContent = 'Mermaid';
-    header.append(
-      label,
-      createCopyButton('复制 PNG', () => copyDiagram(pre)),
-    );
+    const copyButton = createCopyButton('复制 PNG', () => copyDiagram(pre));
+    copyButton.disabled = true;
+    header.append(label, copyButton);
     const body = document.createElement('div');
     body.className = 'code-body mermaid-code-body';
     pre.before(wrapper);
     wrapper.append(header, body);
     body.append(pre);
-    return { pre, source };
+    return { pre, source, copyButton, hasRendered: false };
   });
 
   const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -95,7 +122,8 @@ export async function initDiagrams(content) {
       securityLevel: 'strict',
       htmlLabels: false,
     });
-    for (const { pre, source } of blocks) {
+    for (const block of blocks) {
+      const { pre, source, copyButton } = block;
       if (requestedVersion !== version) break;
       const id = `mermaid-diagram-${sequence++}`;
       try {
@@ -106,6 +134,8 @@ export async function initDiagrams(content) {
         pre.classList.remove('mermaid-error');
         // SVG 放入文章后重新核对画布边界，完整包含节点、文字与连线。
         const svg = pre.querySelector('svg');
+        await document.fonts?.ready;
+        if (requestedVersion !== version) continue;
         const bounds = svg.getBBox();
         const padding = 8;
         if (bounds.width > 0 && bounds.height > 0) {
@@ -119,8 +149,15 @@ export async function initDiagrams(content) {
             ].join(' '),
           );
           svg.style.maxWidth = `${bounds.width + 2 * padding}px`;
+          // 宽图局部滚动，避免把节点及坐标轴文字缩成难以辨认的标记。
+          keepDiagramLabelsReadable(svg);
         }
         result.bindFunctions?.(pre);
+        // 首次图表完成后才可复制，避免加载期间提前点击得到失败反馈。
+        if (!block.hasRendered) {
+          copyButton.disabled = false;
+          block.hasRendered = true;
+        }
       } catch (error) {
         document.getElementById(`d${id}`)?.remove();
         pre.classList.add('mermaid-error');

@@ -116,9 +116,7 @@ export function initScrollbars(content) {
   }
 
   function sync() {
-    for (const target of content.querySelectorAll(
-      'table, .code-block-wrapper pre:not(.mermaid-rendered)',
-    )) {
+    for (const target of content.querySelectorAll('table, .code-block-wrapper pre')) {
       if (target.scrollWidth > target.clientWidth + 1 && !states.has(target)) create(target);
     }
     for (const [target, state] of states) {

@@ -2,7 +2,7 @@ import {
   matchingRanges,
   prepareSearchIndex,
   searchDocuments,
-  searchExcerpt,
+  searchResultExcerpt,
 } from './search-engine.js';
 
 const PREVIEW_COUNT = 5;
@@ -51,7 +51,7 @@ function resultLink(result, query, compact = false) {
   title.append(highlighted(result.title, query));
   const excerpt = document.createElement('span');
   excerpt.className = 'search-result-excerpt';
-  excerpt.append(highlighted(searchExcerpt(result.content, query, compact ? 100 : 180), query));
+  excerpt.append(highlighted(searchResultExcerpt(result, query, compact ? 100 : 180), query));
   link.append(meta, title, excerpt);
   return link;
 }
@@ -100,7 +100,9 @@ function initHeaderSearch(root, loadIndex) {
     const viewport = window.visualViewport;
     const bottom = (viewport?.offsetTop ?? 0) + (viewport?.height ?? window.innerHeight);
     popover.style.top = top + 'px';
-    popover.style.maxHeight = Math.max(96, Math.min(570, bottom - top - 16)) + 'px';
+    const availableHeight = Math.max(0, Math.min(570, bottom - top - 8));
+    popover.style.maxHeight = availableHeight + 'px';
+    popover.classList.toggle('is-compact', availableHeight < 180);
     if (open) frame = requestAnimationFrame(geometry);
   }
 

@@ -97,6 +97,63 @@ def open_panel_with_motion(page, trigger, panel):
     assert page.locator(panel).evaluate('(dialog) => dialog.matches(":modal")')
 
 
+def check_wide_diagrams(page, post_address, screenshots):
+    # 宽图文字应可读，并且只在图表区域横向滚动。
+    page.add_init_script('''(() => {
+      window.smokeUnreadyDiagramCopies = 0;
+      new MutationObserver(() => {
+        for (const button of document.querySelectorAll('.mermaid-block-wrapper .code-copy-btn:enabled')) {
+          if (!button.closest('.mermaid-block-wrapper').querySelector('svg')) {
+            window.smokeUnreadyDiagramCopies += 1;
+          }
+        }
+      }).observe(document, {childList:true, subtree:true, attributes:true, attributeFilter:['disabled']});
+    })();''')
+    fixture = '''<section id="smoke-wide-diagrams"><pre><code class="language-mermaid">sequenceDiagram
+    actor Reader as 读者
+    participant Browser as 浏览器
+    participant Search as 搜索服务
+    participant Database as 数据库
+    Reader-&gt;&gt;Browser: 输入搜索关键词
+    Browser-&gt;&gt;Search: 提交查询
+    Search-&gt;&gt;Database: 查找公开文章
+    Database--&gt;&gt;Reader: 返回匹配内容</code></pre></section>'''
+
+    def add_diagram(route):
+        response = route.fetch()
+        pattern = r'(<div\b[^>]*class=[\"\'][^\"\']*\bmarkdown-body\b[^\"\']*[\"\'][^>]*>)'
+        source, count = re.subn(pattern, lambda match: match.group(0) + fixture, response.text(), count=1)
+        assert count == 1
+        route.fulfill(response=response, body=source)
+
+    page.route(post_address, add_diagram)
+    try:
+        for width in [320, 1440]:
+            page.set_viewport_size({'width': width, 'height': 900})
+            page.goto(post_address, wait_until='networkidle')
+            diagram = page.locator('#smoke-wide-diagrams pre.mermaid-rendered')
+            expect(diagram).to_be_visible()
+            page.evaluate('async () => { await document.fonts.ready; }')
+            expect(page.locator('#smoke-wide-diagrams .code-copy-btn')).to_be_enabled()
+            assert page.evaluate('window.smokeUnreadyDiagramCopies') == 0
+            heights = diagram.locator('svg text').evaluate_all('(nodes) => nodes.filter(node=>node.textContent.trim()).map(node=>node.getBoundingClientRect().height).filter(height=>height>0)')
+            assert min(heights) >= 11.8, heights
+            assert page.evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1')
+            if width == 320:
+                assert diagram.evaluate('node => node.scrollWidth > node.clientWidth + 1')
+                diagram.scroll_into_view_if_needed()
+                scrollbar = page.locator('[role="scrollbar"][aria-controls="' + diagram.get_attribute('id') + '"]')
+                expect(scrollbar).to_be_visible()
+                scrollbar.focus()
+                scrollbar.press('End')
+                assert diagram.evaluate('node => node.scrollLeft > 0')
+                scrollbar.press('Home')
+                assert diagram.evaluate('node => node.scrollLeft') <= 1
+            diagram.screenshot(path=str(screenshots / f'wide-diagram-{width}.png'))
+    finally:
+        page.unroute(post_address, add_diagram)
+
+
 def check_heading_levels(page, post_address, screenshots):
     # Add headings before the production module runs; leave the source article unchanged.
     headings = ''.join(
@@ -294,6 +351,24 @@ def check_search(page, origin, baseurl, site, post_url, screenshots, requests):
     expect(page.locator('.search-results-list li')).to_have_count(10)
     page.unroute(index_address, serve_pages)
 
+    # 公式摘要支持符号查询，查源码命令时仍显示实际命中的上下文。
+    mathematical = [{'title': '数学检索样例', 'url': demonstration['url'], 'type': 'post',
+                     'content': r'传播条件：$\alpha_1=0$。', 'excerpt': '传播条件：α₁=0。',
+                     'tags': ['数学', 'ＭＡＴＨ', 'Math', 'math']}]
+    serve_math = lambda route: route.fulfill(status=200, content_type='application/json', body=json.dumps(mathematical))
+    page.route(index_address, serve_math)
+    try:
+        page.goto(search_address + '?' + urlencode({'q': '传播'}), wait_until='networkidle')
+        expect(page.locator('.search-results-list .search-result-excerpt')).to_have_text('传播条件：α₁=0。')
+        expect(page.locator('.search-results-list .search-result-meta')).to_have_text('文章 · 数学 · ＭＡＴＨ')
+        page.locator('#page-search-input').fill('α')
+        expect(page.locator('.search-results-list mark')).to_have_text('α')
+        page.locator('#page-search-input').fill('alpha')
+        expect(page.locator('.search-results-list .search-result-excerpt')).to_have_text(mathematical[0]['content'])
+        expect(page.locator('.search-results-list mark')).to_have_text('alpha')
+    finally:
+        page.unroute(index_address, serve_math)
+
     for scheme in ['light', 'dark']:
         page.emulate_media(color_scheme=scheme)
         for width in [320, 375, 390, 414, 768]:
@@ -321,6 +396,22 @@ def check_search(page, origin, baseurl, site, post_url, screenshots, requests):
             assert page.evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1')
             if width == 390:
                 page.screenshot(path=str(screenshots / ('search-results-mobile-' + scheme + '.png')))
+    # 极低可视高度时保留首条建议的点击目标，预览不得越过可视区。
+    for scheme in ['light', 'dark']:
+        page.emulate_media(color_scheme=scheme)
+        page.set_viewport_size({'width': 390, 'height': 140})
+        page.goto(home, wait_until='networkidle')
+        button.click()
+        input_box.fill(query)
+        first = popover.locator('[role="option"]').first
+        expect(first).to_be_visible()
+        expect(popover).to_have_class(re.compile(r'\bis-compact\b'))
+        bounds = popover.bounding_box()
+        assert bounds['y'] + bounds['height'] <= 141, bounds
+        assert first.bounding_box()['height'] >= 44
+        first.click()
+        page.wait_for_url(lambda address: urlsplit(address).path == demonstration['url'])
+    page.set_viewport_size({'width': 390, 'height': 900})
     page.emulate_media(reduced_motion='reduce')
     button.click()
     expect(input_box).to_be_focused()
@@ -552,6 +643,18 @@ def main():
             diagram_button.click()
             expect(diagram_button).to_have_text('已复制 PNG', timeout=15000)
             assert page.evaluate('''async () => (await navigator.clipboard.read())[0].types.includes('image/png')''')
+            png_corner = page.evaluate('''async () => {
+              const item = (await navigator.clipboard.read())[0];
+              const image = await createImageBitmap(await item.getType('image/png'));
+              const canvas = document.createElement('canvas');
+              canvas.width = image.width; canvas.height = image.height;
+              const context = canvas.getContext('2d');
+              context.drawImage(image, 0, 0);
+              const pixel = [...context.getImageData(0, 0, 1, 1).data];
+              image.close();
+              return pixel;
+            }''')
+            assert png_corner[3] == 255 and max(png_corner[:3]) < 64, png_corner
 
             # The visual scrollbar must support keyboard input and pointer dragging.
             page.evaluate('''() => {
@@ -685,6 +788,7 @@ def main():
                         expect(page.locator('.post-directory-toggle')).to_be_visible()
                     if 'Example-No-Sidebar-Nav' in route:
                         assert page.locator('.post-directory-toggle').count() == 0
+            check_wide_diagrams(page, origin + post_url, screenshots)
             check_heading_levels(page, origin + post_url, screenshots)
             check_search(page, origin, baseurl, site, post_url, screenshots, requests)
             assert not errors, errors

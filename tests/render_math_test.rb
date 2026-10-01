@@ -15,6 +15,7 @@ source = parser.convert("# 公式 $x_1$\n\n| 含义 | 公式 |\n| --- | --- |\n|
 document = MathDocument.new(source, '.html', '公式测试.md')
 Jekyll::Hooks.trigger :documents, :post_convert, document
 assert_equal(source, document.instance_variable_get(:@math_source_content), '保留索引使用的原始 HTML')
+abort '搜索摘要缺少公式符号或重复保留 LaTeX' unless document.instance_variable_get(:@math_preview_content).include?('x₁') && !document.instance_variable_get(:@math_preview_content).include?('<math')
 assert_equal(source[/<h1[^>]*id="([^"]+)"/, 1], document.content[/<h1[^>]*id="([^"]+)"/, 1], '公式不改变标题锚点')
 assert_equal(4, document.content.scan(/<(?:td|th)>/).length, '公式中的竖线不拆开表格')
 abort '公式未预渲染' unless document.content.include?('data-math-rendered="true"')
@@ -24,6 +25,7 @@ page = MathDocument.new(code, '.html', '代码测试.html')
 Jekyll::Hooks.trigger :pages, :post_convert, page
 assert_equal(code, page.content, '仅代码的页面保持原样')
 assert_equal(nil, page.instance_variable_get(:@math_source_content), '没有公式时不缓存旧索引内容')
+assert_equal(nil, page.instance_variable_get(:@math_preview_content), '没有公式时不缓存旧摘要')
 
 xml = '<title>$x_1$</title>'
 feed = MathDocument.new(xml, '.xml', 'feed.xml')
@@ -35,4 +37,4 @@ rendered = template.render!({ 'post' => { 'path' => document.relative_path, 'con
 assert_equal(source, rendered, 'RSS 使用原始公式正文')
 rendered = template.render!({ 'post' => { 'path' => 'unknown.md', 'content' => '普通正文' } }, registers: { site: site })
 assert_equal('普通正文', rendered, '普通正文与缺失文档使用传入内容')
-puts '数学预渲染与 Jekyll 钩子检查通过（9 项）。'
+puts '数学预渲染与 Jekyll 钩子检查通过（11 项）。'

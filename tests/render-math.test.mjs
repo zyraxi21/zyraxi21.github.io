@@ -34,6 +34,28 @@ test('四种公式标记保持原始 LaTeX、行内与独立显示及无障碍 M
   assert.equal(descendants(tree, (node) => node.tagName === 'math').length, 4);
 });
 
+test('搜索摘要保留公式符号与运算关系，排除重复文字及 LaTeX 命令', () => {
+  const result = renderMathHtml(
+    String.raw`<p>频率 $\alpha_1+\frac{x^2}{y}$，长度 $\sqrt{a}$。</p><pre><code>$源码$</code></pre>`,
+  );
+  const preview = parseFragment(result.previewHtml);
+  const text = descendants(preview, (node) => node.nodeName === '#text')
+    .map((node) => node.value)
+    .join('');
+  assert.equal(text, '频率 α₁+(x²)/(y)，长度 √(a)。$源码$');
+  assert.ok(!text.includes('\\alpha'));
+  assert.equal(descendants(preview, (node) => node.tagName === 'math').length, 0);
+  assert.equal(
+    descendants(parseFragment(result.html), (node) => node.tagName === 'math').length,
+    2,
+  );
+  const escaped = renderMathHtml(String.raw`<p>$\text{&lt;img src=x onerror=alert(1)&gt;}$</p>`);
+  assert.equal(
+    descendants(parseFragment(escaped.previewHtml), (node) => node.tagName === 'img').length,
+    0,
+  );
+});
+
 test('转义美元符号及花括号内的定界符不提前关闭公式', () => {
   const parts = splitMathText(String.raw`价格 \$5，$\text{a $ b} + \$ + x$，\(y\)，未闭合 $z`);
   assert.deepEqual(

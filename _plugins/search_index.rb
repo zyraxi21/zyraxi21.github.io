@@ -7,7 +7,7 @@ module SiteSearchIndex
     source = html.to_s.gsub(/<(script|style|noscript)\b[^>]*>.*?<\/\1\s*>/im, ' ')
     source = source.gsub(/<!--.*?-->/m, '')
     source = source.gsub(/<\/?(?:p|div|h[1-6]|br|li|tr|td|section|article|pre|blockquote|ul|ol)\b[^>]*>/i, ' ')
-    CGI.unescapeHTML(source.gsub(/<[^>]*>/m, '')).gsub(/[[:space:]]+/, ' ').strip
+    CGI.unescapeHTML(source.gsub(/<[^>]*>/m, '').gsub(/&nbsp;/i, ' ')).gsub(/[[:space:]]+/, ' ').strip
   end
 
   def self.entries(site)
@@ -40,7 +40,7 @@ module SiteSearchIndex
 
       seen[path] = true
       date = article && data['date'].respond_to?(:strftime) ? data['date'].strftime('%Y-%m-%d') : ''
-      {
+      entry = {
         'title' => text(title),
         'url' => site.config['baseurl'].to_s.sub(/\/\z/, '') + path,
         'type' => article ? 'post' : 'page',
@@ -48,6 +48,17 @@ module SiteSearchIndex
         'tags' => (Array(data['tags']) + Array(data['categories']) + Array(data['category'])).map(&:to_s).uniq,
         'content' => text(body),
       }
+      preview = document.instance_variable_get(:@math_preview_content)
+      if preview
+        preview_body = if article
+                         preview
+                       else
+                         preview_html = document.output.to_s.sub(document.content.to_s) { preview }
+                         preview_html[/<main\b[^>]*>(.*?)<\/main>/im, 1] || preview_html[/<body\b[^>]*>(.*?)<\/body>/im, 1] || preview_html
+                       end
+        entry['excerpt'] = text(preview_body)
+      end
+      entry
     end
   end
 end

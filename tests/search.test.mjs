@@ -5,6 +5,7 @@ import {
   searchDocuments,
   matchingRanges,
   searchExcerpt,
+  searchResultExcerpt,
 } from '../src/js/search-engine.js';
 
 test('search ranks exact titles before tags and body, breaking ties by date', () => {
@@ -47,6 +48,15 @@ test('literal punctuation in code searches does not become regular expressions',
   ]);
 });
 
+test('结果元信息合并大小写和全角重复标签，保留原有名称及检索能力', () => {
+  const [document] = prepareSearchIndex([
+    { title: '样例', url: '/note', tags: [' CSS ', 'css', 'ＣＳＳ', '', null, 'C++'] },
+  ]);
+  assert.deepEqual(document.tags, ['CSS', 'C++']);
+  assert.equal(searchDocuments([document], 'css')[0], document);
+  assert.equal(searchDocuments([document], 'C++')[0], document);
+});
+
 test('the index rejects external or executable links and removes duplicate pages', () => {
   const index = prepareSearchIndex([
     { title: '有效页面', url: '/preview/page.html' },
@@ -75,4 +85,23 @@ test('snippets show the actual matching context without breaking surrogate pairs
   assert.ok(excerpt.startsWith('…') && excerpt.endsWith('…'));
   assert.ok(excerpt.isWellFormed());
   assert.equal(searchExcerpt('  一条 笔记  ', '笔记'), '一条 笔记');
+});
+
+test('公式摘要可读且可用符号检索，直接查 LaTeX 命令仍显示源码', () => {
+  const [document] = prepareSearchIndex([
+    {
+      title: '电磁波',
+      url: '/waves',
+      content: String.raw`传播条件：$\alpha_1=0$，$\beta_1=k_1$。`,
+      excerpt: '传播条件：α_(1)=0，β_(1)=k_(1)。',
+    },
+  ]);
+  assert.equal(searchResultExcerpt(document, '传播'), document.excerpt);
+  assert.equal(searchDocuments([document], 'α')[0], document);
+  assert.deepEqual(matchingRanges(searchResultExcerpt(document, 'α'), 'α'), [[5, 6]]);
+  assert.equal(searchDocuments([document], 'alpha')[0], document);
+  assert.equal(searchResultExcerpt(document, 'alpha'), document.content);
+  assert.equal(searchResultExcerpt(document, '电磁波 alpha'), document.content);
+  const [ordinary] = prepareSearchIndex([{ title: '普通文章', url: '/post', content: '正文匹配' }]);
+  assert.equal(searchResultExcerpt(ordinary, '正文'), '正文匹配');
 });

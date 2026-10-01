@@ -6,6 +6,7 @@ module SiteMathRender
 
   def self.render(document)
     document.instance_variable_set(:@math_source_content, nil)
+    document.instance_variable_set(:@math_preview_content, nil)
     return unless document.output_ext == '.html'
 
     source = document.content.to_s
@@ -19,6 +20,7 @@ module SiteMathRender
     return if rendered.fetch('count').zero?
 
     document.instance_variable_set(:@math_source_content, source)
+    document.instance_variable_set(:@math_preview_content, rendered.fetch('previewHtml'))
     document.content = rendered.fetch('html')
   end
 end
