@@ -3,6 +3,7 @@ layout: post
 title: 雷达原理公式总结
 category: 雷达原理
 tags: [考前复习, 雷达原理]
+no-post-nav: true
 excerpt: "雷达原理课程公式总结与复习。"
 ---
 总结雷达原理课程的所有公式。
