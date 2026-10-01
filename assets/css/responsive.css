@@ -222,6 +222,15 @@ html.mobile-panel-open body {
 }
 
 @media (max-width: 991px) {
+  :root {
+    --glass-surface: rgba(255, 255, 255, 0.48);
+  }
+
+  .mobile-panel {
+    -webkit-backdrop-filter: blur(32px) saturate(1.6);
+    backdrop-filter: blur(32px) saturate(1.6);
+  }
+
   html {
     scroll-padding-top: 88px;
   }
@@ -252,6 +261,8 @@ html.mobile-panel-open body {
   .site-header.site-header-nav-scrolled-ph {
     margin: 0;
     padding-block: 10px;
+    -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    backdrop-filter: blur(24px) saturate(1.6);
   }
 
   .site-header.site-header-nav-scrolled-ph {
@@ -273,7 +284,7 @@ html.mobile-panel-open body {
     gap: 8px;
     float: none;
     min-width: 0;
-    max-width: calc(100% - 88px);
+    max-width: calc(100% - 56px);
     font-size: clamp(20px, 4vw, 26px);
     line-height: 1.2;
   }
@@ -296,14 +307,13 @@ html.mobile-panel-open body {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    min-width: 44px;
     min-height: 44px;
-    padding: 8px 10px;
+    padding: 10px;
     color: inherit;
-    font-size: 15px;
     background: transparent;
-    border: 1px solid currentColor;
-    border-radius: 10px;
+    border: 0;
   }
 
   .jumbotron {
@@ -438,8 +448,8 @@ html.mobile-panel-open body {
     border: 1px solid var(--border-color);
     border-radius: 999px;
     box-shadow: 0 4px 20px var(--shadow-color);
-    -webkit-backdrop-filter: blur(18px) saturate(1.4);
-    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    backdrop-filter: blur(24px) saturate(1.6);
   }
 
   .post-directory-toggle:hover {
@@ -506,6 +516,12 @@ html.mobile-panel-open body {
 
   .card-title {
     overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 991px) and (prefers-color-scheme: dark) {
+  :root {
+    --glass-surface: rgba(23, 28, 33, 0.56);
   }
 }
 

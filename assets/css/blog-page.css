@@ -103,20 +103,29 @@
 /* Blog category filter */
 .category-filter {
   cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
 }
 
-/* Selected filters keep the same readable theme color during hover and focus. */
+/* Hovering a selected filter keeps its theme background and white text. */
 #blog-categories .category-filter:not(.active):hover,
 #blog-categories .category-filter:not(.active):focus-within {
   background-color: var(--surface-hover);
 }
 
-#blog-categories .category-filter.active,
+#blog-categories .category-filter.active {
+  color: var(--brand-on-primary);
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
 #blog-categories .category-filter.active:hover,
 #blog-categories .category-filter.active:focus-within {
-  color: var(--brand-on-primary);
-  background-color: var(--brand-primary-strong);
-  border-color: var(--brand-primary-strong);
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+  background-color: color-mix(in srgb, var(--brand-primary) 94%, #000);
+  border-color: color-mix(in srgb, var(--brand-primary) 94%, #000);
 }
 
 #blog-categories .category-link,
@@ -128,7 +137,7 @@
 
 #blog-categories .badge {
   color: var(--brand-on-primary);
-  background: var(--brand-primary-strong);
+  background: var(--brand-primary);
 }
 
 #blog-categories .category-filter.active .badge {

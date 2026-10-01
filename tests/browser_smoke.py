@@ -43,8 +43,29 @@ def check_code_alignment(page):
 def check_glass(element):
     style = element.evaluate('(element) => ({background: getComputedStyle(element).backgroundColor, blur: getComputedStyle(element).backdropFilter})')
     rgba = [float(value) for value in re.findall(r'[\d.]+', style['background'])]
-    assert len(rgba) == 4 and 0.5 < rgba[3] < 1, style
-    assert 'blur(' in style['blur'], style
+    assert len(rgba) == 4 and 0 < rgba[3] <= 0.6, style
+    blur = re.search(r'blur\(([\d.]+)px\)', style['blur'])
+    assert blur and float(blur.group(1)) >= 24, style
+
+
+def category_colors(element):
+    return element.evaluate('''async (element) => {
+      await Promise.allSettled(element.getAnimations().map((animation) => animation.finished));
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1;
+      const context = canvas.getContext('2d');
+      const rgb = (color) => {
+        context.clearRect(0, 0, 1, 1); context.fillStyle = color; context.fillRect(0, 0, 1, 1);
+        return `rgb(${[...context.getImageData(0, 0, 1, 1).data].slice(0, 3).join(', ')})`;
+      };
+      const style = getComputedStyle(element);
+      return {
+        background: rgb(style.backgroundColor),
+        themeBackground: rgb(style.getPropertyValue('--brand-primary')),
+        foreground: rgb(getComputedStyle(element.querySelector('a')).color),
+        badgeBackground: rgb(getComputedStyle(element.querySelector('.badge')).backgroundColor),
+        badgeForeground: rgb(getComputedStyle(element.querySelector('.badge')).color),
+      };
+    }''')
 
 
 def open_panel_with_motion(page, trigger, panel):
@@ -167,19 +188,24 @@ def main():
                 for scheme in ['light', 'dark']:
                     page.emulate_media(color_scheme=scheme)
                     selected = filters.nth(1)
+                    selected.locator('a').evaluate('(link) => link.blur()')
                     page.mouse.move(0, 0)
-                    normal_background = selected.evaluate('(element) => getComputedStyle(element).backgroundColor')
+                    normal = category_colors(selected)
+                    assert normal['background'] == normal['themeBackground'], normal
+                    assert normal['foreground'] == 'rgb(255, 255, 255)', normal
                     selected.hover()
+                    hovered = category_colors(selected)
+                    assert hovered['background'] != normal['background'], hovered
+                    channels = lambda color: [float(value) for value in re.findall(r'[\d.]+', color)[:3]]
+                    changes = [abs(before - after) for before, after in zip(channels(normal['background']), channels(hovered['background']))]
+                    assert 0 < max(changes) <= 20, hovered
+                    assert hovered['foreground'] == normal['foreground'], hovered
+                    page.mouse.move(0, 0)
                     selected.locator('a').focus()
-                    colors = selected.evaluate('''(element) => ({
-                      background:getComputedStyle(element).backgroundColor,
-                      foreground:getComputedStyle(element.querySelector('a')).color,
-                      badgeBackground:getComputedStyle(element.querySelector('.badge')).backgroundColor,
-                      badgeForeground:getComputedStyle(element.querySelector('.badge')).color,
-                    })''')
-                    assert normal_background == colors['background'], colors
-                    assert contrast_ratio(colors['foreground'], colors['background']) >= 4.5, colors
-                    assert contrast_ratio(colors['badgeForeground'], colors['badgeBackground']) >= 4.5, colors
+                    focused = category_colors(selected)
+                    assert focused['background'] == hovered['background'], focused
+                    assert focused['foreground'] == normal['foreground'], focused
+                    assert contrast_ratio(focused['badgeForeground'], focused['badgeBackground']) >= 4.5, focused
             page.set_viewport_size({'width': 1440, 'height': 1000})
             page.emulate_media(color_scheme='light')
             visible_categories = page.locator('#posts-list .posts-list-item:not([hidden])').evaluate_all('(items) => items.map((item) => JSON.parse(item.dataset.categories))')
@@ -275,6 +301,10 @@ def main():
             assert page.evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1')
             toggle = page.locator('.site-nav-toggle')
             expect(toggle).to_be_visible()
+            assert toggle.inner_text().strip() == ''
+            expect(toggle).to_have_accessible_name('展开导航菜单')
+            toggle_style = toggle.evaluate('(element) => ({width:element.clientWidth, height:element.clientHeight, border:getComputedStyle(element).borderWidth})')
+            assert toggle_style['width'] >= 44 and toggle_style['height'] >= 44 and toggle_style['border'] == '0px', toggle_style
             drawer = page.locator('#site-nav-panel')
             expect(drawer).to_be_hidden()
             open_panel_with_motion(page, '.site-nav-toggle', '#site-nav-panel')
@@ -369,7 +399,7 @@ def main():
             assert not errors, errors
             assert not missing, missing
             browser.close()
-            print(f'Browser checks passed (animated panels/focus/blur, category contrast, line alignment, math/diagrams, copy, scrollbars, portrait layouts; baseurl={baseurl or "/"}).')
+            print(f'Browser checks passed (animated panels/focus/glass, icon navigation, category theme/hover/white text, line alignment, math/diagrams, copy, scrollbars, portrait layouts; baseurl={baseurl or "/"}).')
     finally:
         server.shutdown()
         server.server_close()
