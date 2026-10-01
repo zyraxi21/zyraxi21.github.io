@@ -63,6 +63,12 @@ Jekyll 在 Markdown 转换后使用 KaTeX 预渲染公式，并生成供辅助�
 
 Jekyll 构建时自动生成搜索索引，首次打开搜索时才加载，无需外部搜索服务。新增或修改内容后重新构建即可更新；要排除某个页面或文章，在 Front Matter 中设置 `search: false`。
 
+## 开源项目数据
+
+项目列表优先读取 `_data/projects.json`，没有该文件时使用 `_config.yml` 中的 `projects`。更新项目列表时运行 `npm run fetch:projects`；获取过程需要访问 GitHub API，获取完成后即可使用本地数据构建和预览。
+
+`jekyll-github-metadata` 默认关闭，避免构建时因 GitHub API 的网络或 TLS 错误而中断。需要 `site.github` 元数据时，可取消 `_config.yml` 中对应插件的注释，填写 `repository: 用户名/仓库名`，并确保能访问 GitHub API。修改插件配置后重新启动 Jekyll。
+
 ## 代码规范与检查
 
 编辑源码后可运行以下命令；前端构建产物位于 `assets/vendor/`，由构建脚本生成：

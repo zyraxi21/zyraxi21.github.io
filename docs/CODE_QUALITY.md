@@ -23,6 +23,7 @@
 | 开发源码和抓取页面可能进入发布目录                            | 明确排除并检查生成目录                                             |
 | 缺少一致的编码、格式、检查入口                                | UTF-8 / LF / 两空格；ESLint、Prettier（含 Liquid）及 npm run check |
 | 模板未填写仓库身份时，生产构建触发 GitHub Metadata 异常       | 模板默认按需开启此插件；启用时同时配置 repository                  |
+| 本地启动时 GitHub API 的 TLS 错误中断 Jekyll                  | 两站默认关闭可选 metadata 插件，构建读取本地项目数据               |
 | 部署缺少构建结果检查                                          | 加入严格 Jekyll 构建、生成站点检查及独立质量工作流                 |
 
 第三方 GeoPattern 文件保持原内容，移到 src/vendor；不格式化第三方源码。生成资源位于 assets/vendor，由构建脚本重建。文章目录不参加自动格式化。
@@ -85,6 +86,14 @@
 本次两仓库规范检查、前端构建、根路径浏览器检查、320–768px 竖屏检查以及 /preview 严格构建和本地引用检查通过。额外以 390px、3 倍像素密度的手机触摸模式复核浅色、深色截图。个人站的本地构建遇到 GitHub 元数据请求的 TLS 错误，验证时使用忽略的临时配置跳过该插件；实际仓库配置未改，模板按原配置构建。
 
 ## 后续维护
+
+### 默认构建的网络依赖
+
+直接运行默认配置的严格构建，复现了 `jekyll-github-metadata` 在 Jekyll 缓存检查期间请求 GitHub API、随后出现 `Faraday::SSLError: unexpected eof while reading` 的失败。错误发生在正文与数学预渲染之前；依赖安装和前端构建已成功。
+
+个人站改为与模板一致的按需开启配置。项目展示继续优先读取 `_data/projects.json`，其次读取 `projects`，更新数据由 `npm run fetch:projects` 单独执行。需要 metadata 时仍可启用插件，但必须能访问 GitHub API。
+
+修复后直接使用默认 `_config.yml`，验证生产环境的严格构建、站点资源检查及开发环境的预览 HTTP 响应；不使用关闭插件的临时配置，也不依赖 GitHub API 令牌。
 
 ### 导航、依赖安全与模板部署复核
 
