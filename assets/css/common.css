@@ -159,6 +159,12 @@ a:hover {
   background-color: var(--brand-on-primary);
 }
 
+.site-header .hvr-underline-from-center:before {
+  transition:
+    transform 0.3s ease-out,
+    background-color var(--header-transition);
+}
+
 .container {
   padding-left: 15px;
   padding-right: 15px;
@@ -203,6 +209,10 @@ dl {
 
 /** Header **/
 .site-header {
+  --header-color: var(--brand-on-primary);
+  --header-hover-color: var(--brand-on-primary);
+  --header-transition: 0.5s ease;
+
   padding-top: 20px;
   padding-bottom: 20px;
   width: 100%;
@@ -213,29 +223,33 @@ dl {
   right: 0;
   z-index: 103;
 
-  color: var(--brand-on-primary);
+  color: var(--header-color);
   background: var(--header-bg);
   -webkit-backdrop-filter: blur(18px) saturate(1.4);
   backdrop-filter: blur(18px) saturate(1.4);
 
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -ms-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+  transition: all var(--header-transition);
 }
 
 .site-header #site-header-brand {
-  color: var(--brand-on-primary);
   float: left;
+}
+
+.site-header a,
+.site-header button {
+  color: var(--header-color);
+  transition:
+    color var(--header-transition),
+    opacity 180ms ease;
 }
 
 .site-header a {
   text-decoration: none;
 }
 
-.site-header a:hover {
-  color: var(--brand-on-primary);
+.site-header a:hover,
+.site-header button:hover {
+  color: var(--header-hover-color);
 }
 
 #site-header-brand,
@@ -261,7 +275,7 @@ dl {
 }
 
 .site-header-nav-item {
-  color: var(--brand-on-primary);
+  color: inherit;
   display: inline-block;
   padding: 10px;
   margin-left: 1.25rem;
@@ -269,13 +283,18 @@ dl {
 }
 
 /******* Scroll Start *******/
+.site-header.site-header-nav-scrolled,
+.site-header.site-header-nav-scrolled-ph {
+  --header-color: var(--text-color);
+  --header-hover-color: var(--brand-primary-hover);
+}
+
 .site-header {
   box-shadow: 0 0 5px var(--shadow-color);
 }
 
 .site-header.site-header-nav-scrolled {
   margin: 0;
-  color: var(--text-color);
   background-color: var(--header-bg);
 
   -webkit-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
@@ -285,14 +304,6 @@ dl {
   box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
 }
 
-.site-header.site-header-nav-scrolled a,
-.site-header.site-header-nav-scrolled #site-header-brand {
-  color: var(--text-color);
-}
-
-.site-header.site-header-nav-scrolled a:hover {
-  color: var(--brand-primary-hover);
-}
 /******* Scroll End *******/
 
 /******* Scroll Start on the phone *******/
@@ -302,7 +313,6 @@ dl {
 
 .site-header.site-header-nav-scrolled-ph {
   margin-top: -160px;
-  color: var(--text-color);
 
   -webkit-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
   -moz-box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
@@ -311,14 +321,6 @@ dl {
   box-shadow: 0 0.125em 0.125em 0 rgba(0, 0, 0, 0.125);
 }
 
-.site-header.site-header-nav-scrolled-ph a,
-.site-header.site-header-nav-scrolled-ph #site-header-brand {
-  color: var(--text-color);
-}
-
-.site-header.site-header-nav-scrolled-ph a:hover {
-  color: var(--brand-primary-hover);
-}
 /******* Scroll End *******/
 
 /** Jumbotron **/
