@@ -25,9 +25,11 @@ module SiteSearchIndex
 
       html = document.output.to_s
       next if html.empty?
+      original = document.instance_variable_get(:@math_source_content)
+      html = html.sub(document.content.to_s) { original } if original
       article = posts.include?(document)
       body = if article && document.respond_to?(:content)
-               document.content.to_s
+               original || document.content.to_s
              else
                html[/<main\b[^>]*>(.*?)<\/main>/im, 1] || html[/<body\b[^>]*>(.*?)<\/body>/im, 1] || html
              end

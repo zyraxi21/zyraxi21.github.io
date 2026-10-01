@@ -31,4 +31,12 @@ assert_equal(['光学', '笔记'], entries.first['tags'], 'tags and categories a
 assert_equal('2026-09-01', entries.first['date'], 'post date is normalized')
 site.config['baseurl'] = ''
 assert_equal('/blog/note.html', SiteSearchIndex.entries(site).first['url'], 'root deployment does not retain a project prefix')
-puts 'Search index regression checks passed (6 scenarios).'
+post.instance_variable_set(:@math_source_content, '<p>公式 $x_1$ 与 &#92;alpha</p>')
+post.content = '<p>公式 <span class="katex"><math>x1</math><span>x1</span></span></p>'
+assert_equal('公式 $x_1$ 与 \\alpha', SiteSearchIndex.entries(site).first['content'], '预渲染公式的索引保留源码，不重复索引视觉和 MathML 文本')
+
+about.instance_variable_set(:@math_source_content, '<p>页面 $x+y$</p>')
+about.content = '<p>页面 <span class="katex"><math>x+y</math><span>x+y</span></span></p>'
+about.output = "<header>导航</header><main><h1>关于</h1><section>#{about.content}</section></main><footer>页脚</footer>"
+assert_equal('关于 页面 $x+y$', SiteSearchIndex.entries(site).last['content'], '独立页面保留 main 内的版式文字及原始公式')
+puts 'Search index regression checks passed (8 scenarios).'

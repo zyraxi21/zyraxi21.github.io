@@ -11,7 +11,7 @@ excerpt: "电磁场与电磁波恒定电场章节公式整理。"
 # 3.1    电流强度和电流密度
 
 ## 3.1.1    电流强度
-$\begin{cases}按媒质 \left \{ \begin{align}&传导电流 \to 导电媒质\\&运流电流 \to 真空或气体\end{align}\right\}自由电流 \\按时变性\begin{cases}恒定电流\ I=\frac{\Delta q}{\Delta t}\\时变电流\ I=\lim_{ \Delta t \to 0 } \frac{\Delta q}{\Delta t}= \frac{\mathrm{d}q}{\mathrm{d}t}\end{cases}\end{cases}$
+$\begin{cases}按媒质 \left \{ \begin{aligned}&传导电流 \to 导电媒质\\&运流电流 \to 真空或气体\end{aligned}\right\}自由电流 \\按时变性\begin{cases}恒定电流\ I=\frac{\Delta q}{\Delta t}\\时变电流\ I=\lim_{ \Delta t \to 0 } \frac{\Delta q}{\Delta t}= \frac{\mathrm{d}q}{\mathrm{d}t}\end{cases}\end{cases}$
 单位：$\mathrm{A}$。
 
 ## 3.1.2    电流密度

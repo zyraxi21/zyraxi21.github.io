@@ -18,7 +18,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "node --test tests/*.test.mjs",
-    "test:ruby": "bundle exec ruby tests/protect_math_test.rb && bundle exec ruby tests/search_index_test.rb",
+    "test:ruby": "bundle exec ruby tests/protect_math_test.rb && bundle exec ruby tests/search_index_test.rb && bundle exec ruby tests/render_math_test.rb",
     "check:site": "node scripts/check-site.mjs",
     "check": "npm run lint && npm run format:check && npm test && npm run test:ruby"
   },
@@ -28,6 +28,7 @@
     "hover.css": "^2.3.1",
     "katex": "^0.16.9",
     "mermaid": "^11.17.2",
+    "parse5": "^8.0.1",
     "primer-markdown": "^2.5.1"
   },
   "devDependencies": {

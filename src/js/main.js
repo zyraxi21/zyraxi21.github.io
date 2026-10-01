@@ -5,6 +5,7 @@ import { initCategories } from './categories.js';
 import { initNavigation } from './navigation.js';
 import { initScrollbars } from './scrollbars.js';
 import { initSearch } from './search.js';
+import { hasUnrenderedMath } from './math-source.js';
 
 async function init() {
   initNavigation();
@@ -42,7 +43,7 @@ async function init() {
   initScrollbars(content);
 
   const enhancements = [];
-  if (content.querySelector('.kdmath') || /\$|\\[([]/.test(content.textContent)) {
+  if (hasUnrenderedMath(content) || document.querySelector('.post-directory .math-display')) {
     enhancements.push(import('./math.js').then(({ initMath }) => initMath(content)));
   }
   if (content.querySelector('code.language-mermaid')) {

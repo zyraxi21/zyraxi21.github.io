@@ -43,6 +43,12 @@ http://127.0.0.1:4000
 
 需要关闭某篇文章的目录时，在 Front Matter 中设置 `no-post-nav: true`。
 
+## 数学公式
+
+行内公式支持 `$E=mc^2$` 与 `\(E=mc^2\)`；独立公式支持 `$$E=mc^2$$` 与 `\[E=mc^2\]`。行内多行表达式使用 `aligned` 环境，`align` 环境用于独立公式。
+
+Jekyll 在 Markdown 转换后使用 KaTeX 预渲染公式，并生成供辅助技术读取的 MathML。运行 Jekyll 前需先完成 `npm ci`；公式无需等待浏览器下载渲染器，关闭 JavaScript 也能阅读。超宽公式在手机上可横向滚动，启用 JavaScript 后可复制原始 LaTeX。
+
 ## 代码字体
 
 代码中的英文优先使用 Ubuntu Mono，中文回退到 LXGW Bright Code GB。代码块、行内代码、行号与语言标签使用同一组合；两种字体都使用 Regular 文件，粗体与斜体由浏览器合成。

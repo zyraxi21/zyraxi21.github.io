@@ -1,74 +1,52 @@
 import katex from 'katex';
-import renderMathInElement from 'katex/contrib/auto-render';
 import { addMathCopyButtons } from './copy.js';
+import { ignoredMathTags, mathTextNodes, splitMathText } from './math-source.js';
 
-const delimiters = [
-  { left: '$$', right: '$$', display: true },
-  { left: '$', right: '$', display: false },
-  { left: '\\(', right: '\\)', display: false },
-  { left: '\\[', right: '\\]', display: true },
-];
-
-function wrapMathTextNodes(root) {
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-    acceptNode(node) {
-      return node.parentElement?.closest('code, pre, script, style, .kdmath, .math-copy, .katex')
-        ? NodeFilter.FILTER_REJECT
-        : NodeFilter.FILTER_ACCEPT;
-    },
-  });
-  const nodes = [];
-  while (walker.nextNode()) nodes.push(walker.currentNode);
-  const pattern = /(?<!\\)(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\$)[^$\n]+?\$)/g;
-
-  for (const node of nodes) {
-    const text = node.nodeValue;
-    const matches = [...text.matchAll(pattern)];
-    if (!matches.length) continue;
+function renderContent(root, inline = false) {
+  for (const element of root.querySelectorAll('.kdmath:not([data-math-rendered="true"])')) {
+    if (element.closest([...ignoredMathTags].join(', '))) continue;
+    const tex = element.textContent.trim().replace(/^\$+|\$+$/g, '');
+    if (!tex) continue;
+    element.classList.add('math-copy');
+    if (!inline) element.classList.add('math-display');
+    element.dataset.latex = tex;
+    element.dataset.mathRendered = 'true';
+    katex.render(tex, element, { displayMode: !inline, throwOnError: false, trust: false });
+  }
+  for (const node of [...mathTextNodes(root)]) {
+    const parts = splitMathText(node.nodeValue);
+    if (!parts.some((part) => part.type === 'math')) continue;
     const fragment = document.createDocumentFragment();
-    let cursor = 0;
-    for (const match of matches) {
-      fragment.append(document.createTextNode(text.slice(cursor, match.index)));
-      const wrapper = document.createElement('span');
-      wrapper.className = 'math-copy';
-      if (match[0].startsWith('$$') || match[0].startsWith('\\[')) {
-        wrapper.classList.add('math-display');
+    for (const part of parts) {
+      if (part.type === 'text') {
+        fragment.append(document.createTextNode(part.data));
+        continue;
       }
-      const delimiterLength = match[0].startsWith('$$') || match[0].startsWith('\\') ? 2 : 1;
-      wrapper.dataset.latex = match[0].slice(delimiterLength, -delimiterLength);
-      wrapper.textContent = match[0];
+      const wrapper = document.createElement('span');
+      const display = part.display && !inline;
+      wrapper.className = display ? 'math-copy math-display' : 'math-copy';
+      wrapper.dataset.latex = part.data;
+      wrapper.dataset.mathRendered = 'true';
+      katex.render(part.data, wrapper, { displayMode: display, throwOnError: false, trust: false });
       fragment.append(wrapper);
-      cursor = match.index + match[0].length;
     }
-    fragment.append(document.createTextNode(text.slice(cursor)));
     node.replaceWith(fragment);
   }
 }
 
 export function initMath(content) {
-  for (const element of content.querySelectorAll('.kdmath')) {
-    const tex = element.textContent.trim().replace(/^\$+|\$+$/g, '');
-    if (!tex) continue;
-    element.classList.add('math-copy', 'math-display');
-    element.dataset.latex = tex;
-    katex.render(tex, element, { displayMode: true, throwOnError: false });
-  }
-  wrapMathTextNodes(content);
-  renderMathInElement(content, { delimiters, throwOnError: false });
+  renderContent(content);
   addMathCopyButtons(content);
 
   const directory = document.querySelector('.post-directory');
-  if (directory) {
-    for (const element of directory.querySelectorAll('.kdmath')) {
-      katex.render(element.textContent.trim(), element, {
-        displayMode: false,
-        throwOnError: false,
-      });
-      element.classList.remove('kdmath');
-    }
-    renderMathInElement(directory, {
-      delimiters: delimiters.map((delimiter) => ({ ...delimiter, display: false })),
+  if (!directory) return;
+  renderContent(directory, true);
+  for (const element of directory.querySelectorAll('.math-display[data-latex]')) {
+    katex.render(element.dataset.latex, element, {
+      displayMode: false,
       throwOnError: false,
+      trust: false,
     });
+    element.classList.remove('math-display');
   }
 }

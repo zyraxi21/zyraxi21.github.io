@@ -107,6 +107,7 @@ lang: zh-Hans-CN
 baseurl: '' # 项目站点可填 /仓库名
 timezone: Asia/Shanghai
 exclude:
+  - .cache
   - Gemfile
   - Gemfile.lock
   - node_modules

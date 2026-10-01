@@ -29,7 +29,7 @@ excerpt: "电磁场与电磁波矢量分析基础公式整理。"
     不服从交换律：$\boldsymbol{B}\times \boldsymbol{A}=-\boldsymbol{A}\times \boldsymbol{B}$
     满足分配律：$\boldsymbol{A}\times(\boldsymbol{B}+\boldsymbol{C})=\boldsymbol{A}\times \boldsymbol{B}+\boldsymbol{A}\times \boldsymbol{C}$
     在直角坐标系中：
-    $\begin{align}\boldsymbol{A}\times \boldsymbol{B}&=\boldsymbol{a}_{x}(A_{y}B_{z}-A_{z}B_{y})+\boldsymbol{a}_{y}(A_{z}B_{x}-A_{x}B_{z})+\boldsymbol{a}_{z}(A_{x}B_{y}-A_{y}B_{x})\\&=\left |\begin{matrix}\boldsymbol{a}_{x} &\boldsymbol{a}_{y} &\boldsymbol{a}_{z}\\A_{x}&A_{y}&A_{z}\\B_{x}&B_{y}&B_{z}\end{matrix}\right |\end{align}$
+    $\begin{aligned}\boldsymbol{A}\times \boldsymbol{B}&=\boldsymbol{a}_{x}(A_{y}B_{z}-A_{z}B_{y})+\boldsymbol{a}_{y}(A_{z}B_{x}-A_{x}B_{z})+\boldsymbol{a}_{z}(A_{x}B_{y}-A_{y}B_{x})\\&=\left |\begin{matrix}\boldsymbol{a}_{x} &\boldsymbol{a}_{y} &\boldsymbol{a}_{z}\\A_{x}&A_{y}&A_{z}\\B_{x}&B_{y}&B_{z}\end{matrix}\right |\end{aligned}$
 5. 三重积
     (1) 标量三重积
         $$\boldsymbol{C}\cdot(\boldsymbol{A}\times \boldsymbol{B})=ABC\sin\theta \cos \varphi$$
