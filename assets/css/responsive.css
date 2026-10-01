@@ -22,7 +22,7 @@ html.mobile-panel-open body {
   max-width: none;
   color: var(--text-color);
   background: var(--glass-surface);
-  border: 1px solid var(--border-color);
+  border: 0;
   box-shadow: 0 16px 48px var(--shadow-color);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
   backdrop-filter: blur(24px) saturate(1.4);
@@ -74,18 +74,16 @@ html.mobile-panel-open body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  min-width: 44px;
   min-height: 44px;
-  padding: 8px 10px;
+  padding: 10px;
   color: var(--text-color);
-  font-size: 14px;
   background: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border: 0;
 }
 
 .mobile-panel-close:hover {
-  background: var(--surface-hover);
+  opacity: 0.75;
 }
 
 .mobile-panel-body {
@@ -107,17 +105,6 @@ html.mobile-panel-open body {
   border: 0;
   border-radius: 20px 0 0 20px;
   transform: translateX(100%);
-}
-
-.mobile-nav-panel .mobile-panel-close {
-  min-width: 44px;
-  padding: 10px;
-  border: 0;
-}
-
-.mobile-nav-panel .mobile-panel-close:hover {
-  background: transparent;
-  opacity: 0.75;
 }
 
 .mobile-nav-panel .site-header-nav {
@@ -192,6 +179,7 @@ html.mobile-panel-open body {
 
 .mobile-directory-panel .post-directory li {
   padding-block: 0;
+  border-left: 0;
 }
 
 .mobile-directory-panel .post-directory a {
@@ -462,7 +450,7 @@ html.mobile-panel-open body {
     color: var(--text-color);
     font-size: 16px;
     background: var(--glass-surface);
-    border: 1px solid var(--border-color);
+    border: 0;
     border-radius: 999px;
     box-shadow: 0 4px 20px var(--shadow-color);
     -webkit-backdrop-filter: blur(24px) saturate(1.6);
@@ -470,7 +458,7 @@ html.mobile-panel-open body {
   }
 
   .post-directory-toggle:hover {
-    border-color: var(--brand-primary);
+    background: color-mix(in srgb, var(--glass-surface) 94%, var(--brand-primary));
   }
 
   #post-directory-module {
