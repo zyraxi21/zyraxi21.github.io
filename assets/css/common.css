@@ -79,7 +79,7 @@
 /* LXGW Bright Code GB：代码中的中文字符回退字体。 */
 @font-face {
   font-family: 'LXGW Bright Code GB';
-  src: url('../fonts/LXGWBrightCodeGB-Regular.ttf') format('truetype');
+  src: url('../fonts/LXGWBrightCodeGB-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -759,7 +759,7 @@ dl {
  * 合成，这样代码仍然留在 Ubuntu Mono，而不是掉到后面的中文回退字体上。 */
 @font-face {
   font-family: 'Ubuntu Mono';
-  src: url('../fonts/UbuntuMono-R.ttf') format('truetype');
+  src: url('../fonts/UbuntuMono-R.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;

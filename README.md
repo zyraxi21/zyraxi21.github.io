@@ -47,6 +47,8 @@ http://127.0.0.1:4000
 
 代码中的英文优先使用 Ubuntu Mono，中文回退到 LXGW Bright Code GB。代码块、行内代码、行号与语言标签使用同一组合；两种字体都使用 Regular 文件，粗体与斜体由浏览器合成。
 
+网页加载 `assets/fonts/UbuntuMono-R.woff2` 和 `assets/fonts/LXGWBrightCodeGB-Regular.woff2`，同目录保留 TTF 原文件。替换代码字体时，请同步更新对应的 WOFF2 文件或 `assets/css/common.css` 中的字体声明。
+
 ## 全站搜索
 
 点击顶栏导航左侧的放大镜展开搜索框，输入后实时显示最多 5 条结果。点击结果直接打开页面；按回车或再次点击放大镜查看完整结果。也可以用上下方向键选择结果、按回车打开，按 Escape 收起搜索框。
