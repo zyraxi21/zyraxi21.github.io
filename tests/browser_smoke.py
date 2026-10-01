@@ -85,6 +85,65 @@ def open_panel_with_motion(page, trigger, panel):
     assert page.locator(panel).evaluate('(dialog) => dialog.matches(":modal")')
 
 
+def check_heading_levels(page, post_address, screenshots):
+    # Add headings before the production module runs; leave the source article unchanged.
+    headings = ''.join(
+        f'<h{level} id="smoke-heading-{level}">{level} 级标题</h{level}>'
+        for level in range(1, 7)
+    )
+    fixture = f'<section class="markdown-body" id="smoke-heading-levels">{headings}</section>'
+
+    def add_headings(route):
+        response = route.fetch()
+        html = response.text()
+        assert '</article>' in html
+        route.fulfill(response=response, body=html.replace('</article>', fixture + '</article>', 1))
+
+    page.route(post_address, add_headings)
+    try:
+        page.set_viewport_size({'width': 1440, 'height': 1000})
+        page.emulate_media(color_scheme='light', reduced_motion='no-preference')
+        page.goto(post_address)
+        page.wait_for_load_state('networkidle')
+        entries = page.locator('.post-directory li:has(a[href^="#smoke-heading-"])')
+        expect(entries).to_have_count(6)
+
+        for width in [1440, 320]:
+            page.set_viewport_size({'width': width, 'height': 900})
+            if width == 320:
+                page.locator('.post-directory-toggle').click()
+                expect(page.locator('#post-directory-panel')).to_be_visible()
+            metrics = entries.evaluate_all('''(items) => items.map((item) => {
+              const link = item.querySelector('a');
+              const heading = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+              const style = getComputedStyle(item);
+              return {tag: heading.tagName, id: heading.id, text: link.textContent,
+                padding: parseFloat(style.paddingLeft), border: parseFloat(style.borderLeftWidth)};
+            })''')
+            assert [item['tag'] for item in metrics] == [f'H{level}' for level in range(1, 7)], metrics
+            assert [item['id'] for item in metrics] == [f'smoke-heading-{level}' for level in range(1, 7)], metrics
+            assert [item['text'] for item in metrics] == [f'{level} 级标题' for level in range(1, 7)], metrics
+            assert all(first['padding'] < second['padding'] for first, second in zip(metrics, metrics[1:])), metrics
+            if width == 320:
+                assert all(item['border'] == 0 for item in metrics), metrics
+                entries.last.locator('a').hover()
+                assert entries.last.evaluate('(item) => getComputedStyle(item).borderLeftWidth') == '0px'
+                entries.last.scroll_into_view_if_needed()
+                page.screenshot(path=str(screenshots / 'heading-levels-mobile.png'))
+            else:
+                page.locator('#smoke-heading-levels').scroll_into_view_if_needed()
+                entries.last.scroll_into_view_if_needed()
+                page.screenshot(path=str(screenshots / 'heading-levels-desktop.png'))
+            entries.last.locator('a').click()
+            assert urlsplit(page.url).fragment == 'smoke-heading-6'
+            if width == 320:
+                expect(page.locator('#post-directory-panel')).to_be_hidden()
+                expect(page.locator('#smoke-heading-6')).to_be_focused()
+                assert page.evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1')
+    finally:
+        page.unroute(post_address, add_headings)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--site', default='_site')
@@ -399,10 +458,11 @@ def main():
                         expect(page.locator('.post-directory-toggle')).to_be_visible()
                     if 'Example-No-Sidebar-Nav' in route:
                         assert page.locator('.post-directory-toggle').count() == 0
+            check_heading_levels(page, origin + post_url, screenshots)
             assert not errors, errors
             assert not missing, missing
             browser.close()
-            print(f'Browser checks passed (animated panels/focus/glass, icon navigation, category theme/hover/white text, line alignment, math/diagrams, copy, scrollbars, portrait layouts; baseurl={baseurl or "/"}).')
+            print(f'Browser checks passed (six heading levels/anchors/indentation, animated panels/focus/glass, icon navigation, category theme/hover/white text, line alignment, math/diagrams, copy, scrollbars, portrait layouts; baseurl={baseurl or "/"}).')
     finally:
         server.shutdown()
         server.server_close()

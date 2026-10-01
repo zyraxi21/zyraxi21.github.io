@@ -4,9 +4,7 @@ function initDirectory() {
   const directory = document.querySelector('.post-directory ol');
   if (!directory) return;
   for (const [index, heading] of [
-    ...document.querySelectorAll(
-      'article .markdown-body h1, article .markdown-body h2, article .markdown-body h3',
-    ),
+    ...document.querySelectorAll('article .markdown-body :is(h1, h2, h3, h4, h5, h6)'),
   ].entries()) {
     if (!heading.id) {
       let id = `section-${index + 1}`;
