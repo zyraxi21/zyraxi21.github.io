@@ -517,7 +517,7 @@ dl {
 .project-card:hover,
 .project-card:focus-within {
   transform: translateY(-2px);
-  border-color: var(--brand-primary);
+  border-color: var(--border-strong);
   box-shadow: 0 6px 18px var(--shadow-color);
 }
 
@@ -543,7 +543,12 @@ dl {
 .project-card .card-title a:hover {
   color: var(--brand-on-primary);
   text-decoration: underline;
-  text-decoration-color: var(--brand-primary);
+  text-decoration-color: currentColor;
+}
+
+.project-card .card-title a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -6px;
 }
 
 .project-card .caption {

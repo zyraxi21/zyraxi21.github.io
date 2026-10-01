@@ -58,8 +58,13 @@ css: ['index.css', 'home-feed.css', 'sidebar-popular-repo.css']
             </p>
             <h3 class='post-list-title'>
               <a class='hvr-underline-from-center' href='{{ post.url | relative_url }}'>
-                <span class='badge post-category-badge'>{{ post.categories | first }}</span>
-                {{ post.title }}
+                {% assign post_category = post.categories | first %}
+                {% if post_category %}
+                  <span class='post-list-category'>
+                    <span class='badge post-category-badge'>{{ post_category }}</span>
+                  </span>
+                {% endif %}
+                <span class='post-list-title-text'>{{ post.title }}</span>
               </a>
             </h3>
             <p class='post-list-description'>

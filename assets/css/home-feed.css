@@ -67,11 +67,34 @@
 }
 
 .home-posts .post-list-title a {
-  display: block;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
   min-height: 44px;
   padding-block: 4px;
   color: var(--text-color);
   overflow-wrap: anywhere;
+}
+
+/* 分类与标题首行居中对齐，多行标题在右侧自然换行。 */
+.post-list-category {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  min-width: 0;
+  max-width: 45%;
+  min-height: 1.5em;
+}
+
+.post-list-category .post-category-badge {
+  margin: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.post-list-title-text {
+  flex: 1;
+  min-width: 0;
 }
 
 .home-posts .post-list-title a:hover {
