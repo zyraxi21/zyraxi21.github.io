@@ -164,15 +164,16 @@ def check_search(page, origin, baseurl, site, post_url, screenshots, requests):
     input_box = page.locator('#site-search-input')
     popover = page.locator('#site-search-popover')
     before = button.locator('svg').bounding_box()
-    button.click()
-    expect(input_box).to_be_focused()
+    # 在同一浏览器任务中展开并采样，避免自动等待跨过短动画。
     durations = page.locator('.header-search-form').evaluate('''async (form) => {
+      form.querySelector('button').click();
       await new Promise(requestAnimationFrame);
       const animations = form.getAnimations();
       const durations = animations.map((animation) => animation.effect.getTiming().duration);
       await Promise.allSettled(animations.map((animation) => animation.finished));
       return durations;
     }''')
+    expect(input_box).to_be_focused()
     assert durations and max(durations) >= 150, durations
     after = button.locator('svg').bounding_box()
     assert abs(before['x'] - after['x']) <= 1 and abs(before['y'] - after['y']) <= 1, (before, after)
@@ -246,8 +247,13 @@ def check_search(page, origin, baseurl, site, post_url, screenshots, requests):
     page.unroute(index_address, abort_index)
     popover.locator('.search-retry').click()
     expect(popover.locator('[role="option"]').first).to_be_visible()
+    input_box.focus()
     input_box.dispatch_event('compositionstart')
-    input_box.fill(query)
+    # fill 在 Firefox 中会结束组合；直接发送仍处于组合状态的输入事件。
+    input_box.evaluate('''(input, value) => {
+      input.value = value;
+      input.dispatchEvent(new InputEvent('input', {bubbles: true, isComposing: true}));
+    }''', query)
     expect(popover).to_be_hidden()
     input_box.dispatch_event('compositionend')
     expect(popover.locator('[role="option"]').first).to_be_visible()
@@ -310,6 +316,37 @@ def check_search(page, origin, baseurl, site, post_url, screenshots, requests):
     expect(button).to_be_focused()
 
 
+def check_initial_mobile_layout(browser, origin, post_url, site):
+    # 暂停主模块初始化，直接检查首次绘制时的手机布局。
+    context = browser.new_context(viewport={'width': 390, 'height': 844}, reduced_motion='reduce')
+    context.route('**/*', lambda route: route.continue_() if route.request.url.startswith(origin) else route.abort())
+    delayed = 'await new Promise(resolve => { window.__releaseInitialLayout = resolve; });\n'
+    delayed += (site / 'assets/vendor/app.js').read_text(encoding='utf-8')
+    context.route('**/assets/vendor/app.js', lambda route: route.fulfill(body=delayed, content_type='application/javascript'))
+    page = context.new_page()
+    try:
+        page.goto(origin + post_url, wait_until='commit')
+        page.wait_for_function('typeof window.__releaseInitialLayout === "function"')
+        page.evaluate('async () => { await document.fonts.ready; }')
+        metrics = '''() => ({
+          contentTop: document.querySelector('.post-content').getBoundingClientRect().top,
+          searchLeft: document.querySelector('.site-search-button').getBoundingClientRect().left,
+          overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+        })'''
+        initial = page.evaluate(metrics)
+        assert page.locator('.site-nav-toggle').is_visible()
+        assert not page.locator('.site-header-actions > .site-header-nav').is_visible()
+        page.evaluate('window.__releaseInitialLayout()')
+        page.wait_for_load_state('networkidle')
+        page.wait_for_function('document.querySelector(".post-directory-toggle:not([hidden])")')
+        final = page.evaluate(metrics)
+        assert not initial['overflow'] and not final['overflow'], (initial, final)
+        assert abs(initial['contentTop'] - final['contentTop']) <= 1, (initial, final)
+        assert abs(initial['searchLeft'] - final['searchLeft']) <= 1, (initial, final)
+    finally:
+        context.close()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--site', default='_site')
@@ -359,6 +396,8 @@ def main():
     try:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True, channel=args.browser_channel)
+            if not args.search_only:
+                check_initial_mobile_layout(browser, origin, post_url, site)
             context = browser.new_context(viewport={'width': 1440, 'height': 1000})
             context.grant_permissions(['clipboard-read', 'clipboard-write'])
             context.route('**/*', lambda route: route.continue_() if route.request.url.startswith(origin) else route.abort())

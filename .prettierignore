@@ -8,6 +8,8 @@ assets/vendor/
 assets/js/*.min.js
 src/vendor/
 assets/css/syntax.css
+assets/css/fonts.css
+assets/fonts/web/
 _posts/
 _data/
 dump.html

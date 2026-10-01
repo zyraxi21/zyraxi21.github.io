@@ -1,0 +1,19 @@
+{
+  "chunkSize": 512,
+  "fonts": [
+    {
+      "id": "serif",
+      "source": "SourceHanSerifCN-VF.otf.woff2",
+      "family": "Yummy Web Serif VF",
+      "rename": true,
+      "weight": "100 900"
+    },
+    {
+      "id": "code",
+      "source": "LXGWBrightCodeGB-Regular.ttf",
+      "family": "LXGW Bright Code GB",
+      "rename": false,
+      "weight": "400"
+    }
+  ]
+}

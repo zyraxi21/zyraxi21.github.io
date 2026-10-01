@@ -309,7 +309,11 @@ html.mobile-panel-open body {
     margin: 0;
   }
 
-  .site-nav-toggle {
+  .js .site-header-actions > .site-header-nav {
+    display: none;
+  }
+
+  .js .site-nav-toggle {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
@@ -459,6 +463,10 @@ html.mobile-panel-open body {
 
   .post-directory-toggle:hover {
     background: color-mix(in srgb, var(--glass-surface) 94%, var(--brand-primary));
+  }
+
+  .js #post-directory-module {
+    display: none;
   }
 
   #post-directory-module {

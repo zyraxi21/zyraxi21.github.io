@@ -7,7 +7,7 @@ import {
   rmSync,
   writeFileSync,
 } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 
@@ -45,6 +45,20 @@ try {
     assetNames: 'fonts/[name]-[hash]',
     legalComments: 'linked',
     logLevel: 'warning',
+    plugins: [
+      {
+        name: 'web-font-paths',
+        setup(builder) {
+          // 分片已提交，不重复复制；路径相对于发布后的 assets/vendor/app.css。
+          builder.onResolve({ filter: /\/fonts\/web\// }, (args) => {
+            const target = resolve(args.resolveDir, args.path);
+            if (dirname(target) !== join(root, 'assets/fonts/web'))
+              throw new Error('无效字体分片路径');
+            return { path: `../fonts/web/${basename(target)}`, external: true };
+          });
+        },
+      },
+    ],
   });
 
   const symbols = Object.entries(icons).map(([name, icon]) => {
