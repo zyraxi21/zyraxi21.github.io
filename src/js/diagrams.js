@@ -93,7 +93,7 @@ export async function initDiagrams(content) {
       theme: darkQuery.matches ? 'dark' : 'default',
       themeVariables: { background: 'transparent' },
       securityLevel: 'strict',
-      flowchart: { htmlLabels: false },
+      htmlLabels: false,
     });
     for (const { pre, source } of blocks) {
       if (requestedVersion !== version) break;
@@ -104,6 +104,22 @@ export async function initDiagrams(content) {
         pre.innerHTML = result.svg;
         pre.classList.add('mermaid-rendered');
         pre.classList.remove('mermaid-error');
+        // SVG 放入文章后重新核对画布边界，完整包含节点、文字与连线。
+        const svg = pre.querySelector('svg');
+        const bounds = svg.getBBox();
+        const padding = 8;
+        if (bounds.width > 0 && bounds.height > 0) {
+          svg.setAttribute(
+            'viewBox',
+            [
+              bounds.x - padding,
+              bounds.y - padding,
+              bounds.width + 2 * padding,
+              bounds.height + 2 * padding,
+            ].join(' '),
+          );
+          svg.style.maxWidth = `${bounds.width + 2 * padding}px`;
+        }
         result.bindFunctions?.(pre);
       } catch (error) {
         document.getElementById(`d${id}`)?.remove();

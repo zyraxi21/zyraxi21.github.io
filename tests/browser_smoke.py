@@ -48,6 +48,18 @@ def check_glass(element, max_alpha=0.6):
     assert blur and float(blur.group(1)) >= 24, style
 
 
+def check_diagram_labels(page):
+    # 核对实际可见文字，不能仅用 SVG 存在和没有报错判断渲染成功。
+    labels = page.locator('.mermaid-rendered svg .node text').evaluate_all('''(elements) => elements.map(element => {
+      const bounds = element.getBoundingClientRect();
+      const viewport = element.ownerSVGElement.getBoundingClientRect();
+      return {text: element.textContent.trim(), height: bounds.height,
+        clipped: bounds.left < viewport.left - 1 || bounds.right > viewport.right + 1
+          || bounds.top < viewport.top - 1 || bounds.bottom > viewport.bottom + 1};
+    })''')
+    assert labels and all(label['text'] and label['height'] >= 7 and not label['clipped'] for label in labels), labels
+
+
 def category_colors(element):
     return element.evaluate('''async (element) => {
       await Promise.allSettled(element.getAnimations().map((animation) => animation.finished));
@@ -491,6 +503,7 @@ def main():
             page.goto(origin + post_url)
             page.wait_for_load_state('networkidle')
             page.locator('.mermaid-rendered svg').first.wait_for(timeout=30000)
+            check_diagram_labels(page)
             assert page.locator('.markdown-body .katex').count() > 0
             assert page.locator('.markdown-body .katex-error').count() == 0
             assert page.locator('.markdown-body .math-copy:not(:has(.katex-display)) .katex').count() > 0, 'Inline formulas must remain within paragraphs'
@@ -629,6 +642,7 @@ def main():
             page.goto(origin + post_url)
             page.wait_for_load_state('networkidle')
             page.locator('.mermaid-rendered svg').first.wait_for(timeout=30000)
+            check_diagram_labels(page)
             directory = page.locator('#post-directory-module')
             expect(directory).to_be_hidden()
             directory_toggle = page.locator('.post-directory-toggle')
