@@ -353,6 +353,67 @@ dl {
   font-size: 18px;
 }
 
+/* 题头分开显示标题与元信息，保留原有纹理配色。 */
+.jumbotron.geopattern {
+  padding-top: 168px;
+  padding-bottom: 52px;
+}
+
+.jumbotron.geopattern h1 {
+  max-width: 26ch;
+  margin: 0;
+  font-size: clamp(32px, 3.4vw, 44px);
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.jumbotron.geopattern #jumbotron-meta-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 24px;
+  margin-top: 16px;
+}
+
+.jumbotron.geopattern .meta-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.hero-date {
+  font-variant-numeric: tabular-nums;
+}
+
+.jumbotron .post-category {
+  min-height: 44px;
+  text-underline-offset: 5px;
+}
+
+.jumbotron .post-category:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 991px) {
+  .jumbotron.geopattern {
+    padding-top: 112px;
+    padding-bottom: 32px;
+  }
+
+  .jumbotron.geopattern h1 {
+    font-size: clamp(28px, 5vw, 36px);
+  }
+
+  .jumbotron.geopattern .meta-info {
+    font-size: 15px;
+  }
+}
+
 /** Footer **/
 .site-footer {
   position: relative;
@@ -406,7 +467,7 @@ dl {
 }
 
 .geopattern {
-  background-size: contain; /* To fix strange behavior when zoom in/out */
+  background-size: contain; /* 缩放时保持原有纹理的显示方式。 */
 }
 
 .caption {
@@ -420,6 +481,102 @@ dl {
 .about-solo {
   max-width: 920px;
   margin-inline: auto;
+}
+
+.post-content {
+  min-width: 0;
+  font-size: 17px;
+  line-height: 1.85;
+}
+
+.post-content.col-12 {
+  max-width: 880px;
+  margin-inline: auto;
+}
+
+.post-content > p {
+  margin-bottom: 1.2em;
+}
+
+/* 首页侧栏与项目页共用完整、不截断的卡片。 */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.project-card:hover,
+.project-card:focus-within {
+  transform: translateY(-2px);
+  border-color: var(--brand-primary);
+  box-shadow: 0 6px 18px var(--shadow-color);
+}
+
+.project-card .card-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.project-card .card-title a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 116px;
+  padding: 24px 20px;
+  color: var(--brand-on-primary);
+  overflow-wrap: anywhere;
+  text-align: center;
+  text-underline-offset: 5px;
+}
+
+.project-card .card-title a:hover {
+  color: var(--brand-on-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--brand-primary);
+}
+
+.project-card .caption {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 20px 20px;
+}
+
+.project-card .card-description {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.project-card .card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: auto;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.project-card .meta-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
 }
 
 /* ===== 数学字体：统一使用 KaTeX 自带字体 =====

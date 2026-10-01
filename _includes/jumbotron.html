@@ -1,39 +1,42 @@
-<section class='jumbotron geopattern' data-pattern-id='{{ page.title }}'>
-  <div class='container'>
-    <div id='jumbotron-meta-info'>
-      <h1>{{ page.title }}</h1>
-      <span class='meta-info'>
-        {% if page.subtitle %}
-          {% if page.subtitle_icon -%}
-            <span class='blog-slogan'>
-              <svg class='mega-octicon octicon' width='24' height='24' aria-hidden='true'>
-                <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-{{ page.subtitle_icon | escape }}"></use>
-              </svg>
-              <span>{{ page.subtitle }}</span></span
-            >
-          {%- else -%}
-            {{- page.subtitle -}}
-          {%- endif %}
-        {% endif %}
-        {% if page.date %}
-          <svg class='octicon' width='16' height='16' aria-hidden='true'>
-            <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-calendar"></use>
-          </svg>
-          {{ page.date | date: '%Y/%m/%d' }}
-        {% endif %}
-      </span>
-      {% if page.category %}
-        <a
-          class='meta-info post-category'
-          href='{{ '/blog' | relative_url }}?category={{ page.category | url_encode }}'
-          title='在“我的博客”查看该分类'
-        >
-          <svg class='octicon' width='16' height='16' aria-hidden='true'>
-            <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-tag"></use>
-          </svg>
-          {{ page.category }}
-        </a>
+{% assign post_category = page.categories | first | default: page.category %}
+{% capture hero_meta %}
+  {% if page.subtitle %}
+    <span class='meta-info blog-slogan'>
+      {% if page.subtitle_icon %}
+        <svg class='octicon' width='20' height='20' aria-hidden='true'>
+          <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-{{ page.subtitle_icon | escape }}"></use>
+        </svg>
       {% endif %}
-    </div>
+      <span>{{ page.subtitle }}</span>
+    </span>
+  {% endif %}
+  {% if page.date %}
+    <span class='meta-info hero-date'>
+      <svg class='octicon' width='16' height='16' aria-hidden='true'>
+        <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-calendar"></use>
+      </svg>
+      <time datetime='{{ page.date | date: '%Y-%m-%d' }}'>{{ page.date | date: '%Y/%m/%d' }}</time>
+    </span>
+  {% endif %}
+  {% if post_category %}
+    <a
+      class='meta-info post-category'
+      href='{{ '/blog' | relative_url }}?category={{ post_category | url_encode }}'
+      title='查看该分类的文章'
+    >
+      <svg class='octicon' width='16' height='16' aria-hidden='true'>
+        <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-tag"></use>
+      </svg>
+      {{ post_category | escape }}
+    </a>
+  {% endif %}
+{% endcapture %}
+{% assign hero_meta = hero_meta | strip %}
+<section class='jumbotron geopattern' data-pattern-id='{{ page.title | escape }}'>
+  <div class='container'>
+    <h1>{{ page.title | escape }}</h1>
+    {% if hero_meta != '' %}
+      <div id='jumbotron-meta-info'>{{ hero_meta }}</div>
+    {% endif %}
   </div>
 </section>

@@ -1,63 +1,58 @@
-.card-image {
-  display: table;
-  height: 120px;
-  width: 100%;
-  border-radius: 4px;
+#container-open-source .repo-list {
+  --bs-gutter-x: 2rem;
+  --bs-gutter-y: 2rem;
 }
 
-.card-image .card-image-cell {
-  display: table-cell;
-  vertical-align: middle;
+#container-open-source .card {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
-.card-image h3 {
-  margin: 0;
+#container-open-source .project-card {
+  height: 100%;
 }
 
-.card-image a {
-  color: var(--brand-on-primary);
-}
-
-.card-description {
-  height: 3em;
-  overflow: hidden;
-}
-
-.jumbotron h1,
-.jumbotron .meta-info {
-  color: var(--brand-on-primary);
-}
-
-.card .thumbnail {
+.project-empty {
+  max-width: 720px;
+  margin-inline: auto;
+  padding: clamp(24px, 4vw, 40px);
+  background: var(--surface-muted);
   border: 1px solid var(--border-color);
-  border-bottom-color: var(--border-strong);
-  border-radius: 4px;
-  box-shadow:
-    0 1px 2px var(--shadow-color),
-    0 5px 10px var(--shadow-color);
-  -webkit-transition:
-    border-color 0.1s ease-in-out,
-    box-shadow 0.1s ease-in-out;
-  transition:
-    border-color 0.1s ease-in-out,
-    box-shadow 0.1s ease-in-out;
-  opacity: 0.8;
+  border-radius: 16px;
 }
 
-.card .thumbnail:hover {
-  border-color: var(--border-color) var(--border-color) var(--border-strong);
-  box-shadow:
-    0 2px 4px var(--shadow-color),
-    0 10px 18px var(--shadow-color);
-  opacity: 1;
+.project-empty h2 {
+  margin: 0 0 12px;
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 600;
+  line-height: 1.4;
 }
 
-/* 悬停只提亮卡片本身，标题链接保持白色，不要改成正文色。 */
-.card .thumbnail:hover .card-title a {
-  color: var(--brand-on-primary);
-  text-decoration: none;
+.project-empty p {
+  margin: 0 0 16px;
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1.7;
 }
 
-.card-text .meta-info {
-  margin-right: 10px;
+.project-empty a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--text-color);
+  font-size: 16px;
+  text-decoration: underline;
+  text-decoration-color: var(--brand-primary);
+  text-underline-offset: 5px;
+}
+
+.project-empty a .octicon {
+  transition: transform 180ms ease;
+}
+
+.project-empty a:hover .octicon,
+.project-empty a:focus-visible .octicon {
+  transform: translateX(3px);
 }

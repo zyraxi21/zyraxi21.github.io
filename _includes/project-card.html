@@ -1,0 +1,53 @@
+{% assign project = include.repo %}
+{% capture project_details %}
+  {% if project.description and project.description != '' %}
+    <p class='card-description'>{{ project.description | escape }}</p>
+  {% endif %}
+  {% if project.stargazers_count or project.forks_count or project.updated_at %}
+    <div class='card-meta'>
+      {% if project.stargazers_count %}
+        <span class='meta-info' title='{{ project.stargazers_count }} 颗星'>
+          <svg class='octicon' width='16' height='16' aria-hidden='true'>
+            <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-star"></use>
+          </svg>
+          {{ project.stargazers_count }}
+        </span>
+      {% endif %}
+      {% if project.forks_count %}
+        <span class='meta-info' title='{{ project.forks_count }} 次分叉'>
+          <svg class='octicon' width='16' height='16' aria-hidden='true'>
+            <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-git-branch"></use>
+          </svg>
+          {{ project.forks_count }}
+        </span>
+      {% endif %}
+      {% if project.updated_at %}
+        <span class='meta-info' title='最后更新：{{ project.updated_at | escape }}'>
+          <svg class='octicon' width='16' height='16' aria-hidden='true'>
+            <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-clock"></use>
+          </svg>
+          <time datetime='{{ project.updated_at | escape }}'>
+            {{- project.updated_at | date: '%Y-%m-%d' -}}
+          </time>
+        </span>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endcapture %}
+{% assign project_details = project_details | strip %}
+<div class='thumbnail project-card'>
+  <div class='card-image geopattern' data-pattern-id='{{ project.name | escape }}'>
+    <h3 class='card-title'>
+      <a
+        href='{{ project.link | default: project.html_url | escape }}'
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        {{- project.name | escape -}}
+      </a>
+    </h3>
+  </div>
+  {% if project_details != '' %}
+    <div class='caption'>{{ project_details }}</div>
+  {% endif %}
+</div>

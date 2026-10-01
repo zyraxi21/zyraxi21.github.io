@@ -31,8 +31,10 @@
   margin-top: -10px;
   top: 50%;
   left: -158px;
-  font-size: 0.95em;
+  font-size: 13px;
   line-height: 20px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
   position: absolute;
 }
 
@@ -42,14 +44,18 @@
 }
 
 .posts-list-name {
+  color: var(--text-color);
   font-size: 25px;
+  font-weight: 600;
+  line-height: 1.5;
   text-decoration: none;
-  opacity: 0.8;
 }
 
 .posts-list-name:hover {
-  text-decoration: none;
-  opacity: 1;
+  color: var(--text-color);
+  text-decoration: underline;
+  text-decoration-color: var(--brand-primary);
+  text-underline-offset: 5px;
 }
 
 .posts-content:hover .circle {

@@ -1,92 +1,57 @@
-{% if site.data.projects %}
-  {% assign sorted_repos = site.data.projects
-    | sort: 'stargazers_count'
-    | reverse
-    | where: 'fork', false
-  %}
-{% elsif site.repository and site.github.public_repositories %}
-  {% assign sorted_repos = site.github.public_repositories
-    | sort: 'stargazers_count'
-    | reverse
-    | where: 'fork', false
-  %}
-{% else %}
-  {% assign sorted_repos = '' | split: ',' %}
-{% endif %}
+{% assign project_profile_url = site.github_url | default: '' | strip %}
+{% assign projects = site.data.projects | default: site.projects %}
+{% unless projects %}
+  {% if site.repository and site.github.public_repositories %}
+    {% assign projects = site.github.public_repositories %}
+  {% else %}
+    {% assign projects = '' | split: ',' %}
+  {% endif %}
+{% endunless %}
+{% assign sorted_repos = projects
+  | where_exp: 'repo', 'repo.fork != true'
+  | sort: 'stargazers_count'
+  | reverse
+%}
 <div id='container-open-source'>
-  <section class='jumbotron geopattern' data-pattern-id='{{ page.title }}'>
+  <section class='jumbotron geopattern' data-pattern-id='{{ page.title | escape }}'>
     <div class='container'>
+      <h1>{{ page.title | escape }}</h1>
       <div id='jumbotron-meta-info'>
-        <h1>Open Source Projects</h1>
-        <span class='meta-info'>
-          I have <span class='repo-count badge'>{{ sorted_repos.size }}</span> projects on Github
-        </span>
+        <span class='meta-info'>展示 {{ sorted_repos.size }} 个开源项目</span>
       </div>
     </div>
   </section>
 
-  <section class='container'>
-    <div class='repo-list row'>
-      <!-- Check here for github metadata -->
-      <!-- https://help.github.com/articles/repository-metadata-on-github-pages/ -->
-      {% for repo in sorted_repos %}
-        <div class='col-md-4 card text-center'>
-          <div class='thumbnail'>
-            <div class='card-image geopattern' data-pattern-id='{{ repo.name | escape }}'>
-              <div class='card-image-cell'>
-                <h3 class='card-title'>
-                  <a
-                    href='{{ repo.link | default: repo.html_url | escape }}'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                  >
-                    {{- repo.name | escape -}}
-                  </a>
-                </h3>
-              </div>
-            </div>
-            <div class='caption'>
-              <div class='card-description'>
-                <p class='card-text'>{{ repo.description | escape }}</p>
-              </div>
-              <div class='card-text'>
-                <span
-                  data-bs-toggle='tooltip'
-                  class='meta-info'
-                  title='{{ repo.stargazers_count }} stars'
-                >
-                  <svg class='octicon' width='16' height='16' aria-hidden='true'>
-                    <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-star"></use>
-                  </svg>
-                  {{ repo.stargazers_count }}
-                </span>
-                <span
-                  data-bs-toggle='tooltip'
-                  class='meta-info'
-                  title='{{ repo.forks_count }} forks'
-                >
-                  <svg class='octicon' width='16' height='16' aria-hidden='true'>
-                    <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-git-branch"></use>
-                  </svg>
-                  {{ repo.forks_count }}
-                </span>
-                <span
-                  data-bs-toggle='tooltip'
-                  class='meta-info'
-                  title='Last updated：{{ repo.updated_at }}'
-                >
-                  <svg class='octicon' width='16' height='16' aria-hidden='true'>
-                    <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-clock"></use>
-                  </svg>
-                  <time datetime='{{ repo.updated_at }}' title='{{ repo.updated_at }}'>
-                    {{- repo.updated_at | date: '%Y-%m-%d' -}}
-                  </time>
-                </span>
-              </div>
-            </div>
+  <section class='container' aria-label='开源项目列表'>
+    {% if sorted_repos.size > 0 %}
+      <div class='repo-list row'>
+        {% for repo in sorted_repos %}
+          <div class='col-md-4 card'>
+            {% include project-card.html repo=repo %}
           </div>
-        </div>
-      {% endfor %}
-    </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class='project-empty'>
+        <h2>暂无展示的项目</h2>
+        <p>
+          {% if project_profile_url != '' -%}
+            更多项目可在 GitHub 上查看。
+          {%- else -%}
+            项目更新后会在这里展示。
+          {%- endif %}
+        </p>
+        {% if project_profile_url != '' %}
+          <a href='{{ project_profile_url | escape }}' target='_blank' rel='noopener noreferrer'>
+            在 GitHub 上查看
+            <svg class='octicon' width='18' height='18' aria-hidden='true'>
+              <use href="{{ '/assets/vendor/octicons.svg' | relative_url }}#icon-arrow-right"></use>
+            </svg>
+          </a>
+        {% else %}
+          <a href='{{ '/blog' | relative_url }}'>浏览文章</a>
+        {% endif %}
+      </div>
+    {% endif %}
   </section>
 </div>

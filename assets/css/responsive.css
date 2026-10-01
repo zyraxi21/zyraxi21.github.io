@@ -203,7 +203,8 @@ html.mobile-panel-open body {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 8px;
-  font-size: 1.75rem;
+  font-size: 22px;
+  font-weight: 600;
   list-style: none;
   cursor: pointer;
 }
