@@ -127,8 +127,7 @@
   z-index: 104;
   max-height: min(70vh, 570px);
   max-height: min(70dvh, 570px);
-  padding: 8px;
-  overflow-y: auto;
+  overflow: hidden;
   color: var(--text-color);
   background: var(--glass-surface);
   border: 0;
@@ -136,8 +135,16 @@
   box-shadow: 0 12px 36px var(--shadow-color);
   -webkit-backdrop-filter: blur(32px) saturate(1.6);
   backdrop-filter: blur(32px) saturate(1.6);
-  overscroll-behavior: contain;
   animation: search-popover-in 160ms ease both;
+}
+
+.site-search-scroll {
+  max-height: inherit;
+  padding: 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-muted) transparent;
 }
 
 .search-preview-status {
