@@ -76,10 +76,10 @@
   font-display: swap;
 }
 
-/* 霞鹜文楷：个人网站代码中的中文字符回退字体。 */
+/* LXGW Bright Code GB：代码中的中文字符回退字体。 */
 @font-face {
-  font-family: 'LXGW WenKai Mono';
-  src: url('../fonts/LXGWWenKaiMono-Regular.ttf') format('truetype');
+  font-family: 'LXGW Bright Code GB';
+  src: url('../fonts/LXGWBrightCodeGB-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -598,6 +598,7 @@ dl {
   src: url('../fonts/UbuntuMono-R.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 /* 代码字体：容器本身之外，Rouge 语法高亮还会为每个 token 生成 <span>。
@@ -615,7 +616,7 @@ samp *,
 .highlight *,
 .markdown-body code,
 .markdown-body pre {
-  font-family: 'Ubuntu Mono', 'LXGW WenKai Mono', monospace;
+  font-family: 'Ubuntu Mono', 'LXGW Bright Code GB', monospace;
 }
 /* Code copy buttons */
 .highlighter-rouge {
@@ -640,7 +641,7 @@ samp *,
 }
 
 .code-lang {
-  font-family: 'Ubuntu Mono', 'LXGW WenKai Mono', monospace;
+  font-family: 'Ubuntu Mono', 'LXGW Bright Code GB', monospace;
   color: var(--brand-primary-hover);
 }
 
@@ -778,7 +779,7 @@ samp *,
   background: var(--brand-primary-soft);
   border-right: 1px solid var(--brand-primary-border);
   user-select: none;
-  font-family: 'Ubuntu Mono', 'LXGW WenKai Mono', monospace !important;
+  font-family: 'Ubuntu Mono', 'LXGW Bright Code GB', monospace !important;
   font-size: var(--code-font-size);
   line-height: var(--code-line-height);
 }
@@ -873,7 +874,13 @@ html {
 .code-block-wrapper .highlight,
 .code-block-wrapper .highlight pre,
 .code-block-wrapper .highlight code {
-  font-family: 'Ubuntu Mono', 'LXGW WenKai Mono', monospace !important;
+  font-family: 'Ubuntu Mono', 'LXGW Bright Code GB', monospace !important;
+}
+
+/* 行内代码与代码块使用同一套中英文代码字体。 */
+.markdown-body :not(pre) > code,
+.code-copy-wrap > code {
+  font-family: 'Ubuntu Mono', 'LXGW Bright Code GB', monospace !important;
 }
 
 /* 表格同样在底部保留轨道空间，避免遮住最后一行。 */
