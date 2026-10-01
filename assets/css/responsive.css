@@ -61,7 +61,6 @@ html.mobile-panel-open body {
   justify-content: space-between;
   gap: 12px;
   padding: 12px 18px;
-  border-bottom: 1px solid var(--border-color);
 }
 
 .mobile-panel-header h2 {
@@ -105,9 +104,20 @@ html.mobile-panel-open body {
   max-height: none;
   padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
   padding-right: env(safe-area-inset-right, 0px);
-  border-width: 0 0 0 1px;
+  border: 0;
   border-radius: 20px 0 0 20px;
   transform: translateX(100%);
+}
+
+.mobile-nav-panel .mobile-panel-close {
+  min-width: 44px;
+  padding: 10px;
+  border: 0;
+}
+
+.mobile-nav-panel .mobile-panel-close:hover {
+  background: transparent;
+  opacity: 0.75;
 }
 
 .mobile-nav-panel .site-header-nav {
@@ -135,8 +145,15 @@ html.mobile-panel-open body {
 .mobile-nav-panel .site-header-nav-item:focus-visible,
 .mobile-nav-panel .site-header-nav-item.selected {
   color: var(--text-color);
-  background: var(--brand-primary-soft);
+  background: color-mix(in srgb, var(--brand-primary) 16%, transparent);
   border-left-color: var(--brand-primary);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
+}
+
+.mobile-nav-panel .site-header-nav-item.selected:hover,
+.mobile-nav-panel .site-header-nav-item.selected:focus-visible {
+  background: color-mix(in srgb, var(--brand-primary) 22%, transparent);
 }
 
 .mobile-nav-panel .site-header-nav-item::before {

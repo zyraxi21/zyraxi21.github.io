@@ -51,7 +51,7 @@
 | 竖屏宽度                     | 首页、博客、示例文章及导航页面在 320、375、390、414、768px 下无整页横向溢出；抽样页头高度为 64px                                      |
 | npm audit                    | 个人站依赖报告为 0 项漏洞                                                                                                             |
 
-本次在 Windows、Node 24.19.0、Ruby 4.0.6 和 Chrome 上验证。工作流按 .node-version（24）及 .ruby-version（3.4）安装环境；新增工作流尚未在 GitHub 远程运行。
+本次在 Windows、Node 24.19.0、Ruby 4.0.6 和 Chrome 上验证。工作流按 .node-version（24）及 .ruby-version（3.4）安装环境；模板质量工作流在 e116762 上已于 GitHub 通过，本轮修改以本地检查验证。
 
 本地 Windows 构建补充了 tzinfo / tzinfo-data，验证用依赖放在忽略的 .cache 中，未修改系统 Ruby 安装。新克隆应按 README 执行 npm ci 和 bundle install。
 
@@ -85,6 +85,17 @@
 本次两仓库规范检查、前端构建、根路径浏览器检查、320–768px 竖屏检查以及 /preview 严格构建和本地引用检查通过。额外以 390px、3 倍像素密度的手机触摸模式复核浅色、深色截图。个人站的本地构建遇到 GitHub 元数据请求的 TLS 错误，验证时使用忽略的临时配置跳过该插件；实际仓库配置未改，模板按原配置构建。
 
 ## 后续维护
+
+### 导航、依赖安全与模板部署复核
+
+- 手机导航关闭按钮改为无边框叉号，保留 44px 触摸区域及“关闭导航菜单”的无障碍名称。移除面板标题分隔线和侧栏边框；选中导航项使用带主题色的半透明模糊背景。
+- Dependabot #164 对应 [DOMPurify 告警 GHSA-p98j-92pf-mc4p](https://github.com/advisories/GHSA-p98j-92pf-mc4p)。两仓库锁文件中的间接依赖由 3.4.14 更新到修复版 3.4.16，Mermaid 仍为 11.17.2；本次 npm audit 返回 0 项漏洞。
+- `35fce2c` 将个人站的 Pages 工作流复制进模板，使模板的 main 分支 push 触发部署。其 [失败记录](https://github.com/zyraxi21/Yummy-Modern/actions/runs/36816512232) 显示 `configure-pages` 因未启用 Pages 而返回 404；同次 [质量检查](https://github.com/zyraxi21/Yummy-Modern/actions/runs/36816512225) 成功。
+- 模板 Pages 工作流已移除 push 触发，仅保留 workflow_dispatch；push 和 pull request 仍进行质量与构建检查。个人站继续自动部署。模板手动部署需要先在 Settings → Pages 配置 GitHub Actions。
+
+本轮两仓库规范检查、前端构建、根路径与 /preview 严格构建和资源检查、/preview 浏览器回归均通过。浏览器验证图表渲染与复制、侧栏动画和焦点、图标关闭入口及 320–768px 竖屏布局；浅深色手机触摸截图与工作流事件也已复核。
+
+### 常用检查命令
 
 ```bash
 npm ci

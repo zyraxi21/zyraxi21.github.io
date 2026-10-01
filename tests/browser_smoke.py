@@ -311,6 +311,9 @@ def main():
             expect(toggle).to_have_attribute('aria-expanded', 'true')
             expect(page.locator('#site-navigation')).to_be_visible()
             check_glass(drawer)
+            close = drawer.locator('.mobile-panel-close')
+            assert close.inner_text().strip() == ''
+            expect(close).to_have_accessible_name('关闭导航菜单')
             assert page.evaluate('getComputedStyle(document.documentElement).overflowY') == 'hidden'
             for _ in range(page.locator('.site-header-nav-item').count() + 2):
                 page.keyboard.press('Tab')
