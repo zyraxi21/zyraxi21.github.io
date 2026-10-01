@@ -1,0 +1,112 @@
+/* 用日期、标题与摘要建立技术札记的阅读顺序。 */
+.home-posts-solo {
+  max-width: 920px;
+  margin-inline: auto;
+}
+
+.post-feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.post-feed-header h2 {
+  margin: 0;
+  font-size: clamp(22px, 2vw, 26px);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.post-feed-all {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--text-color);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.post-feed-all:hover {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.post-feed-all svg {
+  transition: transform 180ms ease;
+}
+
+.post-feed-all:hover svg,
+.post-feed-all:focus-visible svg {
+  transform: translateX(3px);
+}
+
+.home-posts .post-list-item {
+  padding-block: clamp(24px, 3vw, 32px);
+  transition: border-color 180ms ease;
+}
+
+.home-posts .post-list-item:hover {
+  border-color: color-mix(in srgb, var(--brand-primary) 40%, var(--border-color));
+}
+
+.home-posts .post-list-title {
+  margin: 0;
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.home-posts .post-list-item:first-child .post-list-title {
+  font-size: clamp(25px, 2.6vw, 34px);
+}
+
+.home-posts .post-list-title a {
+  display: block;
+  min-height: 44px;
+  padding-block: 4px;
+  color: var(--text-color);
+  overflow-wrap: anywhere;
+}
+
+.home-posts .post-list-title a:hover {
+  color: var(--text-color);
+}
+
+.home-posts .post-list-meta {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-posts .post-list-description {
+  max-width: 68ch;
+  margin-top: 8px;
+  font-size: clamp(16px, 1.4vw, 18px);
+  line-height: 1.8;
+}
+
+.home-projects .sidebar-title {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+@media (min-width: 992px) {
+  .home-projects {
+    padding-left: 40px;
+  }
+}
+
+@media (max-width: 991px) {
+  .home-projects {
+    margin-top: 40px;
+  }
+}

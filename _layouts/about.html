@@ -3,13 +3,15 @@ layout: default
 css: ['about.css', 'sidebar-popular-repo.css']
 ---
 {% include jumbotron.html %}
+{% capture project_sidebar %}{% include sidebar-popular-repo.html %}{% endcapture %}
+{% assign project_sidebar = project_sidebar | strip %}
 <article class='post container'>
   <div class='row'>
-    <div class='col-md-8 markdown-body about'>
+    <div class='{% if project_sidebar != '' %}col-lg-8{% else %}col-12 about-solo{% endif %} markdown-body about'>
       {{ content }}
     </div>
-    <div class='col-md-4'>
-      {% include sidebar-popular-repo.html %}
-    </div>
+    {% if project_sidebar != '' %}
+      <aside class='col-lg-4' aria-label='项目'>{{ project_sidebar }}</aside>
+    {% endif %}
   </div>
 </article>

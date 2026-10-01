@@ -417,6 +417,11 @@ dl {
   text-align: center;
 }
 
+.about-solo {
+  max-width: 920px;
+  margin-inline: auto;
+}
+
 /* ===== 数学字体：统一使用 KaTeX 自带字体 =====
  * 为什么必须显式声明到每个后代：正文的通用选择器 `*` 会给每个元素直接声明
  * 正文字体，而 KaTeX 生成的 mrow / mord / vlist / mfrac 等中间层元素自身没有
