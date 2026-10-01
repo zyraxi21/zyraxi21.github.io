@@ -1,0 +1,68 @@
+---
+layout: default
+title: 搜索
+subtitle: 查找文章和页面
+subtitle_icon: search
+search: false
+css: ['index.css']
+---
+{% include jumbotron.html %}
+<section class='container search-page' aria-label='全站搜索'>
+  <form class='search-page-form' action='{{ '/search' | relative_url }}' method='get' role='search'>
+    <label class='visually-hidden' for='page-search-input'>搜索关键词</label>
+    <input
+      id='page-search-input'
+      type='search'
+      name='q'
+      placeholder='搜索文章和页面'
+      maxlength='160'
+      autocomplete='off'
+    >
+    <button type='submit' aria-label='搜索' title='搜索'>
+      <svg
+        width='24'
+        height='24'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='1.8'
+        stroke-linecap='round'
+        aria-hidden='true'
+      >
+        <circle cx='10.5' cy='10.5' r='6.5'></circle>
+        <path d='m16 16 4.5 4.5'></path>
+      </svg>
+    </button>
+  </form>
+  <p class='search-page-status' role='status' aria-live='polite'></p>
+  <ol class='search-results-list' aria-label='搜索结果'></ol>
+  <div class='search-empty' hidden>
+    <svg
+      width='40'
+      height='40'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      stroke-width='1.2'
+      stroke-linecap='round'
+      aria-hidden='true'
+    >
+      <circle cx='10.5' cy='10.5' r='6.5'></circle>
+      <path d='m16 16 4.5 4.5'></path>
+    </svg>
+    <h2></h2>
+    <p></p>
+    <button class='search-retry' type='button' hidden>重试</button>
+  </div>
+  <nav class='search-pagination' aria-label='搜索结果分页' hidden>
+    <button type='button' data-search-previous>上一页</button>
+    <span class='search-page-number'></span>
+    <button type='button' data-search-next>下一页</button>
+  </nav>
+  <noscript>
+    <p class='search-noscript'>
+      请启用 JavaScript 后使用搜索，也可以在<a href='{{ '/blog' | relative_url }}'>博客列表</a
+      >中浏览文章。
+    </p>
+  </noscript>
+</section>

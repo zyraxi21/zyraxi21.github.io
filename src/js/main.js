@@ -4,10 +4,12 @@ import { initCodeCopy } from './copy.js';
 import { initCategories } from './categories.js';
 import { initNavigation } from './navigation.js';
 import { initScrollbars } from './scrollbars.js';
+import { initSearch } from './search.js';
 
 async function init() {
   initNavigation();
   initCategories();
+  initSearch();
 
   const comments = document.querySelector('#disqus_thread');
   if (comments) {

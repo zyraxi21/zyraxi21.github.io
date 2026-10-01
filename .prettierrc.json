@@ -4,7 +4,13 @@
   "plugins": ["@shopify/prettier-plugin-liquid"],
   "overrides": [
     {
-      "files": ["_includes/**/*.html", "_layouts/**/*.html", "index.html", "donate.html"],
+      "files": [
+        "_includes/**/*.html",
+        "_layouts/**/*.html",
+        "index.html",
+        "donate.html",
+        "search.html"
+      ],
       "options": { "parser": "liquid-html" }
     }
   ]

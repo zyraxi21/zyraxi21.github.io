@@ -6,7 +6,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import threading
-from urllib.parse import unquote, urlsplit
+from urllib.parse import unquote, urlsplit, urlencode
 
 from playwright.sync_api import expect, sync_playwright
 
@@ -40,10 +40,10 @@ def check_code_alignment(page):
         assert metric['codeFont'] == metric['numberFont'], metric
 
 
-def check_glass(element):
+def check_glass(element, max_alpha=0.6):
     style = element.evaluate('(element) => ({background: getComputedStyle(element).backgroundColor, blur: getComputedStyle(element).backdropFilter})')
     rgba = [float(value) for value in re.findall(r'[\d.]+', style['background'])]
-    assert len(rgba) == 4 and 0 < rgba[3] <= 0.6, style
+    assert len(rgba) == 4 and 0 < rgba[3] <= max_alpha, style
     blur = re.search(r'blur\(([\d.]+)px\)', style['blur'])
     assert blur and float(blur.group(1)) >= 24, style
 
@@ -144,6 +144,172 @@ def check_heading_levels(page, post_address, screenshots):
         page.unroute(post_address, add_headings)
 
 
+def check_search(page, origin, baseurl, site, post_url, screenshots, requests):
+    catalog = json.loads((site / 'search-index.json').read_text(encoding='utf-8'))
+    assert catalog and all(item['url'].startswith(baseurl + '/') for item in catalog)
+    assert all(item['type'] in ['post', 'page'] for item in catalog)
+    assert not any(item['url'].endswith('/search.html') for item in catalog)
+    demonstration = next(item for item in catalog if item['url'] == post_url)
+    independent = next(item for item in catalog if item['type'] == 'page' and 'about' in item['url'])
+    query = demonstration['title']
+    index_address = origin + baseurl + '/search-index.json'
+    home = origin + baseurl + '/'
+    search_address = origin + baseurl + '/search'
+    assert not any(urlsplit(request).path.endswith('/search-index.json') for request in requests), 'Index must load on demand'
+    page.set_viewport_size({'width': 1440, 'height': 1000})
+    page.emulate_media(color_scheme='light', reduced_motion='no-preference')
+    page.goto(home)
+    page.wait_for_load_state('networkidle')
+    button = page.locator('.site-search-button')
+    input_box = page.locator('#site-search-input')
+    popover = page.locator('#site-search-popover')
+    before = button.locator('svg').bounding_box()
+    button.click()
+    expect(input_box).to_be_focused()
+    durations = page.locator('.header-search-form').evaluate('''async (form) => {
+      await new Promise(requestAnimationFrame);
+      const animations = form.getAnimations();
+      const durations = animations.map((animation) => animation.effect.getTiming().duration);
+      await Promise.allSettled(animations.map((animation) => animation.finished));
+      return durations;
+    }''')
+    assert durations and max(durations) >= 150, durations
+    after = button.locator('svg').bounding_box()
+    assert abs(before['x'] - after['x']) <= 1 and abs(before['y'] - after['y']) <= 1, (before, after)
+    assert page.locator('.header-search-form').bounding_box()['width'] > 180
+    input_box.fill(query)
+    expect(popover.locator('[role="option"]').first).to_be_visible()
+    expect(popover.locator('.search-result-title').first).to_have_text(query)
+    assert 1 <= popover.locator('[role="option"]').count() <= 5
+    check_glass(popover, max_alpha=0.9)
+    popover.evaluate('async (element) => { await Promise.allSettled(element.getAnimations().map((animation) => animation.finished)); }')
+    page.screenshot(path=str(screenshots / 'search-preview-desktop.png'))
+    input_box.press('ArrowUp')
+    expect(input_box).to_have_attribute('aria-activedescendant', popover.locator('[role="option"]').last.get_attribute('id'))
+    input_box.press('Escape')
+    expect(popover).to_be_hidden()
+    expect(button).to_be_focused()
+    button.click()
+    expect(popover.locator('[role="option"]').first).to_be_visible()
+    input_box.press('ArrowDown')
+    input_box.press('Enter')
+    page.wait_for_url(lambda address: urlsplit(address).path == demonstration['url'])
+    page.wait_for_load_state('networkidle')
+
+    # Both direct clicks and an unselected Enter use the expected destination.
+    page.goto(home)
+    page.wait_for_load_state('networkidle')
+    button.click()
+    input_box.fill(query)
+    popover.locator('[role="option"]').first.click()
+    page.wait_for_url(lambda address: urlsplit(address).path == demonstration['url'])
+    page.goto(home)
+    page.wait_for_load_state('networkidle')
+    button.click()
+    input_box.fill(query)
+    input_box.press('Enter')
+    page.wait_for_url(lambda address: urlsplit(address).path == baseurl + '/search')
+    page.wait_for_load_state('networkidle')
+    expect(page.locator('#page-search-input')).to_have_value(query)
+    expect(page.locator('.search-results-list .search-result-title').first).to_have_text(query)
+    assert page.locator('.search-results-list mark').count() > 0
+    page.screenshot(path=str(screenshots / 'search-results-desktop.png'))
+    page.locator('#page-search-input').fill(independent['title'])
+    expect(page.locator('.search-results-list a[href="' + independent['url'] + '"]')).to_be_visible()
+
+    page.goto(home)
+    page.wait_for_load_state('networkidle')
+    button.click()
+    input_box.fill(query)
+    button.click()
+    page.wait_for_url(lambda address: urlsplit(address).path == baseurl + '/search')
+    expect(page.locator('#page-search-input')).to_have_value(query)
+
+    # Empty and hostile queries remain plain text.
+    page.goto(search_address)
+    page.wait_for_load_state('networkidle')
+    expect(page.locator('.search-empty h2')).to_have_text('输入关键词开始搜索')
+    hostile = '<img src=x onerror=window.searchInjected=1>'
+    page.locator('#page-search-input').fill(hostile)
+    expect(page.locator('.search-empty h2')).to_contain_text(hostile)
+    assert page.evaluate('window.searchInjected') is None
+    assert page.locator('.search-page img').count() == 0
+
+    # The index fetch can fail and then recover in the same expanded control.
+    page.goto(home)
+    page.wait_for_load_state('networkidle')
+    abort_index = lambda route: route.abort()
+    page.route(index_address, abort_index)
+    button.click()
+    input_box.fill(query)
+    expect(popover.locator('.search-preview-status')).to_have_text('搜索暂时不可用，请重试')
+    page.unroute(index_address, abort_index)
+    popover.locator('.search-retry').click()
+    expect(popover.locator('[role="option"]').first).to_be_visible()
+    input_box.dispatch_event('compositionstart')
+    input_box.fill(query)
+    expect(popover).to_be_hidden()
+    input_box.dispatch_event('compositionend')
+    expect(popover.locator('[role="option"]').first).to_be_visible()
+    page.locator('#main-content').click(position={'x': 5, 'y': 5})
+    expect(popover).to_be_hidden()
+
+    # A deterministic fixture exercises all-results pagination and reload restoration.
+    paginated = [
+        {'title': '搜索分页样例 ' + str(number), 'url': demonstration['url'] + '?sample=' + str(number),
+         'content': '分页正文', 'type': 'post', 'date': '', 'tags': []}
+        for number in range(11)
+    ]
+    serve_pages = lambda route: route.fulfill(status=200, content_type='application/json', body=json.dumps(paginated))
+    page.route(index_address, serve_pages)
+    page.goto(search_address + '?' + urlencode({'q': '搜索分页样例'}))
+    page.wait_for_load_state('networkidle')
+    expect(page.locator('.search-results-list li')).to_have_count(10)
+    page.locator('[data-search-next]').click()
+    expect(page.locator('.search-results-list li')).to_have_count(1)
+    assert 'page=2' in page.url
+    page.reload()
+    page.wait_for_load_state('networkidle')
+    expect(page.locator('.search-results-list li')).to_have_count(1)
+    expect(page.locator('.search-page-number')).to_have_text('2 / 2')
+    page.locator('[data-search-previous]').click()
+    expect(page.locator('.search-results-list li')).to_have_count(10)
+    page.unroute(index_address, serve_pages)
+
+    for scheme in ['light', 'dark']:
+        page.emulate_media(color_scheme=scheme)
+        for width in [320, 375, 390, 414, 768]:
+            page.set_viewport_size({'width': width, 'height': 900})
+            page.goto(home)
+            page.wait_for_load_state('networkidle')
+            before = button.locator('svg').bounding_box()
+            button.click()
+            input_box.fill(query)
+            expect(popover.locator('[role="option"]').first).to_be_visible()
+            for element in [page.locator('.header-search-form'), popover]:
+                element.evaluate('async (element) => { await Promise.allSettled(element.getAnimations().map((animation) => animation.finished)); }')
+            after = button.locator('svg').bounding_box()
+            assert abs(before['x'] - after['x']) <= 1 and abs(before['y'] - after['y']) <= 1, (before, after)
+            bounds = popover.bounding_box()
+            assert bounds['x'] >= 0 and bounds['x'] + bounds['width'] <= width + 1, bounds
+            check_glass(popover)
+            assert page.evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1')
+            if width == 390:
+                page.screenshot(path=str(screenshots / ('search-preview-mobile-' + scheme + '.png')))
+            input_box.press('Enter')
+            page.wait_for_url(lambda address: urlsplit(address).path == baseurl + '/search')
+            page.wait_for_load_state('networkidle')
+            expect(page.locator('.search-results-list li').first).to_be_visible()
+            assert page.evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1')
+            if width == 390:
+                page.screenshot(path=str(screenshots / ('search-results-mobile-' + scheme + '.png')))
+    page.emulate_media(reduced_motion='reduce')
+    button.click()
+    expect(input_box).to_be_focused()
+    input_box.press('Escape')
+    expect(button).to_be_focused()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--site', default='_site')
@@ -152,6 +318,7 @@ def main():
     parser.add_argument('--post', help='Path to a built demonstration post with code, math and Mermaid')
     parser.add_argument('--screenshots', default='.cache/screenshots')
     parser.add_argument('--inspect', action='store_true', help='Capture portrait layouts before running interactions')
+    parser.add_argument('--search-only', action='store_true', help='Exercise search interactions and responsive layouts')
     args = parser.parse_args()
     site = Path(args.site).resolve()
     baseurl = args.baseurl.rstrip('/')
@@ -205,6 +372,13 @@ def main():
             expect(page.locator('#main-content')).to_be_visible()
             assert page.locator('.site-header-nav-item.selected').count() == 1
             assert not any('chunks/math-' in request or 'chunks/diagrams-' in request for request in requests)
+            if args.search_only:
+                check_search(page, origin, baseurl, site, post_url, screenshots, requests)
+                assert not errors, errors
+                assert not missing, missing
+                browser.close()
+                print('Search browser checks passed (motion, fixed icon, lazy index, keyboard/IME, navigation, safe queries, retry, pagination, portrait layouts).')
+                return
             portrait_routes = list(dict.fromkeys([
                 baseurl + '/', baseurl + '/blog', post_url,
                 *page.locator('.site-header-nav-item').evaluate_all('(links) => links.map((link) => link.getAttribute("href"))'),
@@ -459,10 +633,11 @@ def main():
                     if 'Example-No-Sidebar-Nav' in route:
                         assert page.locator('.post-directory-toggle').count() == 0
             check_heading_levels(page, origin + post_url, screenshots)
+            check_search(page, origin, baseurl, site, post_url, screenshots, requests)
             assert not errors, errors
             assert not missing, missing
             browser.close()
-            print(f'Browser checks passed (six heading levels/anchors/indentation, animated panels/focus/glass, icon navigation, category theme/hover/white text, line alignment, math/diagrams, copy, scrollbars, portrait layouts; baseurl={baseurl or "/"}).')
+            print(f'Browser checks passed (full-site search, six heading levels/anchors/indentation, animated panels/focus/glass, icon navigation, category theme/hover/white text, line alignment, math/diagrams, copy, scrollbars, portrait layouts; baseurl={baseurl or "/"}).')
     finally:
         server.shutdown()
         server.server_close()

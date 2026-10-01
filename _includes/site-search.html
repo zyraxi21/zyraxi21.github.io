@@ -1,0 +1,47 @@
+<div class='site-search' data-index-url='{{ '/search-index.json' | relative_url }}'>
+  <form
+    class='header-search-form'
+    action='{{ '/search' | relative_url }}'
+    method='get'
+    role='search'
+  >
+    <label class='visually-hidden' for='site-search-input'>搜索全站</label>
+    <input
+      id='site-search-input'
+      class='header-search-input'
+      type='search'
+      name='q'
+      placeholder='搜索文章和页面'
+      maxlength='160'
+      autocomplete='off'
+      spellcheck='false'
+      role='combobox'
+      aria-autocomplete='list'
+      aria-controls='site-search-options'
+      aria-expanded='false'
+      tabindex='-1'
+    >
+    <button
+      class='site-search-button'
+      type='submit'
+      aria-label='搜索全站'
+      aria-expanded='false'
+      aria-controls='site-search-input'
+      title='搜索全站'
+    >
+      <svg
+        width='22'
+        height='22'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='1.8'
+        stroke-linecap='round'
+        aria-hidden='true'
+      >
+        <circle cx='10.5' cy='10.5' r='6.5'></circle>
+        <path d='m16 16 4.5 4.5'></path>
+      </svg>
+    </button>
+  </form>
+</div>

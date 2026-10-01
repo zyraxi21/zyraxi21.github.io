@@ -10,44 +10,48 @@
       >
       <span class='site-brand-name'>{{ site.name | escape }}</span>
     </a>
-    <button
-      class='site-nav-toggle'
-      type='button'
-      aria-expanded='false'
-      aria-controls='site-nav-panel'
-      aria-haspopup='dialog'
-      aria-label='展开导航菜单'
-      hidden
-    >
-      <svg
-        width='24'
-        height='24'
-        viewBox='0 0 24 24'
-        fill='none'
-        stroke='currentColor'
-        stroke-width='2'
-        aria-hidden='true'
+    <div class='site-header-actions'>
+      {% include site-search.html %}
+      <button
+        class='site-nav-toggle'
+        type='button'
+        aria-expanded='false'
+        aria-controls='site-nav-panel'
+        aria-haspopup='dialog'
+        aria-label='展开导航菜单'
+        hidden
       >
-        <path d='M3 5h18M3 12h18M3 19h18'></path>
-      </svg>
-    </button>
-    <nav id='site-navigation' class='site-header-nav' aria-label='主导航'>
-      {% for nav in site.navs %}
-        <a
-          href='{{ nav.href | relative_url }}'
-          class='{% if page.menu == nav.label or page.url == nav.href %} selected {% endif %} site-header-nav-item hvr-underline-from-center'
-          target='{{ nav.target | default: '_self' }}'
-          {% if nav.target == '_blank' %}
-            rel='noopener noreferrer'
-          {% endif %}
-          title='{{ nav.label | escape }}'
+        <svg
+          width='24'
+          height='24'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='2'
+          aria-hidden='true'
         >
-          {{ nav.label | escape }}
-        </a>
-      {% endfor %}
-    </nav>
+          <path d='M3 5h18M3 12h18M3 19h18'></path>
+        </svg>
+      </button>
+      <nav id='site-navigation' class='site-header-nav' aria-label='主导航'>
+        {% for nav in site.navs %}
+          <a
+            href='{{ nav.href | relative_url }}'
+            class='{% if page.menu == nav.label or page.url == nav.href %} selected {% endif %} site-header-nav-item hvr-underline-from-center'
+            target='{{ nav.target | default: '_self' }}'
+            {% if nav.target == '_blank' %}
+              rel='noopener noreferrer'
+            {% endif %}
+            title='{{ nav.label | escape }}'
+          >
+            {{ nav.label | escape }}
+          </a>
+        {% endfor %}
+      </nav>
+    </div>
   </div>
 </header>
+{% include search-popover.html %}
 <dialog
   id='site-nav-panel'
   class='mobile-panel mobile-nav-panel'

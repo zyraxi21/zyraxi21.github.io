@@ -43,9 +43,9 @@
 
 | 检查                         | 结果 / 范围                                                                                                                           |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| npm run check                | 两仓库 ESLint、Prettier、5 项 Node 测试和 12 项 Ruby 回归均通过                                                                       |
+| npm run check                | 两仓库 ESLint、Prettier、11 项 Node 测试和 18 项 Ruby 回归均通过                                                                      |
 | npm run build                | 两仓库前端构建通过，无构建警告                                                                                                        |
-| Jekyll 严格构建与 check:site | 根路径均通过；个人站 1481、模板站 1181 条本地引用                                                                                     |
+| Jekyll 严格构建与 check:site | 根路径均通过；个人站 1543、模板站 1218 条本地引用                                                                                     |
 | /preview 子目录              | 两仓库严格构建、本地引用及浏览器检查均通过                                                                                            |
 | Chromium 浏览器              | 根路径的菜单、分类、目录、代码/公式/图表复制、深色图表与滚动条通过；子目录中新增的关于页、模板项目/书签页、个人捐赠页和分页检查均通过 |
 | 竖屏宽度                     | 首页、博客、示例文章及导航页面在 320、375、390、414、768px 下无整页横向溢出；抽样页头高度为 64px                                      |
@@ -101,6 +101,14 @@
 
 浏览器回归覆盖六级标题的顺序、锚点、缩进，以及手机端点击后关闭面板并聚焦标题。
 
+### 全站搜索
+
+- 顶栏入口位于导航左侧。文本框从固定的放大镜向左展开，不移动图标或导航；输入后预览最多 5 条结果，回车或再次点击图标进入完整搜索页。
+- 页面沿用现有横幅、字体与主题色；结果显示类型、日期、标签和正文片段，支持关键词高亮、每页 10 条结果、空状态及加载失败重试。
+- Jekyll 在渲染后生成标题、标签、分类与正文索引，文章正文不包含布局和目录；排除搜索页、分页副本及 `search: false` 内容。索引与结果地址使用构建时的 `baseurl`。
+- 索引按需加载。检索支持中文、大小写和全半角规范化，多个关键词须全部匹配；文字用文本节点与 mark 元素呈现。
+- 浏览器检查覆盖固定图标位置、展开动画、实时结果、上下键与 Escape、输入法组合输入、页面跳转、异常查询、失败重试、分页恢复、浅深色和 320–768px 布局。
+
 ### 常用检查命令
 
 ```bash
@@ -124,6 +132,7 @@ python tests/browser_smoke.py --site .cache/preview --baseurl /preview
 ## 规范依据
 
 - [Jekyll URL 与转义过滤器](https://jekyllrb.com/docs/liquid/filters/)
+- [WAI-ARIA 可编辑组合框交互](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
 - [ESLint 配置文件](https://eslint.org/docs/latest/use/configure/configuration-files)
 - [esbuild 代码分割](https://esbuild.github.io/api/#splitting)
 - [Mermaid 配置](https://mermaid.js.org/config/schema-docs/config.html)
