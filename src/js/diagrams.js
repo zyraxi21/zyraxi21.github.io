@@ -75,7 +75,10 @@ async function copyDiagram(pre) {
   if (!svg) throw new Error('Mermaid SVG 尚未生成');
   if (navigator.clipboard?.write && window.ClipboardItem) {
     try {
-      const png = await rasterizeSvg(svg);
+      // 在点击期间发起写入，图片转换交给 ClipboardItem 等待。
+      const png = rasterizeSvg(svg);
+      // 写入若提前被拒绝，仍接住后续转换失败，避免未处理的拒绝。
+      void png.catch(() => {});
       await navigator.clipboard.write([new ClipboardItem({ 'image/png': png })]);
       return '已复制 PNG';
     } catch {

@@ -640,8 +640,33 @@ def main():
             page.wait_for_function('(id) => document.querySelector(".mermaid-rendered svg")?.id !== id', arg=first_id)
             assert page.locator('.mermaid-error').count() == 0
             diagram_button = page.locator('.mermaid-block-wrapper .code-copy-btn').first
+            # 图片转换较慢时，剪贴板请求仍应在点击期间发起。
+            page.evaluate('''() => {
+              const originalWrite = navigator.clipboard.write.bind(navigator.clipboard);
+              const originalToBlob = HTMLCanvasElement.prototype.toBlob;
+              let clicking = false;
+              const markClick = () => { clicking = true; setTimeout(() => { clicking = false; }, 0); };
+              document.addEventListener('click', markClick, true);
+              window.pngConversionFinished = false;
+              HTMLCanvasElement.prototype.toBlob = function(callback, ...options) {
+                originalToBlob.call(this, blob => setTimeout(() => {
+                  window.pngConversionFinished = true; callback(blob);
+                }, 300), ...options);
+              };
+              navigator.clipboard.write = items => {
+                window.pngRequestedDuringClick = clicking;
+                window.pngRequestedBeforeConversion = !window.pngConversionFinished;
+                return originalWrite(items);
+              };
+              window.restorePngProbe = () => {
+                navigator.clipboard.write = originalWrite;
+                HTMLCanvasElement.prototype.toBlob = originalToBlob;
+                document.removeEventListener('click', markClick, true);
+              };
+            }''')
             diagram_button.click()
             expect(diagram_button).to_have_text('已复制 PNG', timeout=15000)
+            assert page.evaluate('window.pngRequestedDuringClick && window.pngRequestedBeforeConversion')
             assert page.evaluate('''async () => (await navigator.clipboard.read())[0].types.includes('image/png')''')
             png_corner = page.evaluate('''async () => {
               const item = (await navigator.clipboard.read())[0];
@@ -655,6 +680,7 @@ def main():
               return pixel;
             }''')
             assert png_corner[3] == 255 and max(png_corner[:3]) < 64, png_corner
+            page.evaluate('window.restorePngProbe()')
 
             # The visual scrollbar must support keyboard input and pointer dragging.
             page.evaluate('''() => {
