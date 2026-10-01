@@ -43,6 +43,9 @@
 }
 
 .site-search {
+  --search-safe-left: env(safe-area-inset-left, 0px);
+  --search-safe-right: env(safe-area-inset-right, 0px);
+  --search-safe-bottom: env(safe-area-inset-bottom, 0px);
   position: relative;
   flex: 0 0 44px;
   width: 44px;

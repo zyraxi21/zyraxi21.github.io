@@ -78,29 +78,32 @@ function initHeaderSearch(root, loadIndex) {
   function geometry() {
     const icon = button.getBoundingClientRect();
     const container = header.querySelector('.container').getBoundingClientRect();
+    const safeStyle = getComputedStyle(root);
+    const safeLeft = parseFloat(safeStyle.getPropertyValue('--search-safe-left')) || 0;
+    const safeRight = parseFloat(safeStyle.getPropertyValue('--search-safe-right')) || 0;
+    const safeBottom = parseFloat(safeStyle.getPropertyValue('--search-safe-bottom')) || 0;
     const logo = header
       .querySelector('.site-brand-logo, #site-header-brand > .octicon')
       .getBoundingClientRect();
-    const width = Math.min(360, icon.right - logo.right - 12);
-    root.style.setProperty('--search-width', Math.max(140, width) + 'px');
+    const width = Math.max(44, Math.min(360, icon.right - logo.right - 12));
+    root.style.setProperty('--search-width', width + 'px');
     header.classList.toggle(
       'search-overlaps-brand',
       open &&
         icon.right - width <
           header.querySelector('#site-header-brand').getBoundingClientRect().right + 12,
     );
-    const panelWidth = Math.min(420, container.width - 30, window.innerWidth - 30);
-    const left = Math.min(
-      Math.max(container.left + 15, icon.right - panelWidth),
-      window.innerWidth - panelWidth - 15,
-    );
+    const panelLeft = Math.max(container.left + 15, safeLeft);
+    const panelRight = Math.min(container.right - 15, window.innerWidth - Math.max(15, safeRight));
+    const panelWidth = Math.min(420, Math.max(0, panelRight - panelLeft));
+    const left = Math.min(Math.max(panelLeft, icon.right - panelWidth), panelRight - panelWidth);
     popover.style.width = panelWidth + 'px';
     popover.style.left = left + 'px';
     const top = header.getBoundingClientRect().bottom + 8;
     const viewport = window.visualViewport;
     const bottom = (viewport?.offsetTop ?? 0) + (viewport?.height ?? window.innerHeight);
     popover.style.top = top + 'px';
-    const availableHeight = Math.max(0, Math.min(570, bottom - top - 8));
+    const availableHeight = Math.max(0, Math.min(570, bottom - top - 8 - safeBottom));
     popover.style.maxHeight = availableHeight + 'px';
     popover.classList.toggle('is-compact', availableHeight < 180);
     if (open) frame = requestAnimationFrame(geometry);

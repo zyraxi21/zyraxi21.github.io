@@ -150,9 +150,20 @@ html.mobile-panel-open body {
 .mobile-directory-panel {
   inset: auto max(18px, env(safe-area-inset-right, 0px))
     calc(100px + env(safe-area-inset-bottom, 0px)) auto;
-  width: min(380px, calc(100vw - 36px));
-  max-height: min(70vh, calc(100vh - 120px));
-  max-height: min(70dvh, calc(100dvh - 120px));
+  width: min(
+    380px,
+    calc(
+      100vw - max(18px, env(safe-area-inset-left, 0px)) - max(18px, env(safe-area-inset-right, 0px))
+    )
+  );
+  max-height: min(
+    70vh,
+    calc(100vh - 120px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))
+  );
+  max-height: min(
+    70dvh,
+    calc(100dvh - 120px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))
+  );
   border-radius: 18px;
   transform: translateY(16px) scale(0.96);
   transform-origin: bottom right;
@@ -238,12 +249,13 @@ html.mobile-panel-open body {
   }
 
   html {
-    scroll-padding-top: 88px;
+    scroll-padding-top: calc(88px + env(safe-area-inset-top, 0px));
   }
 
   .container {
     width: 100%;
-    padding-inline: max(18px, env(safe-area-inset-left, 0px));
+    padding-left: max(18px, env(safe-area-inset-left, 0px));
+    padding-right: max(18px, env(safe-area-inset-right, 0px));
   }
 
   .row {
@@ -267,6 +279,7 @@ html.mobile-panel-open body {
   .site-header.site-header-nav-scrolled-ph {
     margin: 0;
     padding-block: 10px;
+    padding-top: calc(10px + env(safe-area-inset-top, 0px));
     -webkit-backdrop-filter: blur(24px) saturate(1.6);
     backdrop-filter: blur(24px) saturate(1.6);
   }
@@ -327,8 +340,12 @@ html.mobile-panel-open body {
 
   .jumbotron {
     margin-bottom: 24px;
-    padding-top: 112px;
+    padding-top: calc(112px + env(safe-area-inset-top, 0px));
     padding-bottom: 36px;
+  }
+
+  .jumbotron.geopattern {
+    padding-top: calc(112px + env(safe-area-inset-top, 0px));
   }
 
   .jumbotron h1 {
@@ -502,6 +519,7 @@ html.mobile-panel-open body {
     gap: 16px;
     margin-top: 32px;
     padding-block: 24px;
+    padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
     font-size: 13px;
   }
 

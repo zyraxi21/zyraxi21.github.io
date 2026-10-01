@@ -450,6 +450,52 @@ def check_initial_mobile_layout(browser, origin, post_url, site):
         context.close()
 
 
+def check_safe_areas(page, origin, post_url):
+    # 用浏览器环境变量检查有遮挡区域时的入口和浮窗，而非仅检查 CSS 声明。
+    client = page.context.new_cdp_session(page)
+    cases = [
+        (390, 500, {'top': 47, 'right': 0, 'bottom': 34, 'left': 0}),
+        (844, 260, {'top': 0, 'right': 44, 'bottom': 21, 'left': 0}),
+        (320, 568, {'top': 44, 'right': 34, 'bottom': 34, 'left': 34}),
+    ]
+    try:
+        for width, height, insets in cases:
+            page.set_viewport_size({'width': width, 'height': height})
+            client.send('Emulation.setSafeAreaInsetsOverride', {'insets': insets})
+            page.goto(origin + post_url, wait_until='networkidle')
+            page.evaluate('() => document.fonts.ready')
+            logo = page.locator('.site-brand-logo, #site-header-brand > .octicon').bounding_box()
+            menu = page.locator('.site-nav-toggle').bounding_box()
+            assert logo['y'] >= insets['top'] and menu['x'] + menu['width'] <= width - insets['right'] + 1
+            page.locator('.site-search-button').click()
+            page.locator('.header-search-input').fill(page.locator('.jumbotron h1').inner_text())
+            popover = page.locator('#site-search-popover')
+            expect(popover.locator('[role="option"]').first).to_be_visible()
+            page.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
+            bounds = popover.bounding_box()
+            assert bounds['x'] >= insets['left'] - 1 and bounds['x'] + bounds['width'] <= width - insets['right'] + 1, bounds
+            assert bounds['y'] + bounds['height'] <= height - insets['bottom'] + 1, bounds
+            page.keyboard.press('Escape')
+            trigger = page.locator('.post-directory-toggle')
+            trigger.click()
+            panel = page.locator('#post-directory-panel')
+            expect(panel).to_be_visible()
+            panel.evaluate('''async e => {
+              await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+              e.getBoundingClientRect();
+              await Promise.allSettled(e.getAnimations().map(a => a.finished));
+            }''')
+            bounds = panel.bounding_box()
+            assert bounds['x'] >= insets['left'] - 1 and bounds['x'] + bounds['width'] <= width - insets['right'] + 1, bounds
+            assert bounds['y'] >= insets['top'] - 1 and bounds['y'] + bounds['height'] <= height - insets['bottom'] + 1, bounds
+            page.keyboard.press('Escape')
+            expect(panel).to_be_hidden()
+            expect(trigger).to_be_focused()
+    finally:
+        client.send('Emulation.setSafeAreaInsetsOverride', {'insets': {'top': 0, 'right': 0, 'bottom': 0, 'left': 0}})
+        client.detach()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--site', default='_site')
@@ -817,6 +863,7 @@ def main():
             check_wide_diagrams(page, origin + post_url, screenshots)
             check_heading_levels(page, origin + post_url, screenshots)
             check_search(page, origin, baseurl, site, post_url, screenshots, requests)
+            check_safe_areas(page, origin, post_url)
             assert not errors, errors
             assert not missing, missing
             browser.close()
