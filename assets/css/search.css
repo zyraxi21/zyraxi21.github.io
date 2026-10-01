@@ -111,6 +111,13 @@
   border-radius: 50%;
 }
 
+.search-icon,
+.search-icon > circle,
+.search-icon > path {
+  fill: none;
+  stroke: currentColor;
+}
+
 .site-search-button:hover {
   opacity: 0.75;
 }
