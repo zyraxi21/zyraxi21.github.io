@@ -3,6 +3,29 @@
   display: none !important;
 }
 
+.site-footer {
+  display: flow-root;
+}
+
+.site-footer .footer-github-link {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.site-footer .footer-github-link .footer-github-icon {
+  position: static;
+  margin-left: 0;
+  color: inherit;
+}
+
 .site-nav-toggle {
   display: none;
 }
@@ -539,10 +562,33 @@ html.mobile-panel-open body {
     position: static;
   }
 
+  .site-footer .footer-github-link {
+    position: static;
+    transform: none;
+  }
+
   .site-footer [data-back-to-top] {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+  }
+
+  .pagination .pagination-controls {
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .pagination .btn-group.pagination-controls > .btn {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin-left: 0;
+    border-radius: var(--bs-btn-border-radius);
   }
 
   .card-title {

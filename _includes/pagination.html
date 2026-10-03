@@ -1,6 +1,6 @@
 {% if paginator.total_pages > 1 %}
   <nav class='pagination text-align' aria-label='文章分页'>
-    <div class='btn-group'>
+    <div class='btn-group pagination-controls'>
       {% if paginator.previous_page %}
         <a
           href='{{ paginator.previous_page_path | relative_url }}'
