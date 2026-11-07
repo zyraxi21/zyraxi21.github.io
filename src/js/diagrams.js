@@ -120,6 +120,10 @@ export async function initDiagrams(content) {
     if (requestedVersion !== version) return;
     mermaid.initialize({
       startOnLoad: false,
+      layout: 'dagre',
+      look: 'classic',
+      flowchart: { minNodeWidth: 0, wrappingWidth: 200 },
+      state: { layout: 'dagre', minNodeWidth: 0, wrappingWidth: 200 },
       theme: darkQuery.matches ? 'dark' : 'default',
       themeVariables: { background: 'transparent' },
       securityLevel: 'strict',
