@@ -10,7 +10,7 @@ excerpt: "把原汁原味的 Windows 11 与微软设计语言带进笔记软件�
 
 为了解决这个问题，我基于微软官方的 **Fluent 2 Design System**（Fluent UI v9 与 Windows 11 WinUI 3 规范），从零打磨了一套 Obsidian 主题 **[Fluent 2](https://community.obsidian.md/themes/fluent-2)**，并专门编写了一个零依赖的桌面配套插件 **[Fluent 2 Windows Native](https://community.obsidian.md/plugins/fluent-windows-native)**。目前主题与插件均已正式上架 Obsidian 官方社区市场，欢迎体验。
 
-![Fluent 2 for Obsidian 预览](/assets/images/fluent-2-for-obsidian/screenshot.png)
+![Fluent 2 for Obsidian 预览]({{ '/assets/images/fluent-2-for-obsidian/screenshot.png' | relative_url }})
 
 ## 为什么是「主题 + 配套插件」的组合？
 
